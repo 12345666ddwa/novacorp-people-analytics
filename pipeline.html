@@ -145,6 +145,13 @@
     font-size: 20px;
     color: var(--blue-light);
   }
+  /* Narrative connector bilingual */
+  .narrative-connector-en { display: block; }
+  .narrative-connector-cn { display: none; }
+  html[lang="zh"] .narrative-connector-en { display: none; }
+  html[lang="zh"] .narrative-connector-cn { display: block; }
+  html[lang="en"] .narrative-connector-en { display: block; }
+  html[lang="en"] .narrative-connector-cn { display: none; }
 
   /* ── Stage Card ── */
   .stage-card {
@@ -484,10 +491,12 @@
   .tag-stay { background: var(--amber); }
   .tag-tiered { background: #7B1FA2; }
   .company-logo-svg {
-    width: 60px;
+    width: auto;
     height: 30px;
+    max-width: 100px;
     margin: 0 auto 6px;
     display: block;
+    object-fit: contain;
   }
   .company-name { font-size: 12px; font-weight: 700; color: var(--gray-800); }
   .company-ticker { font-size: 10px; color: var(--gray-600); }
@@ -761,8 +770,10 @@ master['IsLeaver'] = master['AttritionType'].notna().astype(int)</div>
 
 <!-- NARRATIVE TRANSITION 1→2 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 2?</strong> A master dataset is only as good as its quality. Merging five sources inevitably introduces artifacts — dates that don't align, surveys taken after employees left, scores that are impossible. Before we can trust any analysis, we must identify and remove these contaminants. This is especially critical because our key variable — engagement — is survey-derived and vulnerable to look-ahead bias."
-     data-zh="<strong>为什么要进入第2阶段？</strong>主数据集的质量取决于其清洁度。合并五个数据源不可避免地会引入伪影——日期不对齐、离职后的调查回复、不可能的分数。在我们能够信任任何分析之前，必须识别并清除这些污染物。这一点尤为关键，因为我们的核心变量——敬业度——来自调查数据，极易受到前瞻偏差的影响。"><strong>Why Stage 2?</strong> A master dataset is only as good as its quality. Merging five sources inevitably introduces artifacts — dates that don't align, surveys taken after employees left, scores that are impossible. Before we can trust any analysis, we must identify and remove these contaminants. This is especially critical because our key variable — engagement — is survey-derived and vulnerable to look-ahead bias.</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 2?</strong> A master dataset is only as good as its quality. Merging five sources inevitably introduces artifacts — dates that don't align, surveys taken after employees left, scores that are impossible. Before we can trust any analysis, we must identify and remove these contaminants. This is especially critical because our key variable — engagement — is survey-derived and vulnerable to look-ahead bias.</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第2阶段？</strong>主数据集的质量取决于其清洁度。合并五个数据源不可避免地会引入伪影——日期不对齐、离职后的调查回复、不可能的分数。在我们能够信任任何分析之前，必须识别并清除这些污染物。这一点尤为关键，因为我们的核心变量——敬业度——来自调查数据，极易受到前瞻偏差的影响。</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -863,8 +874,10 @@ Conclusion: Post-termination surveys inflated engagement by
 
 <!-- NARRATIVE TRANSITION 2→3 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 3?</strong> With clean data, the natural first question is: <em>what does the landscape look like?</em> Before building predictive models or inferring causation, we need to map the terrain. Who's leaving? From which departments? When do they leave? Descriptive statistics give us the lay of the land — and often reveal patterns so striking that they shape everything that follows. In our case, one number jumped off the page: 34% of new hires were leaving within their first year."
-     data-zh="<strong>为什么要进入第3阶段？</strong>数据干净后，最自然的第一个问题是：<em>现状是什么样的？</em>在建立预测模型或推断因果关系之前，我们需要绘制地形图。谁在离职？哪个部门？什么时间点离职？描述性统计让我们了解全局——而且往往揭示出足以塑造后续一切工作的惊人模式。我们的案例中，一个数字跃然纸上：34%的新员工在入职第一年内离开。"><strong>Why Stage 3?</strong> With clean data, the natural first question is: <em>what does the landscape look like?</em> Before building predictive models or inferring causation, we need to map the terrain. Who's leaving? From which departments? When do they leave? Descriptive statistics give us the lay of the land — and often reveal patterns so striking that they shape everything that follows. In our case, one number jumped off the page: 34% of new hires were leaving within their first year.</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 3?</strong> With clean data, the natural first question is: <em>what does the landscape look like?</em> Before building predictive models or inferring causation, we need to map the terrain. Who's leaving? From which departments? When do they leave? Descriptive statistics give us the lay of the land — and often reveal patterns so striking that they shape everything that follows. In our case, one number jumped off the page: 34% of new hires were leaving within their first year.</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第3阶段？</strong>数据干净后，最自然的第一个问题是：<em>现状是什么样的？</em>在建立预测模型或推断因果关系之前，我们需要绘制地形图。谁在离职？哪个部门？什么时间点离职？描述性统计让我们了解全局——而且往往揭示出足以塑造后续一切工作的惊人模式。我们的案例中，一个数字跃然纸上：34%的新员工在入职第一年内离开。</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -894,6 +907,13 @@ Conclusion: Post-termination surveys inflated engagement by
         <div class="kn-item"><span class="kn-icon">📉</span> <span class="kn-value">34% Early Attrition</span></div>
         <div class="kn-item"><span class="kn-icon">🚪</span> <span class="kn-value">60.7% Push</span></div>
         <div class="kn-item"><span class="kn-icon">📊</span> <span class="kn-value">N=13,281</span></div>
+      </div>
+
+
+      <!-- Chart: Tenure Distribution -->
+      <div class="trend-chart-container">
+        <h4 data-en="Tenure Distribution by Cohort" data-zh="按群组的在职时长分布">Tenure Distribution by Cohort</h4>
+        <img src="img/fig6_tenure.png" alt="Tenure Distribution Chart" style="width:100%;max-width:660px;display:block;margin:0 auto;border-radius:8px;">
       </div>
 
       <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
@@ -943,8 +963,10 @@ Conclusion: Post-termination surveys inflated engagement by
 
 <!-- NARRATIVE TRANSITION 3→4 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 4?</strong> Describing the past is useful, but NovaCorp's leadership needs to look forward. Knowing that 34% of new hires leave is alarming — but <em>which specific</em> new hires are most at risk? This is where machine learning comes in. A predictive model can flag individual employees months before they quit, turning a retrospective statistic into a forward-looking early warning system."
-     data-zh="<strong>为什么要进入第4阶段？</strong>描述过去很有用，但NovaCorp的领导层需要向前看。知道34%的新员工会离职令人警觉——但<em>具体哪些</em>新员工风险最高？这就是机器学习发挥作用的地方。预测模型可以在员工离职前几个月发出预警，将回顾性统计数据转化为前瞻性预警系统。"><strong>Why Stage 4?</strong> Describing the past is useful, but NovaCorp's leadership needs to look forward. Knowing that 34% of new hires leave is alarming — but <em>which specific</em> new hires are most at risk? This is where machine learning comes in. A predictive model can flag individual employees months before they quit, turning a retrospective statistic into a forward-looking early warning system.</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 4?</strong> Describing the past is useful, but NovaCorp's leadership needs to look forward. Knowing that 34% of new hires leave is alarming — but <em>which specific</em> new hires are most at risk? This is where machine learning comes in. A predictive model can flag individual employees months before they quit, turning a retrospective statistic into a forward-looking early warning system.</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第4阶段？</strong>描述过去很有用，但NovaCorp的领导层需要向前看。知道34%的新员工会离职令人警觉——但<em>具体哪些</em>新员工风险最高？这就是机器学习发挥作用的地方。预测模型可以在员工离职前几个月发出预警，将回顾性统计数据转化为前瞻性预警系统。</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -974,6 +996,13 @@ Conclusion: Post-termination surveys inflated engagement by
         <div class="kn-item"><span class="kn-icon">🔮</span> <span class="kn-value">78% Recall</span></div>
         <div class="kn-item"><span class="kn-icon">📊</span> <span class="kn-value">SHAP 0.31</span></div>
         <div class="kn-item"><span class="kn-icon">⚡</span> <span class="kn-value">OR 4.7×</span></div>
+      </div>
+
+
+      <!-- Chart: SHAP Bar Plot -->
+      <div class="trend-chart-container">
+        <h4 data-en="SHAP Feature Importance (Bar)" data-zh="SHAP特征重要性（柱状图）">SHAP Feature Importance (Bar)</h4>
+        <img src="img/fig_shap_bar.png" alt="SHAP Bar Plot" style="width:100%;max-width:660px;display:block;margin:0 auto;border-radius:8px;">
       </div>
 
       <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
@@ -1010,6 +1039,12 @@ Conclusion: Post-termination surveys inflated engagement by
             <tr><td data-en="Internal Mobility (12m)" data-zh="内部流动(12个月)">Internal Mobility</td><td><strong>0.53</strong></td><td>0.46–0.61</td><td>&lt;0.001</td><td>🟢 Protective</td></tr>
           </tbody>
         </table>
+
+
+        <div class="dd-h3" data-en="Odds Ratio Forest Plot" data-zh="优势比森林图">Odds Ratio Forest Plot</div>
+        <div class="trend-chart-container">
+          <img src="../output/viz/03_odds_ratio_forest.png" alt="Odds Ratio Forest Plot" style="width:100%;max-width:660px;display:block;margin:0 auto;border-radius:8px;">
+        </div>
 
         <div class="dd-h3" data-en="Top 10 SHAP Feature Importances (XGBoost)" data-zh="前10 SHAP特征重要性（XGBoost）">Top 10 SHAP Feature Importances (XGBoost)</div>
         <table class="dd-table">
@@ -1083,8 +1118,10 @@ shap.summary_plot(shap_values, X_test, feature_names=features)</div>
 
 <!-- NARRATIVE TRANSITION 4→5 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 5?</strong> A predictive model tells us <em>who</em> will leave, but not <em>why</em> — and certainly not whether fixing engagement will actually reduce attrition. Correlation is not causation: highly engaged employees might simply be different in other ways (better managers, higher pay, more experience). Without causal validation, we risk investing millions in engagement programs that don't work. This stage answers: does low engagement <em>cause</em> attrition, or just happen alongside it?"
-     data-zh="<strong>为什么要进入第5阶段？</strong>预测模型告诉我们<em>谁</em>会离职，但没有告诉我们<em>为什么</em>——更没有告诉我们提高敬业度是否真的能减少流失。相关性不等于因果性：高敬业度的员工可能在其他方面也不同（更好的领导、更高的薪资、更多的经验）。没有因果验证，我们可能把数百万投入无效的敬业度项目。这个阶段回答：低敬业度是否<em>导致</em>流失，还是只是同时发生？"><strong>Why Stage 5?</strong> A predictive model tells us <em>who</em> will leave, but not <em>why</em> — and certainly not whether fixing engagement will actually reduce attrition. Correlation is not causation: highly engaged employees might simply be different in other ways (better managers, higher pay, more experience). Without causal validation, we risk investing millions in engagement programs that don't work. This stage answers: does low engagement <em>cause</em> attrition, or just happen alongside it?</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 5?</strong> A predictive model tells us <em>who</em> will leave, but not <em>why</em> — and certainly not whether fixing engagement will actually reduce attrition. Correlation is not causation: highly engaged employees might simply be different in other ways (better managers, higher pay, more experience). Without causal validation, we risk investing millions in engagement programs that don't work. This stage answers: does low engagement <em>cause</em> attrition, or just happen alongside it?</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第5阶段？</strong>预测模型告诉我们<em>谁</em>会离职，但没有告诉我们<em>为什么</em>——更没有告诉我们提高敬业度是否真的能减少流失。相关性不等于因果性：高敬业度的员工可能在其他方面也不同（更好的领导、更高的薪资、更多的经验）。没有因果验证，我们可能把数百万投入无效的敬业度项目。这个阶段回答：低敬业度是否<em>导致</em>流失，还是只是同时发生？</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -1170,6 +1207,12 @@ shap.summary_plot(shap_values, X_test, feature_names=features)</div>
   <span data-en="• After correction: causal effect of engagement on attrition remains robust (δ = −0.31, p=0.003)" data-zh="• 修正后: 敬业度对流失的因果效应仍然稳健 (δ = −0.31, p=0.003)">• After correction: δ = −0.31 (p=0.003) → effect robust</span>
 </div>
 
+
+        <div class="dd-h3" data-en="Feature Interaction Heatmap" data-zh="特征交互热力图">Feature Interaction Heatmap</div>
+        <div class="trend-chart-container">
+          <img src="../output/viz/06_interaction_heatmap.png" alt="Interaction Heatmap" style="width:100%;max-width:660px;display:block;margin:0 auto;border-radius:8px;">
+        </div>
+
         <!-- Foldable Source Code for Stage 5 -->
         <button class="code-toggle" onclick="toggleCodeBlock(this)">
           <span>📄 PSM + DID + Heckman Implementation (Python)</span>
@@ -1216,8 +1259,10 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
 
 <!-- NARRATIVE TRANSITION 5→6 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 6?</strong> We now know that NovaCorp has a retention crisis and that engagement is a causal lever. But is 27.1% attrition actually bad — or just normal for the industry? Without external benchmarks, we can't calibrate our ambition. This stage answers: how does NovaCorp compare to its peers, and what proven practices do world-class companies use that NovaCorp lacks?"
-     data-zh="<strong>为什么要进入第6阶段？</strong>我们现在知道NovaCorp存在留任危机，敬业度是一个因果杠杆。但27.1%的流失率到底算不算差——还是行业常态？没有外部对标，我们无法校准目标。这个阶段回答：NovaCorp与同行相比如何，世界级公司使用了哪些NovaCorp缺乏的成熟实践？"><strong>Why Stage 6?</strong> We now know that NovaCorp has a retention crisis and that engagement is a causal lever. But is 27.1% attrition actually bad — or just normal for the industry? Without external benchmarks, we can't calibrate our ambition. This stage answers: how does NovaCorp compare to its peers, and what proven practices do world-class companies use that NovaCorp lacks?</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 6?</strong> We now know that NovaCorp has a retention crisis and that engagement is a causal lever. But is 27.1% attrition actually bad — or just normal for the industry? Without external benchmarks, we can't calibrate our ambition. This stage answers: how does NovaCorp compare to its peers, and what proven practices do world-class companies use that NovaCorp lacks?</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第6阶段？</strong>我们现在知道NovaCorp存在留任危机，敬业度是一个因果杠杆。但27.1%的流失率到底算不算差——还是行业常态？没有外部对标，我们无法校准目标。这个阶段回答：NovaCorp与同行相比如何，世界级公司使用了哪些NovaCorp缺乏的成熟实践？</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -1258,7 +1303,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
         <div class="company-grid">
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#4285F4"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Google</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/120px-Google_2015_logo.svg.png" alt="Google logo" loading="lazy">
             <div class="company-name">Alphabet (Google)</div>
             <div class="company-ticker">NASDAQ: GOOGL</div>
             <div class="company-cap">$4.32T</div>
@@ -1267,7 +1312,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#00A4EF"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Microsoft</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/56/Microsoft_logo_2012.png" alt="Microsoft logo" loading="lazy">
             <div class="company-name">Microsoft</div>
             <div class="company-ticker">NASDAQ: MSFT</div>
             <div class="company-cap">$3.71T</div>
@@ -1276,7 +1321,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#76B900"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">NVIDIA</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Nvidia_logo.svg/120px-Nvidia_logo.svg.png" alt="NVIDIA logo" loading="lazy">
             <div class="company-name">NVIDIA</div>
             <div class="company-ticker">NASDAQ: NVDA</div>
             <div class="company-cap">$5.42T</div>
@@ -1285,7 +1330,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#A2AAAD"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Apple</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/120px-Apple_logo_black.svg.png" alt="Apple logo" loading="lazy">
             <div class="company-name">Apple</div>
             <div class="company-ticker">NASDAQ: AAPL</div>
             <div class="company-cap">$4.57T</div>
@@ -1294,7 +1339,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#FF9900"/><text x="60" y="17" text-anchor="middle" fill="#232F3E" font-size="12" font-weight="700" font-family="sans-serif">Amazon</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/120px-Amazon_logo.svg.png" alt="Amazon logo" loading="lazy">
             <div class="company-name">Amazon</div>
             <div class="company-ticker">NASDAQ: AMZN</div>
             <div class="company-cap">$2.96T</div>
@@ -1303,7 +1348,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#00A1E0"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Salesforce</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/120px-Salesforce.com_logo.svg.png" alt="Salesforce logo" loading="lazy">
             <div class="company-name">Salesforce</div>
             <div class="company-ticker">NYSE: CRM</div>
             <div class="company-cap">$158B</div>
@@ -1312,7 +1357,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#005073"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Cisco</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cisco_logo.svg/120px-Cisco_logo.svg.png" alt="Cisco logo" loading="lazy">
             <div class="company-name">Cisco</div>
             <div class="company-ticker">NASDAQ: CSCO</div>
             <div class="company-cap">$479B</div>
@@ -1321,7 +1366,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#A100FF"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Accenture</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Accenture.svg/120px-Accenture.svg.png" alt="Accenture logo" loading="lazy">
             <div class="company-name">Accenture</div>
             <div class="company-ticker">NYSE: ACN</div>
             <div class="company-cap">$108B</div>
@@ -1330,7 +1375,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#EB1C26"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="sans-serif">Hilton</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Hilton_Worldwide_logo.svg/120px-Hilton_Worldwide_logo.svg.png" alt="Hilton logo" loading="lazy">
             <div class="company-name">Hilton</div>
             <div class="company-ticker">NYSE: HLT</div>
             <div class="company-cap">$73B</div>
@@ -1339,7 +1384,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#A67B5B"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="sans-serif">Marriott</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Marriott_Logo.svg/120px-Marriott_Logo.svg.png" alt="Marriott logo" loading="lazy">
             <div class="company-name">Marriott Intl.</div>
             <div class="company-ticker">NASDAQ: MAR</div>
             <div class="company-cap">$92B</div>
@@ -1348,7 +1393,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#FA0F00"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">Adobe</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Corporate_logo.svg/120px-Adobe_Corporate_logo.svg.png" alt="Adobe logo" loading="lazy">
             <div class="company-name">Adobe</div>
             <div class="company-ticker">NASDAQ: ADBE</div>
             <div class="company-cap">$105B</div>
@@ -1357,7 +1402,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#1F70C1"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">IBM</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/120px-IBM_logo.svg.png" alt="IBM logo" loading="lazy">
             <div class="company-name">IBM</div>
             <div class="company-ticker">NYSE: IBM</div>
             <div class="company-cap">$224B</div>
@@ -1366,7 +1411,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#009FDB"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="sans-serif">AT&T</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/AT%26T_logo_2016.svg/120px-AT%26T_logo_2016.svg.png" alt="AT&amp;T logo" loading="lazy">
             <div class="company-name">AT&T</div>
             <div class="company-ticker">NYSE: T</div>
             <div class="company-cap">$163B</div>
@@ -1375,7 +1420,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#003A70"/><text x="60" y="17" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="sans-serif">GE Aero</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/GE_Aerospace_logo.svg/120px-GE_Aerospace_logo.svg.png" alt="GE Aero logo" loading="lazy">
             <div class="company-name">GE Aerospace</div>
             <div class="company-ticker">NYSE: GE</div>
             <div class="company-cap">$389B</div>
@@ -1384,7 +1429,7 @@ print(f"Heckman ρ: {rho:.3f}, p={outcome_res.pvalues['inv_mills']:.4f}")</div>
           </div>
 
           <div class="company-card">
-            <svg class="company-logo-svg" viewBox="0 0 120 24"><rect width="120" height="24" rx="4" fill="#89D329"/><text x="60" y="17" text-anchor="middle" fill="#10384F" font-size="11" font-weight="700" font-family="sans-serif">Bayer</text></svg>
+            <img class="company-logo-svg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bayer_Logo.svg/120px-Bayer_Logo.svg.png" alt="Bayer logo" loading="lazy">
             <div class="company-name">Bayer AG</div>
             <div class="company-ticker">ETR: BAYN</div>
             <div class="company-cap">$57B</div>
@@ -1495,8 +1540,10 @@ q3 = df_bench['attrition'].quantile(0.75)  # 19.4%</div>
 
 <!-- NARRATIVE TRANSITION 6→7 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 7?</strong> The benchmarks tell us WHAT to build; now we need to design HOW. The evidence from 15 Fortune 500 companies points to structured, tiered interventions — but every company is different. We need a framework tailored to NovaCorp's specific risk profile: 6 lifecycle stages × 3 risk tiers, with intensity calibrated by the predictive model. A one-size-fits-all program wastes 62% of budget on employees who wouldn't leave anyway — tiering solves this."
-     data-zh="<strong>为什么要进入第7阶段？</strong>对标数据告诉我们要建什么；现在需要设计怎么建。来自15家财富500强公司的证据指向结构化、分层干预——但每家公司都不同。我们需要一个针对NovaCorp特定风险状况量身定制的框架：6个生命周期阶段×3个风险层级，强度由预测模型校准。一刀切计划会将62%的预算浪费在不会离职的员工身上——分层解决了这个问题。"><strong>Why Stage 7?</strong> The benchmarks tell us WHAT to build; now we need to design HOW. The evidence from 15 Fortune 500 companies points to structured, tiered interventions — but every company is different. We need a framework tailored to NovaCorp's specific risk profile: 6 lifecycle stages × 3 risk tiers, with intensity calibrated by the predictive model. A one-size-fits-all program wastes 62% of budget on employees who wouldn't leave anyway — tiering solves this.</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 7?</strong> The benchmarks tell us WHAT to build; now we need to design HOW. The evidence from 15 Fortune 500 companies points to structured, tiered interventions — but every company is different. We need a framework tailored to NovaCorp's specific risk profile: 6 lifecycle stages × 3 risk tiers, with intensity calibrated by the predictive model. A one-size-fits-all program wastes 62% of budget on employees who wouldn't leave anyway — tiering solves this.</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第7阶段？</strong>对标数据告诉我们要建什么；现在需要设计怎么建。来自15家财富500强公司的证据指向结构化、分层干预——但每家公司都不同。我们需要一个针对NovaCorp特定风险状况量身定制的框架：6个生命周期阶段×3个风险层级，强度由预测模型校准。一刀切计划会将62%的预算浪费在不会离职的员工身上——分层解决了这个问题。</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -1609,8 +1656,10 @@ def recalibrate_tiers(new_data):
 
 <!-- NARRATIVE TRANSITION 7→8 -->
 <div class="narrative-connector">
-  <p data-en="<strong>Why Stage 8?</strong> A beautifully designed intervention strategy is worthless without a business case. CFOs don't approve programs based on engagement scores — they approve based on ROI. This final stage translates every analytical finding into dollars and cents: what does the program cost, what does it save, and how quickly does it pay for itself? The answer determines whether our recommendations move from PowerPoint to reality."
-     data-zh="<strong>为什么要进入第8阶段？</strong>一个精心设计的干预策略没有商业案例就是纸上谈兵。CFO不会因为敬业度评分而批准项目——他们根据ROI做决策。这个最后阶段将每个分析发现转化为实实在在的金额：项目成本多少，节省多少，多久能回本？答案决定了我们的建议是从PPT走进现实还是止步于此。"><strong>Why Stage 8?</strong> A beautifully designed intervention strategy is worthless without a business case. CFOs don't approve programs based on engagement scores — they approve based on ROI. This final stage translates every analytical finding into dollars and cents: what does the program cost, what does it save, and how quickly does it pay for itself? The answer determines whether our recommendations move from PowerPoint to reality.</p>
+  <p >
+          <span class="narrative-connector-en"><strong>Why Stage 8?</strong> A beautifully designed intervention strategy is worthless without a business case. CFOs don't approve programs based on engagement scores — they approve based on ROI. This final stage translates every analytical finding into dollars and cents: what does the program cost, what does it save, and how quickly does it pay for itself? The answer determines whether our recommendations move from PowerPoint to reality.</span>
+          <span class="narrative-connector-cn"><strong>为什么要进入第8阶段？</strong>一个精心设计的干预策略没有商业案例就是纸上谈兵。CFO不会因为敬业度评分而批准项目——他们根据ROI做决策。这个最后阶段将每个分析发现转化为实实在在的金额：项目成本多少，节省多少，多久能回本？答案决定了我们的建议是从PPT走进现实还是止步于此。</span>
+        </p>
   <span class="arrow-down">⬇</span>
 </div>
 
@@ -1707,6 +1756,13 @@ def recalibrate_tiers(new_data):
           <line x1="240" y1="320" x2="280" y2="320" stroke="#C62828" stroke-width="2" stroke-dasharray="6,4" opacity="0.5"/>
           <text x="285" y="324" font-size="10" fill="#6C757D" data-en="Without intervention" data-zh="无干预">Without intervention</text>
         </svg>
+      </div>
+
+
+      <!-- Chart: ROI Bubble Chart -->
+      <div class="trend-chart-container">
+        <h4 data-en="ROI Bubble Analysis" data-zh="ROI气泡分析">ROI Bubble Analysis</h4>
+        <img src="../output/viz/07_roi_bubble.png" alt="ROI Bubble Chart" style="width:100%;max-width:660px;display:block;margin:0 auto;border-radius:8px;">
       </div>
 
       <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
