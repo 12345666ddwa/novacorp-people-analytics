@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaCorp — End-to-End Project Pipeline / 端到端项目流水线</title>
+<style>
+  :root {
+    --blue: #1F4E79;
+    --blue-light: #2B6DA8;
+    --blue-lighter: #D6E4F0;
+    --blue-pale: #EEF3F8;
+    --white: #FFFFFF;
+    --gray-100: #F7F8FA;
+    --gray-200: #E9ECEF;
+    --gray-300: #CED4DA;
+    --gray-600: #6C757D;
+    --gray-800: #343A40;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-hover: 0 6px 24px rgba(31,78,121,0.15);
+    --radius: 12px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    line-height: 1.6;
+  }
+
+  /* ── Sticky Header ── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--blue);
+    color: var(--white);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-logo {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .header-subtitle {
+    font-size: 13px;
+    opacity: 0.75;
+    font-weight: 400;
+  }
+
+  /* ── Lang Toggle ── */
+  .lang-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .lang-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    transition: var(--transition);
+    font-family: inherit;
+  }
+  .lang-btn.active {
+    background: var(--white);
+    color: var(--blue);
+  }
+  .lang-btn:hover:not(.active) {
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 48px 24px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--blue);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .hero p {
+    font-size: 16px;
+    color: var(--gray-600);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  /* ── Pipeline ── */
+  .pipeline {
+    max-width: 780px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .stage {
+    position: relative;
+    margin-bottom: 0;
+  }
+
+  /* ── Connector Arrow ── */
+  .connector {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+  }
+  .connector svg {
+    width: 36px;
+    height: 36px;
+  }
+  .connector-line {
+    stroke: var(--gray-300);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .connector-arrow {
+    fill: none;
+    stroke: var(--blue-light);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: var(--transition);
+  }
+  .stage-card:hover ~ .connector .connector-arrow,
+  .connector:hover .connector-arrow {
+    stroke: var(--blue);
+    stroke-width: 3;
+  }
+
+  /* ── Stage Card ── */
+  .stage-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: var(--transition);
+    border-left: 5px solid var(--blue-light);
+    position: relative;
+  }
+  .stage-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+    border-left-color: var(--blue);
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px 12px;
+  }
+
+  .stage-number {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 800;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stage-title-area {
+    flex: 1;
+  }
+  .stage-title-en {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue);
+    display: block;
+  }
+  .stage-title-cn {
+    font-size: 14px;
+    color: var(--gray-600);
+    font-weight: 500;
+    display: none;
+  }
+  html[lang="zh"] .stage-title-en { display: none; }
+  html[lang="zh"] .stage-title-cn { display: block; }
+  html[lang="en"] .stage-title-en { display: block; }
+  html[lang="en"] .stage-title-cn { display: none; }
+
+  /* ── Stage Body ── */
+  .stage-body {
+    padding: 0 24px 20px;
+  }
+
+  .stage-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--blue-pale);
+    color: var(--blue);
+  }
+  .meta-tag.method { background: #D6E4F0; color: #1a3c5c; }
+  .meta-tag.number { background: #E8F5E9; color: #2E7D32; }
+
+  .stage-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .detail-row {
+    font-size: 14px;
+    color: var(--gray-800);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .detail-bullet {
+    color: var(--blue-light);
+    flex-shrink: 0;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .detail-cn {
+    display: none;
+    font-size: 14px;
+    color: var(--gray-800);
+  }
+  .detail-en {
+    display: block;
+    font-size: 14px;
+    color: var(--gray-800);
+  }
+  html[lang="zh"] .detail-en { display: none; }
+  html[lang="zh"] .detail-cn { display: block; }
+  html[lang="en"] .detail-en { display: block; }
+  html[lang="en"] .detail-cn { display: none; }
+
+  /* ── Key Number Highlight ── */
+  .key-number {
+    display: inline-block;
+    background: var(--blue);
+    color: var(--white);
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    margin: 0 2px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+    color: var(--gray-600);
+    font-size: 13px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .header { padding: 12px 16px; }
+    .header-logo { font-size: 18px; }
+    .hero h1 { font-size: 26px; }
+    .pipeline { padding: 0 12px; }
+    .stage-header { padding: 16px 16px 10px; }
+    .stage-body { padding: 0 16px 16px; }
+    .stage-number { width: 36px; height: 36px; font-size: 16px; }
+    .stage-title-en { font-size: 17px; }
+    .lang-btn { padding: 6px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  STICKY HEADER                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-left">
+    <span class="header-logo">NovaCorp</span>
+    <span class="header-subtitle" data-en="End-to-End Project Pipeline" data-zh="端到端项目流水线">End-to-End Project Pipeline</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="en" onclick="switchLang('en')">EN</button>
+    <button class="lang-btn" data-lang="zh" onclick="switchLang('zh')">中文</button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  HERO                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="hero">
+  <h1 data-en="NovaCorp Project Pipeline" data-zh="NovaCorp 项目流水线">NovaCorp Project Pipeline</h1>
+  <p data-en="From raw data ingestion to financial impact — an 8-stage vertical pipeline demonstrating our end-to-end analytical approach."
+     data-zh="从原始数据采集到财务影响评估 — 展示我们端到端分析方法的8阶段垂直流水线。">
+    From raw data ingestion to financial impact — an 8-stage vertical pipeline demonstrating our end-to-end analytical approach.
+  </p>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  PIPELINE                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="pipeline">
+
+  <!-- ── Stage 1 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">1</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Raw Data Ingestion</span>
+          <span class="stage-title-cn">原始数据采集</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">📊 4 CSVs</span>
+          <span class="meta-tag method">📄 Annual Report</span>
+          <span class="meta-tag number">Multi-source</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">4 structured CSV datasets covering employee lifecycle, performance, engagement, and attrition records</span>
+            <span class="detail-cn">4个结构化CSV数据集，涵盖员工生命周期、绩效、敬业度和流失记录</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Annual report providing organizational context, strategic priorities, and workforce demographics</span>
+            <span class="detail-cn">年度报告提供组织背景、战略重点和劳动力人口统计信息</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Integrated multi-source data foundation for all downstream analysis</span>
+            <span class="detail-cn">为所有下游分析建立多源数据基础</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 2 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">2</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Data Cleaning & Quality Assurance</span>
+          <span class="stage-title-cn">数据清洗与质量保证</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">Lagged Design</span>
+          <span class="meta-tag method">Non-responder Filter</span>
+          <span class="meta-tag method">Artifact Detection</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Lagged variable design: temporal alignment of predictors (T₀) with outcomes (T₁₂) to prevent look-ahead bias</span>
+            <span class="detail-cn">滞后变量设计：预测因子(T₀)与结果(T₁₂)的时间对齐，防止前视偏差</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Non-responder detection: identification and exclusion of incomplete or invalid survey responses</span>
+            <span class="detail-cn">未应答检测：识别并排除不完整或无效的调查回复</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Artifact detection: outlier analysis and distributional checks to remove measurement artifacts</span>
+            <span class="detail-cn">异常检测：离群值分析和分布检查，以移除测量伪影</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 3 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">3</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Descriptive Analysis</span>
+          <span class="stage-title-cn">描述性分析</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">P0–1 Cohort</span>
+          <span class="meta-tag number">21.5% &lt;12m</span>
+          <span class="meta-tag number">79.4% Entity B</span>
+          <span class="meta-tag number">60.7% Push</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Primary P0–1 cohort: <span class="key-number">21.5%</span> of employees have tenure below 12 months — concentrated turnover risk</span>
+            <span class="detail-cn">主要P0–1群体：<span class="key-number">21.5%</span>的员工在职时间不足12个月 — 集中流失风险</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Entity distribution: <span class="key-number">79.4%</span> of the sample belongs to Entity B, revealing structural concentration</span>
+            <span class="detail-cn">实体分布：样本中<span class="key-number">79.4%</span>属于实体B，揭示结构性集中</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Attrition driver: <span class="key-number">60.7%</span> of leavers were "pushed" (involuntary) rather than "pulled" — actionable insight</span>
+            <span class="detail-cn">流失驱动因素：<span class="key-number">60.7%</span>的离职者为"被推动"（非自愿）而非"被吸引" — 可操作的洞察</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 4 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">4</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Predictive Modeling</span>
+          <span class="stage-title-cn">预测建模</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">XGBoost</span>
+          <span class="meta-tag method">SHAP</span>
+          <span class="meta-tag method">Logistic Reg. OR</span>
+          <span class="meta-tag method">Interaction Effects</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">XGBoost gradient boosting with SHAP values for model-agnostic feature importance interpretation</span>
+            <span class="detail-cn">XGBoost梯度提升配合SHAP值进行模型无关的特征重要性解释</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Logistic regression odds ratios (OR) for inferential clarity — quantifying individual risk factor contributions</span>
+            <span class="detail-cn">逻辑回归优势比(OR)用于推断清晰度 — 量化个体风险因素的贡献</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Interaction effect analysis: multiplicative risk when multiple factors co-occur (tenure × engagement × performance)</span>
+            <span class="detail-cn">交互效应分析：多因素共同出现时的乘性风险（在职时间 × 敬业度 × 绩效）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 5 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">5</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Causal Validation</span>
+          <span class="stage-title-cn">因果验证</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">PSM</span>
+          <span class="meta-tag method">DID</span>
+          <span class="meta-tag method">Heckman Correction</span>
+          <span class="meta-tag number">p &lt; 0.001</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Triangulation of three quasi-experimental methods: Propensity Score Matching (PSM), Difference-in-Differences (DID), and Heckman selection correction</span>
+            <span class="detail-cn">三种准实验方法的三角验证：倾向得分匹配(PSM)、双重差分(DID)和Heckman选择修正</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Meta-analytic synthesis across methods yields combined <span class="key-number">p &lt; 0.001</span> — causal effect confirmed with high confidence</span>
+            <span class="detail-cn">跨方法的元分析综合得出合并<span class="key-number">p &lt; 0.001</span> — 高置信度确认因果效应</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Robustness checks: placebo tests, alternative bandwidths, and sensitivity analysis against unobserved confounding</span>
+            <span class="detail-cn">稳健性检验：安慰剂测试、替代带宽和针对未观测混杂因素的敏感性分析</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 6 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">6</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Industry Benchmarking</span>
+          <span class="stage-title-cn">行业对标分析</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">15 Fortune 500</span>
+          <span class="meta-tag number">$23.8T Market Cap</span>
+          <span class="meta-tag method">Best Practices</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Benchmarked against <span class="key-number">15 Fortune 500</span> companies spanning technology, finance, healthcare, and manufacturing sectors</span>
+            <span class="detail-cn">对标<span class="key-number">15家财富500强</span>企业，涵盖科技、金融、医疗和制造业</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Collective <span class="key-number">$23.8 trillion</span> market capitalization distilled into actionable retention benchmarks</span>
+            <span class="detail-cn">合计<span class="key-number">23.8万亿美元</span>市值提炼为可操作的员工留任基准</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Gap analysis: NovaCorp vs. industry quartiles on voluntary turnover, engagement scores, and intervention ROI</span>
+            <span class="detail-cn">差距分析：NovaCorp与行业四分位在自愿流失率、敬业度评分和干预ROI方面的对比</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 7 ── -->
+  <article class="stage">
+    <div class="stage-card">
+      <div class="stage-header">
+        <div class="stage-number">7</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Tiered Intervention Design</span>
+          <span class="stage-title-cn">分层干预设计</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag method">6-Stage Lifecycle</span>
+          <span class="meta-tag method">3 Risk Tiers</span>
+          <span class="meta-tag number">Precision Targeting</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en"><span class="key-number">6-stage</span> employee lifecycle framework: Recruitment → Onboarding → Early Tenure → Mid-Career → Senior → Alumni</span>
+            <span class="detail-cn"><span class="key-number">6阶段</span>员工生命周期框架：招聘 → 入职 → 早期在职 → 职业中期 → 资深 → 校友</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en"><span class="key-number">3 risk tiers</span> (High / Medium / Low) derived from predictive model scores — resource allocation proportional to risk</span>
+            <span class="detail-cn"><span class="key-number">3个风险层级</span>（高/中/低）由预测模型评分得出 — 资源按风险比例分配</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Differentiated intervention packages: High-risk → intensive coaching + retention bonus; Medium → mentorship; Low → engagement nudges</span>
+            <span class="detail-cn">差异化干预方案：高风险 → 强化辅导 + 留任奖金；中风险 → 导师制；低风险 → 敬业度微调</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="connector">
+    <svg viewBox="0 0 36 36">
+      <line x1="18" y1="2" x2="18" y2="26" class="connector-line"/>
+      <polyline points="8,24 18,34 28,24" class="connector-arrow"/>
+    </svg>
+  </div>
+
+  <!-- ── Stage 8 ── -->
+  <article class="stage">
+    <div class="stage-card" style="border-left-color: #2E7D32;">
+      <div class="stage-header">
+        <div class="stage-number" style="background: #2E7D32;">8</div>
+        <div class="stage-title-area">
+          <span class="stage-title-en">Financial Impact Assessment</span>
+          <span class="stage-title-cn">财务影响评估</span>
+        </div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-meta">
+          <span class="meta-tag number" style="background:#E8F5E9;color:#2E7D32;">$6.9M Cost</span>
+          <span class="meta-tag number" style="background:#E8F5E9;color:#2E7D32;">$20–28M Saved</span>
+          <span class="meta-tag number" style="background:#C8E6C9;color:#1B5E20;">Net +$134M/yr</span>
+        </div>
+        <div class="stage-detail">
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Total intervention program cost: <span class="key-number" style="background:#2E7D32;">$6.9M</span> annually — covering coaching, bonus pools, mentorship platform, and engagement tools</span>
+            <span class="detail-cn">干预计划总成本：每年<span class="key-number" style="background:#2E7D32;">$6.9M</span> — 涵盖辅导、奖金池、导师平台和敬业度工具</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en">Projected savings from reduced turnover: <span class="key-number" style="background:#2E7D32;">$20–28M</span> (replacement costs, productivity loss, institutional knowledge retention)</span>
+            <span class="detail-cn">降低流失率的预计节省：<span class="key-number" style="background:#2E7D32;">$20–28M</span>（替代成本、生产力损失、机构知识保留）</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-bullet">▸</span>
+            <span class="detail-en"><strong>Net annual impact: <span class="key-number" style="background:#1B5E20;">+$134M/year</span></strong> — including productivity gains, reduced recruitment, and revenue continuity</span>
+            <span class="detail-cn"><strong>年度净影响：<span class="key-number" style="background:#1B5E20;">+$134M/年</span></strong> — 包括生产力提升、招聘减少和收入连续性</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  FOOTER                                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<footer class="footer">
+  <p>NovaCorp &copy; 2026 &nbsp;·&nbsp; Datathon Project &nbsp;·&nbsp; All analysis based on proprietary datasets and validated methodologies.</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  SCRIPT                                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<script>
+function switchLang(lang) {
+  document.documentElement.setAttribute('lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  // Update data-en/data-zh text content
+  document.querySelectorAll('[data-en][data-zh]').forEach(el => {
+    el.textContent = el.dataset[lang];
+  });
+}
+</script>
+
+</body>
+</html>
