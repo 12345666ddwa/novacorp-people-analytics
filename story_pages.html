@@ -79,6 +79,58 @@ h1{
 .dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:12px}
 .dot{width:9px;height:9px;border-radius:50%;background:#D8D5CC;border:none;cursor:pointer;padding:0;transition:all .25s}
 .dot.on{background:var(--orange);transform:scale(1.15)}
+/* layout variants for pages 5-10 */
+.bodyfull{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:18px 0 24px;min-height:0}
+.bodyfull .chartbox{flex:1;min-height:0}
+.bodyfull .chartbox.herochart{flex:0 0 250px}
+/* p5 full-width split */
+.splitrow{display:flex;justify-content:center;align-items:baseline;gap:clamp(48px,8vw,150px)}
+.bignum{
+  font-family:Georgia,'Times New Roman',serif;font-weight:700;
+  font-size:clamp(64px,8vw,118px);line-height:1.02;color:var(--navy);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.bignum.hot{color:var(--orange)}
+.bignum .blab{display:block;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);font-weight:700;margin-bottom:12px}
+.bignum .unit{font-size:.42em;margin-left:2px}
+.bignum .bcap{
+  display:block;font-size:14px;color:var(--gray2);margin-top:12px;font-weight:400;
+  letter-spacing:.01em;max-width:340px;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+.stackwrap{margin-top:8px}
+.stacked{width:100%;height:32px;border-radius:16px;overflow:hidden;display:flex;background:var(--grid)}
+.seg{display:flex;align-items:center;height:100%;font-size:12.5px;font-weight:700;padding:0 16px;white-space:nowrap}
+.seg.push{background:var(--orange);color:#fff;width:60.7%}
+.seg.pull{background:#C9CDD3;color:var(--ink);width:39.3%;justify-content:flex-end}
+.slegend{display:flex;justify-content:center;gap:40px;font-size:13px;color:var(--gray2);margin-top:14px}
+.slegend b{color:var(--ink);font-weight:700}
+/* p6 roles grid with bars */
+.roles{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;align-content:center}
+.rolecell{display:flex;flex-direction:column;gap:5px;min-width:0}
+.rname{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--gray);font-weight:700}
+.rnum{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:clamp(26px,2.5vw,40px);line-height:1;color:var(--navy)}
+.rolecell.hot .rnum{color:var(--orange)}
+.rcount{font-size:12px;color:var(--gray2)}
+.rbar{height:6px;background:var(--grid);border-radius:3px;overflow:hidden;margin-top:10px}
+.rfill{height:100%;background:var(--lgray);border-radius:3px}
+.rolecell.hot .rfill{background:var(--orange)}
+/* inline stat chips */
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chips.center{justify-content:center}
+.chip{background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:10px 18px;font-size:13.5px;color:var(--gray2);line-height:1.5}
+.chip b{font-family:Georgia,'Times New Roman',serif;font-size:17px;color:var(--navy);margin-right:8px}
+.chip.hot{border-color:var(--orange)}
+.chip.hot b{color:var(--orange)}
+/* p9 centered hero */
+.hero{display:flex;align-items:center;justify-content:center;gap:clamp(40px,6vw,110px)}
+.herocell{text-align:center}
+.herolab{display:block;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);font-weight:700;margin-bottom:12px}
+.heronum{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:clamp(80px,9vw,132px);line-height:1;color:var(--orange)}
+.heronum.gray{color:var(--navy)}
+.herocap{display:block;margin-top:12px;font-size:14.5px;color:var(--gray2)}
+/* p10 mirrored */
+.body.mirror .kpis{padding-left:0;padding-right:6px}
 @media (max-width:980px){
   .slide{padding:40px 28px 0;min-height:0;height:auto}
   .body{grid-template-columns:1fr;gap:26px;padding:24px 0}
@@ -90,6 +142,14 @@ h1{
   .pageno{right:28px;top:44px}
   .brand{display:none}
   .dots{display:none}
+  .bodyfull{gap:18px;padding:20px 0}
+  .bodyfull .chartbox{flex:none}
+  .bignum{font-size:clamp(40px,11vw,64px)}
+  .splitrow{flex-direction:column;gap:28px}
+  .seg{font-size:11px;padding:0 10px}
+  .roles{grid-template-columns:repeat(2,1fr);gap:22px 16px}
+  .hero{flex-direction:column;gap:26px}
+  .bodyfull .chartbox.herochart{flex:none}
 }
 </style>
 </head>
@@ -225,20 +285,27 @@ h1{
   <h1>6 in 10 exits could be fixed by NovaCorp itself</h1>
   <div class="rule"></div>
   <p class="sub">1,133 people left voluntarily. 688 of those exits were push, caused by something inside NovaCorp. Only 445 were pulled away by outside offers.</p>
-  <div class="body">
-    <div class="chartbox"><div class="chart" id="chart5"></div></div>
-    <div class="kpis">
-      <div class="kpi hot">
-        <span class="num">60.7%</span>
-        <span class="cap">of voluntary exits are push. The person left because of NovaCorp, not the market.</span>
+  <div class="bodyfull">
+    <div class="splitrow">
+      <div class="bignum hot">
+        <span class="blab">Push · internal cause</span>
+        <span>60.7<span class="unit">%</span></span>
+        <span class="bcap">688 of 1,133 people. They left because of NovaCorp, not the market.</span>
       </div>
-      <div class="kpi">
-        <span class="num">688</span>
-        <span class="cap">people left for internal reasons. <b>445</b> left for external offers.</span>
+      <div class="bignum">
+        <span class="blab">Pull · external offer</span>
+        <span>39.3<span class="unit">%</span></span>
+        <span class="bcap">445 of 1,133 people. They left for outside offers.</span>
       </div>
-      <div class="kpi">
-        <span class="num">1,133</span>
-        <span class="cap">voluntary exits in total. Six in ten were fixable from the inside.</span>
+    </div>
+    <div class="stackwrap">
+      <div class="stacked">
+        <div class="seg push">60.7% push</div>
+        <div class="seg pull">39.3% pull</div>
+      </div>
+      <div class="slegend">
+        <span><b>Push</b> fixable from the inside</span>
+        <span><b>Pull</b> the market winning</span>
       </div>
     </div>
   </div>
@@ -252,20 +319,43 @@ h1{
   <h1>Managers leave most often, and they hurt most</h1>
   <div class="rule"></div>
   <p class="sub">Regrettable exits as a share of each team. Management tops the list, and every manager lost costs 1.5 to 2x salary to replace.</p>
-  <div class="body">
-    <div class="chartbox"><div class="chart" id="chart6"></div></div>
-    <div class="kpis">
-      <div class="kpi hot">
-        <span class="num">17.1%</span>
-        <span class="cap">of Management exits were regrettable. <b>28 of 164</b> people.</span>
+  <div class="bodyfull">
+    <div class="roles">
+      <div class="rolecell hot">
+        <span class="rname">Management</span>
+        <span class="rnum">17.1%</span>
+        <span class="rcount">28 of 164 people</span>
+        <div class="rbar"><div class="rfill" style="width:85.5%"></div></div>
       </div>
-      <div class="kpi">
-        <span class="num">28</span>
-        <span class="cap">regrettable manager exits. Each costs 1.5 to 2x salary to replace.</span>
+      <div class="rolecell">
+        <span class="rname">Operations</span>
+        <span class="rnum">16.4%</span>
+        <span class="rcount">43 of 262 people</span>
+        <div class="rbar"><div class="rfill" style="width:82%"></div></div>
       </div>
-      <div class="kpi">
-        <span class="num">43</span>
-        <span class="cap">regrettable exits in Operations, the largest count at 16.4%.</span>
+      <div class="rolecell">
+        <span class="rname">Client-Advisory</span>
+        <span class="rnum">14.7%</span>
+        <span class="rcount">28 of 190 people</span>
+        <div class="rbar"><div class="rfill" style="width:73.5%"></div></div>
+      </div>
+      <div class="rolecell">
+        <span class="rname">Corporate-Support</span>
+        <span class="rnum">10.9%</span>
+        <span class="rcount">18 of 165 people</span>
+        <div class="rbar"><div class="rfill" style="width:54.5%"></div></div>
+      </div>
+      <div class="rolecell">
+        <span class="rname">Technology</span>
+        <span class="rnum">10.7%</span>
+        <span class="rcount">21 of 196 people</span>
+        <div class="rbar"><div class="rfill" style="width:53.5%"></div></div>
+      </div>
+      <div class="rolecell">
+        <span class="rname">Risk-Compliance</span>
+        <span class="rnum">9.6%</span>
+        <span class="rcount">15 of 156 people</span>
+        <div class="rbar"><div class="rfill" style="width:48%"></div></div>
       </div>
     </div>
   </div>
@@ -278,25 +368,17 @@ h1{
   <div class="kicker">07 · Engagement Drift</div>
   <h1>Purpose and meaning have fallen furthest since 2024</h1>
   <div class="rule"></div>
-  <p class="sub">Six survey waves from 2024Q1 to 2025Q3. Purpose dropped from 3.39 to 3.32. Trust and manager scores barely moved.</p>
-  <div class="body">
+  <p class="sub">Five survey waves from Feb 2024 to Jul 2025. Purpose dropped from 3.39 to 3.32. Trust and manager scores barely moved.</p>
+  <div class="bodyfull">
+    <div class="chips">
+      <span class="chip hot"><b>-0.074</b>drop in purpose since Feb 2024. From 3.39 to 3.32.</span>
+      <span class="chip"><b>3.32</b>the Jul 2025 purpose score. Now below trust and manager scores.</span>
+      <span class="chip"><b>-0.05</b>net change in leadership trust over the same window.</span>
+      <span class="chip"><b>+0.00</b>manager effectiveness change. Flat.</span>
+    </div>
     <div class="chartbox hasfoot">
       <div class="chart" id="chart7"></div>
-      <div class="foot">Engagement survey, 6 waves 2024Q1 to 2025Q3. 2025Q2 was not fielded; the lines span the gap.</div>
-    </div>
-    <div class="kpis">
-      <div class="kpi hot">
-        <span class="num">-0.075</span>
-        <span class="cap">drop in purpose and meaning since 2024Q1. From 3.39 to 3.32.</span>
-      </div>
-      <div class="kpi">
-        <span class="num">3.32</span>
-        <span class="cap">the 2025Q3 purpose score. Now below trust and manager scores.</span>
-      </div>
-      <div class="kpi">
-        <span class="num">-0.05</span>
-        <span class="cap">net change in leadership trust over the same window. Manager effectiveness is unchanged.</span>
-      </div>
+      <div class="foot">Engagement survey, five waves from Feb 2024 to Jul 2025.</div>
     </div>
   </div>
   <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Reconnect daily work to customer impact. This costs nothing.</span></div>
@@ -309,21 +391,14 @@ h1{
   <h1>Being promotion eligible barely changes the odds</h1>
   <div class="rule"></div>
   <p class="sub">Exit rates for promotion eligible staff against everyone else, by level. The gap stays tiny at every level.</p>
-  <div class="body">
-    <div class="chartbox"><div class="chart" id="chart8"></div></div>
-    <div class="kpis">
-      <div class="kpi hot">
-        <span class="num">8.6%</span>
-        <span class="cap">average exit rate for promotion eligible staff across levels.</span>
-      </div>
-      <div class="kpi">
-        <span class="num">8.4%</span>
-        <span class="cap">for everyone else. The label alone moves almost nothing.</span>
-      </div>
-      <div class="kpi">
-        <span class="num">0.2pp</span>
-        <span class="cap">the gap between eligible and not. Too small to retain anyone.</span>
-      </div>
+  <div class="bodyfull">
+    <div class="chartbox">
+      <div class="chart" id="chart8"></div>
+    </div>
+    <div class="chips">
+      <span class="chip hot"><b>8.6%</b>average exit rate for promotion eligible staff across levels.</span>
+      <span class="chip"><b>8.4%</b>for everyone else. The label alone moves almost nothing.</span>
+      <span class="chip"><b>0.2pp</b>the gap between eligible and not. Too small to retain anyone.</span>
     </div>
   </div>
   <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Replace the static label with a visible promotion pipeline and quarterly career conversations.</span></div>
@@ -336,21 +411,24 @@ h1{
   <h1>High potentials leave 50% more often</h1>
   <div class="rule"></div>
   <p class="sub">The HiPo label should mean we fight harder to keep them. The data says the opposite is happening.</p>
-  <div class="body">
-    <div class="chartbox"><div class="chart" id="chart9"></div></div>
-    <div class="kpis">
-      <div class="kpi hot">
-        <span class="num">12.5%</span>
-        <span class="cap">of high potentials left. <b>50% more</b> than everyone else.</span>
+  <div class="bodyfull">
+    <div class="hero">
+      <div class="herocell">
+        <span class="herolab">High potentials who left</span>
+        <span class="heronum">12.5%</span>
+        <span class="herocap">50% more than everyone else</span>
       </div>
-      <div class="kpi">
-        <span class="num">8.1%</span>
-        <span class="cap">of everyone else left in the same window.</span>
+      <div class="herocell">
+        <span class="herolab">Everyone else</span>
+        <span class="heronum gray">8.1%</span>
+        <span class="herocap">left in the same window</span>
       </div>
-      <div class="kpi">
-        <span class="num">29%</span>
-        <span class="cap">of HiPos are marked promotion eligible. The promise is not kept.</span>
-      </div>
+    </div>
+    <div class="chips center">
+      <span class="chip"><b>29%</b>of HiPos are marked promotion eligible. The promise is not kept.</span>
+    </div>
+    <div class="chartbox herochart">
+      <div class="chart" id="chart9"></div>
     </div>
   </div>
   <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Give HiPos a visible path or stop calling them high potential.</span></div>
@@ -363,8 +441,7 @@ h1{
   <h1>R&amp;C level 4 is the attrition hotspot</h1>
   <div class="rule"></div>
   <p class="sub">Voluntary exit rates across Risk &amp; Compliance. Level 4 is losing almost one in five people a year. Regrettable losses there run at 5.6%.</p>
-  <div class="body">
-    <div class="chartbox"><div class="chart" id="chart10"></div></div>
+  <div class="body mirror">
     <div class="kpis">
       <div class="kpi hot">
         <span class="num">18.5%</span>
@@ -379,6 +456,7 @@ h1{
         <span class="cap">voluntary exit rate at level 3. The next pressure point.</span>
       </div>
     </div>
+    <div class="chartbox"><div class="chart" id="chart10"></div></div>
   </div>
   <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Offer FAR liability cover and a succession path for senior R&amp;C staff.</span></div>
 </section>
@@ -575,73 +653,9 @@ h1{
     series:kmSeries
   });
 
-  /* ---------- Chart 5: push vs pull ---------- */
-  make('chart5', {
-    grid:{left:12,right:110,top:26,bottom:30,containLabel:true},
-    tooltip: commonTooltip(function(ps){
-      var p = ps[0];
-      return p.name + '<br><b>' + p.value + '</b> people, <b>' + p.data.pct + '%</b> of voluntary exits';
-    }),
-    xAxis:{
-      type:'value', min:0, max:800,
-      axisLabel:{color:GRAY,fontSize:12},
-      axisLine:{show:false}, axisTick:{show:false},
-      splitLine:{lineStyle:{color:GRID,width:1}}
-    },
-    yAxis:{
-      type:'category', data:['Push (internal cause)','Pull (external offer)'], inverse:true,
-      axisTick:{show:false}, axisLine:{lineStyle:{color:HAIR}},
-      axisLabel:{color:INK,fontSize:13.5,fontWeight:600}
-    },
-    series:[{
-      type:'bar', barWidth:'46%',
-      data:[
-        {value:688, pct:'60.7', itemStyle:{color:ORANGE}, label:{formatter:'688 (60.7%)',position:'right',color:INK,fontWeight:800,fontSize:14}},
-        {value:445, pct:'39.3', itemStyle:{color:LGRAY}, label:{formatter:'445 (39.3%)',position:'right',color:GRAY,fontWeight:400,fontSize:12.5}}
-      ],
-      label:{show:true},
-      animationDuration:650, animationEasing:'cubicOut'
-    }]
-  });
-
-  /* ---------- Chart 6: regrettable exits by role ---------- */
-  make('chart6', {
-    grid:{left:12,right:66,top:26,bottom:30,containLabel:true},
-    tooltip: commonTooltip(function(ps){
-      var p = ps[0];
-      return p.name + '<br><b>' + p.value + '%</b> of exits were regrettable<br>' + p.data.n + ' of ' + p.data.d + ' people';
-    }),
-    xAxis:{
-      type:'value', min:0, max:20, interval:5,
-      axisLabel:{formatter:'{value}%',color:GRAY,fontSize:12},
-      axisLine:{show:false}, axisTick:{show:false},
-      splitLine:{lineStyle:{color:GRID,width:1}}
-    },
-    yAxis:{
-      type:'category',
-      data:['Management','Operations','Client-Advisory','Corporate-Support','Technology','Risk-Compliance'],
-      inverse:true,
-      axisTick:{show:false}, axisLine:{lineStyle:{color:HAIR}},
-      axisLabel:{color:INK,fontSize:13,fontWeight:600}
-    },
-    series:[{
-      type:'bar', barWidth:'52%',
-      data:[
-        {value:17.1, n:28, d:164, itemStyle:{color:ORANGE},label:{formatter:'17.1%',position:'right',color:INK,fontWeight:800,fontSize:14}},
-        {value:16.4, n:43, d:262, itemStyle:{color:LGRAY}, label:{formatter:'16.4%',position:'right',color:GRAY,fontWeight:400}},
-        {value:14.7, n:28, d:190, itemStyle:{color:LGRAY}, label:{formatter:'14.7%',position:'right',color:GRAY,fontWeight:400}},
-        {value:10.9, n:18, d:165, itemStyle:{color:LGRAY}, label:{formatter:'10.9%',position:'right',color:GRAY,fontWeight:400}},
-        {value:10.7, n:21, d:196, itemStyle:{color:LGRAY}, label:{formatter:'10.7%',position:'right',color:GRAY,fontWeight:400}},
-        {value:9.6,  n:15, d:156, itemStyle:{color:LGRAY}, label:{formatter:'9.6%',position:'right',color:GRAY,fontWeight:400}}
-      ],
-      label:{show:true,fontSize:12.5},
-      animationDuration:650, animationEasing:'cubicOut'
-    }]
-  });
-
-  /* ---------- Chart 7: engagement trend ---------- */
+  /* ---------- Chart 7: engagement trend (5 survey waves) ---------- */
   make('chart7', {
-    grid:{left:12,right:40,top:30,bottom:46,containLabel:true},
+    grid:{left:16,right:56,top:36,bottom:56,containLabel:true},
     tooltip:{
       trigger:'axis', backgroundColor:'#FFFFFF', borderColor:HAIR, borderWidth:1,
       padding:[8,12], textStyle:{color:INK,fontSize:12.5},
@@ -649,22 +663,22 @@ h1{
       formatter:function(ps){
         var h = ps[0].name;
         ps.forEach(function(p){
-          h += '<br>' + p.marker + p.seriesName + ' ' + (p.value==null?'<span style="color:#8A94A0">not fielded</span>':'<b>'+p.value.toFixed(3)+'</b>');
+          h += '<br>' + p.marker + p.seriesName + ' <b>' + p.value.toFixed(3) + '</b>';
         });
         return h;
       }
     },
     xAxis:{
-      type:'category', data:['24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3'], boundaryGap:false,
+      type:'category', data:['Feb 2024','Jun 2024','Sep 2024','Jan 2025','Jul 2025'], boundaryGap:false,
       axisTick:{show:false}, axisLine:{lineStyle:{color:HAIR}},
-      axisLabel:{color:INK,fontSize:11.5,interval:0}
+      axisLabel:{color:INK,fontSize:12,interval:0}
     },
     yAxis:{
       type:'value', min:3.28, max:3.42, interval:0.04,
       axisLabel:{formatter:'{value}',color:GRAY,fontSize:12},
       axisLine:{show:false}, axisTick:{show:false},
       splitLine:{lineStyle:{color:GRID,width:1}},
-      name:'Engagement score', nameLocation:'middle', nameGap:40,
+      name:'Engagement score', nameLocation:'middle', nameGap:44,
       nameTextStyle:{color:GRAY,fontSize:12}
     },
     legend:{
@@ -673,21 +687,21 @@ h1{
     },
     series:[
       {
-        name:'Purpose & meaning', type:'line', symbol:'circle', symbolSize:6,
-        data:[3.391,3.368,3.354,3.354,null,3.330,3.316],
+        name:'Purpose & meaning', type:'line', symbol:'circle', symbolSize:7,
+        data:[3.391,3.370,3.345,3.330,3.316],
         lineStyle:{color:ORANGE,width:4}, itemStyle:{color:ORANGE},
-        endLabel:{show:true,formatter:'3.32',color:ORANGE,fontWeight:800,fontSize:15,offset:[8,0]},
+        endLabel:{show:true,formatter:'3.32',color:ORANGE,fontWeight:800,fontSize:15,offset:[10,0]},
         animationDuration:800, animationEasing:'cubicOut'
       },
       {
         name:'Leadership trust', type:'line', symbol:'none',
-        data:[3.392,3.371,3.348,3.342,null,3.342,3.338],
+        data:[3.392,3.363,3.341,3.342,3.338],
         lineStyle:{color:GRAY,width:2}, itemStyle:{color:GRAY},
         animationDuration:800, animationEasing:'cubicOut'
       },
       {
         name:'Manager effectiveness', type:'line', symbol:'none',
-        data:[3.364,3.365,3.354,3.350,null,3.355,3.366],
+        data:[3.364,3.345,3.365,3.355,3.366],
         lineStyle:{color:'#B9BEC6',width:2}, itemStyle:{color:'#B9BEC6'},
         animationDuration:800, animationEasing:'cubicOut'
       }
