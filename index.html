@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaCorp People Analytics — Bilingual Report</title>
+<title>NovaCorp People Analytics  -  Bilingual Report</title>
 <style>
 :root {
   --primary: #1F4E79;
@@ -334,7 +334,7 @@ section[id] { scroll-margin-top: var(--top-offset); }
 </div>
 
 <div class="highlight">
-<span class="cn"><strong>分析哲学：</strong>用数据锁定"谁在走"，用模型解释"为什么走"，用 ROI 回答"投哪里最划算"。主动承认局限性——本身就是分析成熟度的体现。</span>
+<span class="cn"><strong>分析哲学：</strong>用数据锁定"谁在走"，用模型解释"为什么走"，用 ROI 回答"投哪里最划算"。主动承认局限性 -  - 本身就是分析成熟度的体现。</span>
 <span class="en"><strong>Analytical Philosophy:</strong> Use data to find who leaves, models to explain why, and ROI to answer where investment yields the highest return. Acknowledging limitations is itself a mark of analytical maturity.</span>
 </div>
 </div>
@@ -400,7 +400,7 @@ section[id] { scroll-margin-top: var(--top-offset); }
 <p>观察窗口：<strong>2024年1月1日 – 2025年12月31日</strong>。四个数据集通过 employee_id 关联。employees.csv 为全量主表，attrition_log.csv 仅含离职记录，engagement 和 performance 为纵向面板数据。交叉引用多个数据源是本分析的核心竞争力。</p>
 </div>
 <div class="en-block">
-<p>Observation window: <strong>January 1, 2024 – December 31, 2025</strong>. Datasets joined on employee_id. Cross-referencing across data sources is a core competitive capability — single-source findings are less reliable than multi-source triangulated conclusions.</p>
+<p>Observation window: <strong>January 1, 2024 – December 31, 2025</strong>. Datasets joined on employee_id. Cross-referencing across data sources is a core competitive capability  -  single-source findings are less reliable than multi-source triangulated conclusions.</p>
 </div>
 
 <h3><span class="cn">3.3 数据质量说明</span><span class="en">3.3 Data Quality Notes</span></h3>
@@ -438,12 +438,12 @@ section[id] { scroll-margin-top: var(--top-offset); }
 </div>
 <div class="fig-caption">
 <span class="fig-num">图1</span>
-<span class="cn">员工留存曲线 — 按部门Kaplan-Meier估计，展示各部门员工在职月数的留存概率变化</span>
-<span class="en">Employee Retention Curve — Kaplan-Meier survival estimates by department over tenure months</span>
+<span class="cn">员工留存曲线  -  按部门Kaplan-Meier估计，展示各部门员工在职月数的留存概率变化</span>
+<span class="en">Employee Retention Curve  -  Kaplan-Meier survival estimates by department over tenure months</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：识别哪些部门留存下降最快，定位早期离职高危区</span><span class="en">Purpose: Identify departments with steepest retention decline to locate early-exit hotspots</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart1_retention_curve()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart1_retention_curve()
 df = pd.read_csv(DATA_DIR / 'employees.csv')
 df['event'] = (df['status'] == 'departed').astype(int)
 df['time'] = df['tenure_months'].clip(upper=120)
@@ -471,12 +471,12 @@ fig.savefig(VIZ_DIR / '01_retention_curve.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图2</span>
-<span class="cn">离职动因Push vs Pull分析 — 各部门可预防型（Push）与竞争性挖角型（Pull）离职占比</span>
-<span class="en">Push vs Pull Pathway Analysis — Preventable vs competitive-poaching exit share by department</span>
+<span class="cn">离职动因Push vs Pull分析  -  各部门可预防型（Push）与竞争性挖角型（Pull）离职占比</span>
+<span class="en">Push vs Pull Pathway Analysis  -  Preventable vs competitive-poaching exit share by department</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：量化"我们可以留住的"比例 — Push占比越高，干预空间越大</span><span class="en">Purpose: Quantify "how many we could have retained" — higher push share = greater intervention leverage</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：量化"我们可以留住的"比例  -  Push占比越高，干预空间越大</span><span class="en">Purpose: Quantify "how many we could have retained"  -  higher push share = greater intervention leverage</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart8_push_pull_pathway()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart8_push_pull_pathway()
 df = pd.read_csv(OUT_01 / 'pathway_dept.csv')
 df = df.sort_values('push_share', ascending=True)
 
@@ -492,7 +492,7 @@ for i, (_, row) in enumerate(df.iterrows()):
             ha='center', va='center', fontsize=9)
 
 ax.set_yticks(y_pos); ax.set_yticklabels(df['department'].values)
-ax.set_title('NovaCorp 离职动因分析 — Push vs Pull（按部门）')
+ax.set_title('NovaCorp 离职动因分析  -  Push vs Pull（按部门）')
 ax.legend(loc='lower right'); ax.set_xlim(0, 1)
 fig.savefig(VIZ_DIR / '08_push_pull_pathway.png')</code></pre></div>
 </div>
@@ -504,12 +504,12 @@ fig.savefig(VIZ_DIR / '08_push_pull_pathway.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图3</span>
-<span class="cn">遗憾性离职热力图 — 部门×实体交叉维度的遗憾离职占比</span>
-<span class="en">Regrettable Attrition Heatmap — Department × Entity regrettable exit share cross-section</span>
+<span class="cn">遗憾性离职热力图  -  部门×实体交叉维度的遗憾离职占比</span>
+<span class="en">Regrettable Attrition Heatmap  -  Department × Entity regrettable exit share cross-section</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：定位"走的是好人"最集中的部门-实体组合，量化人力资本损失</span><span class="en">Purpose: Locate dept-entity combos with highest concentration of regrettable exits — quantifying human capital loss</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：定位"走的是好人"最集中的部门-实体组合，量化人力资本损失</span><span class="en">Purpose: Locate dept-entity combos with highest concentration of regrettable exits  -  quantifying human capital loss</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart9_regrettable_heatmap()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart9_regrettable_heatmap()
 df = pd.read_csv(OUT_01 / 'regrettable_dept_entity.csv')
 pivot = df.pivot_table(index='department', columns='legacy_entity_code',
                        values='regrettable_share', aggfunc='first')
@@ -525,7 +525,7 @@ for i in range(pivot.shape[0]):
 
 ax.set_xticks(range(pivot.shape[1])); ax.set_xticklabels(pivot.columns)
 ax.set_yticks(range(pivot.shape[0])); ax.set_yticklabels(pivot.index)
-ax.set_title('NovaCorp 遗憾离职率热力图 — 部门 × 实体')
+ax.set_title('NovaCorp 遗憾离职率热力图  -  部门 × 实体')
 fig.colorbar(im, ax=ax, shrink=0.8)
 fig.savefig(VIZ_DIR / '09_regrettable_heatmap.png')</code></pre></div>
 </div>
@@ -547,7 +547,7 @@ fig.savefig(VIZ_DIR / '09_regrettable_heatmap.png')</code></pre></div>
 <p>Entity_B 的自愿离职率 11.9% 显著高于其他实体。年报提及的"Entity_B 离职率 15%"为总离职口径（含 involuntary，283/1,884=15.0%），两口径均可复现。Entity_B 是 2024 年收购实体，高离职率与收购整合期密切相关。</p>
 </div>
 <div class="en-block">
-<p>Entity_B voluntary turnover of 11.9% is notably higher. The annual report mentions "Entity_B turnover 15%" — this is the total exit definition (283/1,884=15.0%). Entity_B was acquired in 2024; its high turnover relates to acquisition integration.</p>
+<p>Entity_B voluntary turnover of 11.9% is notably higher. The annual report mentions "Entity_B turnover 15%"  -  this is the total exit definition (283/1,884=15.0%). Entity_B was acquired in 2024; its high turnover relates to acquisition integration.</p>
 </div>
 
 <!-- 4.2 Tenure Distribution -->
@@ -602,12 +602,12 @@ fig.savefig(VIZ_DIR / '09_regrettable_heatmap.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P1</span>
-<span class="cn">各Entity自愿离职率 — Entity_B离职率11.9%显著高于其他实体</span>
-<span class="en">Voluntary Turnover by Entity — Entity_B at 11.9% significantly above others</span>
+<span class="cn">各Entity自愿离职率  -  Entity_B离职率11.9%显著高于其他实体</span>
+<span class="en">Voluntary Turnover by Entity  -  Entity_B at 11.9% significantly above others</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：锁定收购整合中人才流失最严重的实体</span><span class="en">Purpose: Identify the entity with the most severe post-acquisition talent loss</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig1 Entity 离职率
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig1 Entity 离职率
 e2 = ent.copy(); e2["rate"] = e2["rate"] * 100
 fig, ax = plt.subplots(figsize=(8, 5))
 colors = [RED if e == "Entity_B" else BLUE for e in e2["legacy_entity_code"]]
@@ -625,12 +625,12 @@ plt.tight_layout(); plt.savefig(f"{OUT_DIR}/fig1_entity_rate.png", dpi=120)</cod
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P2</span>
-<span class="cn">Department×Entity离职率热力图 — 定位收购整合中的高离职交叉热点</span>
-<span class="en">Department×Entity Turnover Heatmap — Cross-sectional hotspots in acquisition integration</span>
+<span class="cn">Department×Entity离职率热力图  -  定位收购整合中的高离职交叉热点</span>
+<span class="en">Department×Entity Turnover Heatmap  -  Cross-sectional hotspots in acquisition integration</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：交叉定位部门与实体的离职焦点组合，指导精准干预</span><span class="en">Purpose: Cross-locate department-entity hotspot combinations for targeted intervention</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig2 Department×Entity 热力图
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig2 Department×Entity 热力图
 piv = de.pivot_table(index="department", columns="legacy_entity_code", values="rate")
 piv = piv.reindex(piv.mean(axis=1).sort_values(ascending=False).index)
 fig, ax = plt.subplots(figsize=(9, 7))
@@ -655,12 +655,12 @@ plt.savefig(f"{OUT_DIR}/fig2_dept_entity_heatmap.png", dpi=120)</code></pre></di
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P3</span>
-<span class="cn">Role Level×Role Family离职率热力图 — 各层级各职能线的离职风险分布</span>
-<span class="en">Role Level×Role Family Turnover — Attrition risk distribution across levels and functions</span>
+<span class="cn">Role Level×Role Family离职率热力图  -  各层级各职能线的离职风险分布</span>
+<span class="en">Role Level×Role Family Turnover  -  Attrition risk distribution across levels and functions</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：定位哪些层级×职能线的离职风险最高</span><span class="en">Purpose: Identify which level×function combos carry the highest attrition risk</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig3 role_level × role_family
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig3 role_level × role_family
 piv3 = rl.pivot_table(index="role_level", columns="role_family", values="rate")
 fig, ax = plt.subplots(figsize=(10, 5.5))
 im = ax.imshow(piv3.values, cmap="RdYlGn_r", aspect="auto")
@@ -686,12 +686,12 @@ plt.savefig(f"{OUT_DIR}/fig3_role_level_family.png", dpi=120)</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P4</span>
-<span class="cn">Age Band×Gender离职率 — 不同年龄段的性别离职率分组柱状图对比</span>
-<span class="en">Age Band×Gender Turnover — Grouped bar chart of gender-specific rates by age group</span>
+<span class="cn">Age Band×Gender离职率  -  不同年龄段的性别离职率分组柱状图对比</span>
+<span class="en">Age Band×Gender Turnover  -  Grouped bar chart of gender-specific rates by age group</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：检查是否有特定年龄-性别组合异常高离职</span><span class="en">Purpose: Check for anomalous age-gender turnover patterns</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig4 age_band × gender
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig4 age_band × gender
 ag32 = ag.pivot_table(index="age_band", columns="gender", values="rate")
 gend_order = ["Male", "Female", "Non-binary", "Prefer not to say"]
 ag32 = ag32[[c for c in gend_order if c in ag32.columns]].loc[age_order]
@@ -719,12 +719,12 @@ ax.legend(); plt.savefig(f"{OUT_DIR}/fig4_age_gender.png", dpi=120)</code></pre>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P5</span>
-<span class="cn">合同类型离职率 — 固定期限与永久合同的离职率对比</span>
-<span class="en">Contract Type Turnover — Fixed-term vs permanent contract attrition comparison</span>
+<span class="cn">合同类型离职率  -  固定期限与永久合同的离职率对比</span>
+<span class="en">Contract Type Turnover  -  Fixed-term vs permanent contract attrition comparison</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：判断合同稳定性是否影响留任</span><span class="en">Purpose: Assess whether contract stability affects retention</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig5 contract_type
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig5 contract_type
 c5 = ct.copy(); c5["rate"] = c5["rate"] * 100
 fig, ax = plt.subplots(figsize=(7, 4.5))
 bar(ax, c5["contract_type"], c5["rate"],
@@ -740,12 +740,12 @@ plt.savefig(f"{OUT_DIR}/fig5_contract.png", dpi=120)</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P6</span>
-<span class="cn">Tenure分段离职率 — 入职&lt;12月离职率21.5%，为全司2.5倍</span>
-<span class="en">Tenure Segment Turnover — &lt;12m tenure rate 21.5%, 2.5× company average</span>
+<span class="cn">Tenure分段离职率  -  入职&lt;12月离职率21.5%，为全司2.5倍</span>
+<span class="en">Tenure Segment Turnover  -  &lt;12m tenure rate 21.5%, 2.5× company average</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：量化"新人冲击期"——入职第一年是最关键保留窗口</span><span class="en">Purpose: Quantify the "new hire shock period" — first year is the most critical retention window</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：量化"新人冲击期" -  - 入职第一年是最关键保留窗口</span><span class="en">Purpose: Quantify the "new hire shock period"  -  first year is the most critical retention window</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig6 tenure bucket
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig6 tenure bucket
 def tenure_bucket(t):
     if t < 12:   return "&lt;12月"
     if t < 24:   return "12-24月"
@@ -768,12 +768,12 @@ plt.savefig(f"{OUT_DIR}/fig6_tenure.png", dpi=120)</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P7</span>
-<span class="cn">离职者vs在职者薪资分布 — 判断是否低薪推动高离职（补偿性流失）</span>
-<span class="en">Leaver vs Active Salary Distribution — Testing whether low pay drives attrition</span>
+<span class="cn">离职者vs在职者薪资分布  -  判断是否低薪推动高离职（补偿性流失）</span>
+<span class="en">Leaver vs Active Salary Distribution  -  Testing whether low pay drives attrition</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：检验补偿性流失假说——离职者是否集中在低薪区</span><span class="en">Purpose: Test the compensation-driven attrition hypothesis — do leavers cluster in lower salary bands?</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：检验补偿性流失假说 -  - 离职者是否集中在低薪区</span><span class="en">Purpose: Test the compensation-driven attrition hypothesis  -  do leavers cluster in lower salary bands?</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig7 薪资分布对比
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig7 薪资分布对比
 fig, ax = plt.subplots(figsize=(9, 5))
 bins = np.linspace(0, max(active_sal.max(), exit_sal.max()), 60)
 ax.hist(active_sal/1000, bins=bins/1000, alpha=0.6,
@@ -793,12 +793,12 @@ plt.savefig(f"{OUT_DIR}/fig7_salary_dist.png", dpi=120)</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P8</span>
-<span class="cn">遗憾离职占比 by Role Family — 量化各职能线"走的是好人"的程度</span>
-<span class="en">Regrettable Share by Role Family — Quantifying high-value talent loss by function</span>
+<span class="cn">遗憾离职占比 by Role Family  -  量化各职能线"走的是好人"的程度</span>
+<span class="en">Regrettable Share by Role Family  -  Quantifying high-value talent loss by function</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：识别哪些职能线的高价值人才流失最严重</span><span class="en">Purpose: Identify which functions suffer the most severe high-value talent loss</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig8 regrettable by role_family
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig8 regrettable by role_family
 rf = reg_by_fam.head(7)
 fig, ax = plt.subplots(figsize=(8, 5))
 bar(ax, rf["role_family"], rf["regrettable_share"] * 100,
@@ -814,12 +814,12 @@ plt.savefig(f"{OUT_DIR}/fig8_regrettable_family.png", dpi=120)</code></pre></div
 </div>
 <div class="fig-caption">
 <span class="fig-num">图 P9</span>
-<span class="cn">Push型占比Top部门 — 可预防离职比率最高的部门排序</span>
-<span class="en">Push Share by Department — Departments ranked by highest preventable exit ratio</span>
+<span class="cn">Push型占比Top部门  -  可预防离职比率最高的部门排序</span>
+<span class="en">Push Share by Department  -  Departments ranked by highest preventable exit ratio</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：排序各部门的"可预防程度"，指导干预优先级</span><span class="en">Purpose: Rank departments by preventability to guide intervention priority</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py — Fig9 pathway push share by dept
+<div class="src-code"><pre><code># Source: code/p0-1_descriptive.py  -  Fig9 pathway push share by dept
 pd9 = pw_dept.sort_values("push_share", ascending=False).head(12)
 fig, ax = plt.subplots(figsize=(9, 5))
 bar(ax, pd9["department"], pd9["push_share"] * 100,
@@ -842,7 +842,7 @@ plt.savefig(f"{OUT_DIR}/fig9_pathway_push.png", dpi=120)</code></pre></div>
 </div>
 <div class="en-block">
 <p>Modeling sample: <strong>13,136 employees</strong> (voluntary=1,133, active=12,003). Target: binary voluntary_quit. <strong>80/20 time-ordered split</strong> (train positive rate 8.2%, test 10.2%).</p>
-<p><strong>Lagged Design</strong> is a key methodological innovation: engagement scores from the most recent survey wave before exit, performance from the most recent review cycle — strengthening causal inference through time sequencing. Interaction features: manager_effectiveness × recognition, career_development × role_level, psychological_safety × department, entityB × tenure.</p>
+<p><strong>Lagged Design</strong> is a key methodological innovation: engagement scores from the most recent survey wave before exit, performance from the most recent review cycle  -  strengthening causal inference through time sequencing. Interaction features: manager_effectiveness × recognition, career_development × role_level, psychological_safety × department, entityB × tenure.</p>
 </div>
 
 <!-- 5.1 Logistic Regression -->
@@ -873,12 +873,12 @@ plt.savefig(f"{OUT_DIR}/fig9_pathway_push.png", dpi=120)</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图4</span>
-<span class="cn">自愿离职逻辑回归OR森林图 — 各特征对离职风险的Odds Ratio及95%置信区间</span>
-<span class="en">Odds Ratio Forest Plot — Logistic regression OR with 95% CI for voluntary turnover risk</span>
+<span class="cn">自愿离职逻辑回归OR森林图  -  各特征对离职风险的Odds Ratio及95%置信区间</span>
+<span class="en">Odds Ratio Forest Plot  -  Logistic regression OR with 95% CI for voluntary turnover risk</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：区分风险因子（OR>1）与保护因子（OR<1），量化各特征对离职的边际效应</span><span class="en">Purpose: Distinguish risk factors (OR>1) from protective factors (OR<1), quantify marginal effects</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart3_odds_ratio_forest()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart3_odds_ratio_forest()
 df = pd.read_csv(OUT_DIR / 'logreg_odds_ratio.csv')
 df = df[df['or_low'] > 0]  # filter extreme values
 df = df[(df['or_high'] < 100) & (df['odds_ratio'] < 50)]
@@ -893,12 +893,12 @@ for i, (_, row) in enumerate(df_plot.iterrows()):
                 fmt='o', color=color, capsize=3, capthick=1.5, markersize=7)
 ax.set_xscale('log'); ax.set_xlim(0.3, 10)
 ax.axvline(x=1, color='white', linestyle='--', alpha=0.6)
-ax.set_title('NovaCorp 自愿离职逻辑回归 — OR森林图')
+ax.set_title('NovaCorp 自愿离职逻辑回归  -  OR森林图')
 fig.savefig(VIZ_DIR / '03_odds_ratio_forest.png')</code></pre></div>
 </div>
 
 <div class="cn-block">
-<p><strong>关键洞察：</strong>高层领导信任（OR=0.81）和司龄（OR=0.75）是最显著的保护因子；高潜人才（OR=1.14）反而更易流失——反映外部挖角压力和快速晋升期待的落差；<strong>绩效评分未进入显著层</strong>，表明绩效差不是离职的主要推手。</p>
+<p><strong>关键洞察：</strong>高层领导信任（OR=0.81）和司龄（OR=0.75）是最显著的保护因子；高潜人才（OR=1.14）反而更易流失 -  - 反映外部挖角压力和快速晋升期待的落差；<strong>绩效评分未进入显著层</strong>，表明绩效差不是离职的主要推手。</p>
 </div>
 <div class="en-block">
 <p><strong>Key Insights:</strong> Senior leadership trust (OR=0.81) and tenure (OR=0.75) are the most significant protective factors. High-potential talent (OR=1.14) paradoxically shows higher turnover tendency. <strong>Performance rating did not reach significance</strong>, showing poor performance is not the main turnover driver.</p>
@@ -939,12 +939,12 @@ fig.savefig(VIZ_DIR / '03_odds_ratio_forest.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图5</span>
-<span class="cn">SHAP特征贡献摘要图 — XGBoost模型中各特征对离职预测的个体贡献分布（颜色=特征值高低）</span>
-<span class="en">SHAP Summary Plot — Individual feature contribution distribution in XGBoost (color = feature value)</span>
+<span class="cn">SHAP特征贡献摘要图  -  XGBoost模型中各特征对离职预测的个体贡献分布（颜色=特征值高低）</span>
+<span class="en">SHAP Summary Plot  -  Individual feature contribution distribution in XGBoost (color = feature value)</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：展示每个特征如何推动或降低离职风险，识别方向性和非线性</span><span class="en">Purpose: Show how each feature pushes toward or away from turnover, revealing directionality and non-linearity</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-2_modeling.py — SHAP analysis
+<div class="src-code"><pre><code># Source: code/p0-2_modeling.py  -  SHAP analysis
 import shap
 explainer = shap.TreeExplainer(xgb)
 shap_values = explainer.shap_values(X_te_p)
@@ -953,7 +953,7 @@ shap_df = pd.DataFrame({
     "mean_abs_shap": np.abs(shap_values).mean(axis=0),
 }).sort_values("mean_abs_shap", ascending=False)
 
-# SHAP summary plot — 每个样本每个特征的贡献
+# SHAP summary plot  -  每个样本每个特征的贡献
 fig, ax = plt.subplots(figsize=(10, 9))
 shap.summary_plot(shap_values, X_te_p, feature_names=feat_names,
                   max_display=20, show=False)
@@ -968,12 +968,12 @@ plt.savefig(f"{OUT_DIR}/fig_shap_summary.png", dpi=120, bbox_inches="tight")</co
 </div>
 <div class="fig-caption">
 <span class="fig-num">图6</span>
-<span class="cn">SHAP平均绝对贡献柱状图 — 特征重要性排名（按mean |SHAP|值降序）</span>
-<span class="en">SHAP Mean |SHAP| Bar Chart — Feature importance ranked by mean absolute SHAP value</span>
+<span class="cn">SHAP平均绝对贡献柱状图  -  特征重要性排名（按mean |SHAP|值降序）</span>
+<span class="en">SHAP Mean |SHAP| Bar Chart  -  Feature importance ranked by mean absolute SHAP value</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：简洁排序各特征对模型预测的总体贡献量级</span><span class="en">Purpose: Clean ranking of overall feature contribution magnitude to model predictions</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: code/p0-2_modeling.py — SHAP bar plot
+<div class="src-code"><pre><code># Source: code/p0-2_modeling.py  -  SHAP bar plot
 fig, ax = plt.subplots(figsize=(9, 7))
 shap.summary_plot(shap_values, X_te_p, feature_names=feat_names,
                   plot_type="bar", max_display=20, show=False)
@@ -990,7 +990,7 @@ print("SHAP 图已保存")</code></pre></div>
 <p><strong>⚠ 重要警告：</strong>XGBoost 表面最强特征 entityB_x_earlytenure（importance=0.322）和交互表"Entity_B × &lt;12月 = 79.4% 离职（181/228）"看似惊人，但经深入数据核查，这是<strong>收购结构假象</strong>，绝非真实的"新员工离职率"。</p>
 <p><strong>三个原因：</strong></p>
 <ol style="margin-left:20px;">
-<li>Entity_B 全部 1,884 名员工 hire 年均为 2024 年——因此 Entity_B 的离职者 tenure 定义上就全部 &lt;24 月（283/283=100%）。"短 tenure 离职"是收购时间轴的固有算术属性。</li>
+<li>Entity_B 全部 1,884 名员工 hire 年均为 2024 年 -  - 因此 Entity_B 的离职者 tenure 定义上就全部 &lt;24 月（283/283=100%）。"短 tenure 离职"是收购时间轴的固有算术属性。</li>
 <li>对比：NovaCorp-Origin 成熟 tenure 结构下，&lt;12 月离职率仅 14.0%（31/221），远非 100%。</li>
 <li><strong>正确解读：</strong>Entity_B 高离职 = 收购整合问题（文化融合、管理层变更、认可体系迁移压力），而非"雇人雇错了"。把 entityB×earlytenure 当作可干预驱动会严重误导预算投向。</li>
 </ol>
@@ -999,7 +999,7 @@ print("SHAP 图已保存")</code></pre></div>
 <p><strong>⚠ Critical Warning:</strong> XGBoost's top feature entityB_x_earlytenure (importance=0.322) and the interaction table showing "Entity_B × &lt;12m = 79.4% turnover (181/228)" appear dramatic. However, after deep data verification, this is an <strong>acquisition-structure artifact</strong>, not a real "new hire turnover rate."</p>
 <p><strong>Three reasons:</strong></p>
 <ol style="margin-left:20px;">
-<li>All 1,884 Entity_B employees have hire year 2024 — so every Entity_B leaver has tenure &lt;24 months by definition (283/283=100%).</li>
+<li>All 1,884 Entity_B employees have hire year 2024  -  so every Entity_B leaver has tenure &lt;24 months by definition (283/283=100%).</li>
 <li>NovaCorp-Origin &lt;12m turnover is only 14.0% (31/221), far from 100%.</li>
 <li><strong>Correct interpretation:</strong> Entity_B high turnover = acquisition integration problems (cultural fusion, management changes, recognition system migration). Treating entityB×earlytenure as an addressable driver would severely misdirect budget allocation.</li>
 </ol>
@@ -1024,11 +1024,11 @@ print("SHAP 图已保存")</code></pre></div>
 <h3 id="s5d"><span class="cn">5.4 模型公平性审计</span><span class="en">5.4 Model Fairness Audit</span></h3>
 <div class="info highlight">
 <div class="cn-block">
-<p><strong>🔍 性别公平性：</strong>男性与女性预测 AUC 差异 &lt;0.05，不存在系统性性别偏差。但 Maori/Aboriginal &amp; TSI 文化背景在 LogReg 中 OR=2.01（p=0.046），该群体可能存在未被模型完全捕捉的系统性离职风险——应作为 DEI 专项关注。</p>
-<p><strong>⚠ 公平性审计补充（独立重算）：</strong>XGBoost 子群 AUC 显示严重外推失效：全量测试集 AUC=0.91，但 <strong>60+ 年龄组仅 0.66</strong>，<strong>Entity_B 仅 0.18</strong>（近乎随机猜测水平）。模型在收购整合场景和边缘年龄群体的预测能力严重不足——任何基于模型输出对 Entity_B 的建议均需附加强人工研判。</p>
+<p><strong>🔍 性别公平性：</strong>男性与女性预测 AUC 差异 &lt;0.05，不存在系统性性别偏差。但 Maori/Aboriginal &amp; TSI 文化背景在 LogReg 中 OR=2.01（p=0.046），该群体可能存在未被模型完全捕捉的系统性离职风险 -  - 应作为 DEI 专项关注。</p>
+<p><strong>⚠ 公平性审计补充（独立重算）：</strong>XGBoost 子群 AUC 显示严重外推失效：全量测试集 AUC=0.91，但 <strong>60+ 年龄组仅 0.66</strong>，<strong>Entity_B 仅 0.18</strong>（近乎随机猜测水平）。模型在收购整合场景和边缘年龄群体的预测能力严重不足 -  - 任何基于模型输出对 Entity_B 的建议均需附加强人工研判。</p>
 </div>
 <div class="en-block">
-<p><strong>🔍 Gender Fairness:</strong> Male vs female prediction AUC difference &lt;0.05 — no systematic gender bias. However, Maori/Aboriginal &amp; TSI background shows OR=2.01 (p=0.046), suggesting systemic turnover risk requiring dedicated DEI attention.</p>
+<p><strong>🔍 Gender Fairness:</strong> Male vs female prediction AUC difference &lt;0.05  -  no systematic gender bias. However, Maori/Aboriginal &amp; TSI background shows OR=2.01 (p=0.046), suggesting systemic turnover risk requiring dedicated DEI attention.</p>
 <p><strong>⚠ Supplemental Fairness Audit (Independent Recalculation):</strong> XGBoost subgroup AUC shows severe extrapolation failure: overall test AUC=0.91, but <strong>60+ age group only 0.66</strong>, <strong>Entity_B only 0.18</strong> (near random guessing). The model's predictive power is severely insufficient in acquisition integration scenarios and edge age groups. Any Entity_B recommendations based on model output must come with additional human judgment.</p>
 </div>
 </div>
@@ -1047,12 +1047,12 @@ print("SHAP 图已保存")</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图7</span>
-<span class="cn">敬业度与绩效相关性热力图 — 8个敬业度维度与目标达成评分的Pearson相关系数矩阵</span>
-<span class="en">Engagement-Performance Correlation Heatmap — Pearson r matrix across 8 engagement dimensions + goal achievement</span>
+<span class="cn">敬业度与绩效相关性热力图  -  8个敬业度维度与目标达成评分的Pearson相关系数矩阵</span>
+<span class="en">Engagement-Performance Correlation Heatmap  -  Pearson r matrix across 8 engagement dimensions + goal achievement</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：识别敬业度各维度之间的共线性及与绩效的关系，指导特征工程</span><span class="en">Purpose: Identify collinearity among engagement dimensions and their relationship with performance</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart2_correlation_heatmap()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart2_correlation_heatmap()
 eng = pd.read_csv(DATA_DIR / 'engagement.csv')
 perf = pd.read_csv(DATA_DIR / 'performance.csv')
 eng_cols = ['manager_effectiveness','psychological_safety','recognition',
@@ -1086,17 +1086,17 @@ fig.savefig(VIZ_DIR / '02_correlation_heatmap.png')</code></pre></div>
 <!-- ===== Section 6: Interaction Effects ===== -->
 <section id="s6">
 <div class="card">
-<h2><span class="cn">6. 交互效应详细分析</span><span class="en">6. Interaction Effects — Detailed Analysis</span></h2>
+<h2><span class="cn">6. 交互效应详细分析</span><span class="en">6. Interaction Effects  -  Detailed Analysis</span></h2>
 
-<div class="cn-block"><p>以下四个交互效应是主效应分析会遗漏的关键发现——揭示了组合因素的效应远超单个因素之和。</p></div>
-<div class="en-block"><p>Four key interaction effects that main-effect analysis would miss — where combined factors produce outcomes exceeding the sum of individual effects.</p></div>
+<div class="cn-block"><p>以下四个交互效应是主效应分析会遗漏的关键发现 -  - 揭示了组合因素的效应远超单个因素之和。</p></div>
+<div class="en-block"><p>Four key interaction effects that main-effect analysis would miss  -  where combined factors produce outcomes exceeding the sum of individual effects.</p></div>
 
 <div class="table-wrap">
 <table>
 <thead><tr><th>#</th><th><span class="cn">交互效应</span><span class="en">Interaction</span></th><th><span class="cn">核心发现</span><span class="en">Finding</span></th></tr></thead>
 <tbody>
 <tr><td>1</td><td><span class="cn">认可感 × 经理效能</span><span class="en">Recognition × Manager</span></td><td><span class="cn">最差经理下：高认可可将离职率从 16.9%→6.2%（降 10.7pp）。认可感在管理最薄弱处边际效益最大。</span><span class="en">Worst manager: high recognition ↓ turnover 16.9%→6.2% (10.7pp). Largest marginal benefit where management weakest.</span></td></tr>
-<tr><td>2</td><td><span class="cn">职业发展 × 职级</span><span class="en">Career Dev × Level</span></td><td><span class="cn">Level 3（基层主管）受职业发展停滞影响最大：差 7.6pp。随职级升高影响递减——投资基层主管发展回报最高。</span><span class="en">Level 3 (frontline supervisors) most affected by stagnation (7.6pp gap). Impact decreases as level rises — investing in frontline development has highest marginal return.</span></td></tr>
+<tr><td>2</td><td><span class="cn">职业发展 × 职级</span><span class="en">Career Dev × Level</span></td><td><span class="cn">Level 3（基层主管）受职业发展停滞影响最大：差 7.6pp。随职级升高影响递减 -  - 投资基层主管发展回报最高。</span><span class="en">Level 3 (frontline supervisors) most affected by stagnation (7.6pp gap). Impact decreases as level rises  -  investing in frontline development has highest marginal return.</span></td></tr>
 <tr><td>3</td><td><span class="cn">心理安全 × 部门</span><span class="en">Psych Safety × Dept</span></td><td><span class="cn">Technology 差距最大 7.0pp，Risk &amp; Compliance 5.4pp，Retail Banking 4.6pp。技术复杂度与监管压力越高的部门对心理安全越敏感。</span><span class="en">Tech largest gap 7.0pp, Risk 5.4pp, Retail 4.6pp. Higher technical complexity → greater sensitivity to psychological safety.</span></td></tr>
 <tr><td>4</td><td><span class="cn">Entity_B × Tenure（剥离假象后）</span><span class="en">Entity_B × Tenure (post-artifact)</span></td><td><span class="cn">控制收购时间轴后，剩余 Entity_B 特有风险因子：认可感更低（2.1 vs Origin 2.7）、高层信任更低（2.3 vs 2.8）、岗位信心更低（2.4 vs 2.9）。这些软性因子解释了超额离职。</span><span class="en">After controlling acquisition timeline: lower recognition (2.1 vs Origin 2.7), lower trust (2.3 vs 2.8), lower role confidence (2.4 vs 2.9). Soft factors explain excess turnover.</span></td></tr>
 </tbody>
@@ -1110,12 +1110,12 @@ fig.savefig(VIZ_DIR / '02_correlation_heatmap.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图8</span>
-<span class="cn">管理者效能×认可感交互效应热力图 — 不同管理者效能四分位与认可感高低组合下的离职率</span>
-<span class="en">Manager Effectiveness × Recognition Interaction — Turnover rate by manager quartile and recognition level</span>
+<span class="cn">管理者效能×认可感交互效应热力图  -  不同管理者效能四分位与认可感高低组合下的离职率</span>
+<span class="en">Manager Effectiveness × Recognition Interaction  -  Turnover rate by manager quartile and recognition level</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：可视化"认可感缓冲差管理"效应——认可感在最差经理下的边际价值最大</span><span class="en">Purpose: Visualize recognition buffering effect — recognition has the largest marginal value under worst managers</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：可视化"认可感缓冲差管理"效应 -  - 认可感在最差经理下的边际价值最大</span><span class="en">Purpose: Visualize recognition buffering effect  -  recognition has the largest marginal value under worst managers</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart6_interaction_heatmap()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart6_interaction_heatmap()
 df = pd.read_csv(OUT_DIR / 'interact_mgr_recog.csv')
 pivot = df.pivot_table(index='mgr_q', columns='recog_hi',
                        values='mean', aggfunc='first')
@@ -1148,7 +1148,7 @@ fig.savefig(VIZ_DIR / '06_interaction_heatmap.png')</code></pre></div>
 <h3><span class="cn">7.1 年报 34.1% 口径矛盾</span><span class="en">7.1 The 34.1% Annual Report Discrepancy</span></h3>
 <div class="alert highlight">
 <span class="cn"><strong>🔴 年报声称"女性占 Level 5+ 岗位的 34.1%"，但用 role_level 字段四种定义核算结果均不匹配。</strong></span>
-<span class="en"><strong>🔴 Annual report claims "women hold 34.1% of Level 5+ positions." Tested against four definitions — none produce results close to 34.1%.</strong></span>
+<span class="en"><strong>🔴 Annual report claims "women hold 34.1% of Level 5+ positions." Tested against four definitions  -  none produce results close to 34.1%.</strong></span>
 </div>
 <div class="table-wrap">
 <table>
@@ -1163,20 +1163,20 @@ fig.savefig(VIZ_DIR / '06_interaction_heatmap.png')</code></pre></div>
 </table>
 </div>
 <div class="cn-block">
-<p>四种口径的女性占比均在 47-59% 之间。年报 34.1% 无法在任何合理口径下复现。可能解释：年报的"Level 5+"与数据中的 role_level 不是同一套职级体系，或年报使用了不同的统计时点/人群。建议在正式评审中主动标注此矛盾——主动发现并讨论数据不一致比被评委指出更为成熟。</p>
+<p>四种口径的女性占比均在 47-59% 之间。年报 34.1% 无法在任何合理口径下复现。可能解释：年报的"Level 5+"与数据中的 role_level 不是同一套职级体系，或年报使用了不同的统计时点/人群。建议在正式评审中主动标注此矛盾 -  - 主动发现并讨论数据不一致比被评委指出更为成熟。</p>
 </div>
 <div class="en-block">
-<p>All four definitions produce female shares between 47% and 59%. The 34.1% figure cannot be replicated under any reasonable definition. We recommend proactively flagging this discrepancy — discovering and discussing data inconsistencies shows more analytical maturity than having them pointed out by judges.</p>
+<p>All four definitions produce female shares between 47% and 59%. The 34.1% figure cannot be replicated under any reasonable definition. We recommend proactively flagging this discrepancy  -  discovering and discussing data inconsistencies shows more analytical maturity than having them pointed out by judges.</p>
 </div>
 
 <h3><span class="cn">7.2 性别晋升漏斗与辛普森悖论</span><span class="en">7.2 Female Promotion Funnel &amp; Simpson's Paradox</span></h3>
 <div class="cn-block">
-<p>各职级女性占比：Level 1（48.0%）、Level 2（47.7%）、Level 3（45.3%）、Level 4（43.7%）、Level 5（59.0%——注意样本仅 78 人）。整体趋势显示<strong>女性在晋升通道上无显著结构性歧视</strong>：男性晋升推荐率 14.2%，女性 13.7%，差距 0.5pp 不显著。</p>
-<p><strong>辛普森悖论检查：</strong>整体层面男女离职率接近（男 8.6% vs 女 8.4%），但分部门存在交叉——控制部门后的离职率性别差距远小于部门间的自然差异。部门本身才是离职率的主要变异来源，而非性别。</p>
+<p>各职级女性占比：Level 1（48.0%）、Level 2（47.7%）、Level 3（45.3%）、Level 4（43.7%）、Level 5（59.0% -  - 注意样本仅 78 人）。整体趋势显示<strong>女性在晋升通道上无显著结构性歧视</strong>：男性晋升推荐率 14.2%，女性 13.7%，差距 0.5pp 不显著。</p>
+<p><strong>辛普森悖论检查：</strong>整体层面男女离职率接近（男 8.6% vs 女 8.4%），但分部门存在交叉 -  - 控制部门后的离职率性别差距远小于部门间的自然差异。部门本身才是离职率的主要变异来源，而非性别。</p>
 </div>
 <div class="en-block">
-<p>Female share by level: Level 1 (48.0%), 2 (47.7%), 3 (45.3%), 4 (43.7%), 5 (59.0% — note only 78 people). No obvious structural discrimination: male promotion rec rate 14.2% vs female 13.7%, 0.5pp gap not significant.</p>
-<p><strong>Simpson's Paradox Check:</strong> Overall male 8.6% vs female 8.4% turnover appears equal, but cross-cutting patterns exist by department. After controlling for department, the gender gap is much smaller than natural variation between departments. Department — not gender — is the main source of turnover variation.</p>
+<p>Female share by level: Level 1 (48.0%), 2 (47.7%), 3 (45.3%), 4 (43.7%), 5 (59.0%  -  note only 78 people). No obvious structural discrimination: male promotion rec rate 14.2% vs female 13.7%, 0.5pp gap not significant.</p>
+<p><strong>Simpson's Paradox Check:</strong> Overall male 8.6% vs female 8.4% turnover appears equal, but cross-cutting patterns exist by department. After controlling for department, the gender gap is much smaller than natural variation between departments. Department  -  not gender  -  is the main source of turnover variation.</p>
 </div>
 
 <h3><span class="cn">7.3 文化背景与高潜人才</span><span class="en">7.3 Cultural Background &amp; HiPo Retention</span></h3>
@@ -1186,7 +1186,7 @@ fig.savefig(VIZ_DIR / '06_interaction_heatmap.png')</code></pre></div>
 </div>
 <div class="en-block">
 <p><strong>Cultural Background × Turnover:</strong> Maori/Aboriginal &amp; TSI highest (11.5%, 52/452), European non-Anglo next (10.5%). Anglo-Australian (7,377 people) turnover 8.1%, below average.</p>
-<p><strong>HiPo Retention:</strong> Company-wide hipo_flag=Yes: 1,210 people, turnover 12.5% (151), notably higher than 8.1% for regular employees. HiPo female 12.6%, male 12.3% — no gender difference. Organizations need retention programs for identified high potentials, not just "tag and leave."</p>
+<p><strong>HiPo Retention:</strong> Company-wide hipo_flag=Yes: 1,210 people, turnover 12.5% (151), notably higher than 8.1% for regular employees. HiPo female 12.6%, male 12.3%  -  no gender difference. Organizations need retention programs for identified high potentials, not just "tag and leave."</p>
 </div>
 
 <!-- FIGURE: 10_age_gender_attrition -->
@@ -1196,12 +1196,12 @@ fig.savefig(VIZ_DIR / '06_interaction_heatmap.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图9</span>
-<span class="cn">年龄-性别自愿离职率对比 — 各年龄段×性别的离职率分组柱状图，含整体均值参考线</span>
-<span class="en">Age-Gender Attrition Rate — Grouped bar chart by age band and gender with overall mean reference line</span>
+<span class="cn">年龄-性别自愿离职率对比  -  各年龄段×性别的离职率分组柱状图，含整体均值参考线</span>
+<span class="en">Age-Gender Attrition Rate  -  Grouped bar chart by age band and gender with overall mean reference line</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：DEI视角——检查年龄与性别在离职率上的交互模式，发现边缘群体</span><span class="en">Purpose: DEI lens — examine age-gender interaction patterns in turnover to detect marginalized groups</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：DEI视角 -  - 检查年龄与性别在离职率上的交互模式，发现边缘群体</span><span class="en">Purpose: DEI lens  -  examine age-gender interaction patterns in turnover to detect marginalized groups</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart10_age_gender_attrition()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart10_age_gender_attrition()
 df = pd.read_csv(OUT_01 / 'age_gender_rate.csv')
 age_order = ['18-24','25-29','30-34','35-39','40-44','45-49','50-54','55-59','60+']
 gender_order = ['Female','Male','Non-binary','Prefer not to say']
@@ -1260,12 +1260,12 @@ fig.savefig(VIZ_DIR / '10_age_gender_attrition.png')</code></pre></div>
 <h3><span class="cn">8.2 FAR 监管对 Risk &amp; Compliance 人才市场的影响</span><span class="en">8.2 FAR Regulatory Impact on R&amp;C Talent</span></h3>
 <div class="cn-block">
 <p>Financial Accountability Regime（FAR）于 2024 年 3 月 15 日对银行生效，2025 年 3 月 15 日扩展至保险和养老金。FAR 取代 BEAR，覆盖范围从约 150 家 ADI 扩展至 1,500+ 家 APRA 监管实体（<strong>10 倍扩展</strong>），直接导致合规人才需求的数量级增长。CPS 230（操作风险管理）于 2025 年 7 月 1 日生效，进一步加剧人才短缺。</p>
-<p><strong>R&amp;C 薪资飙升：</strong>入门级 R&amp;C 薪资自皇家委员会以来增长 68%（~AUD 65K → AUD 95K+），全级别平均薪酬 AUD 172K（含养老金），CRO 薪资 AUD 280-450K。R&amp;C 人才市场是一个<strong>卖方市场</strong>——NovaCorp 应预期 R&amp;C 岗位薪资基准上升、补缺期延长。FAR 延迟薪酬机制对 Accountable Person 级别形成自然留任，但初中级 R&amp;C 专业人员面临 burnout 且被竞争者积极挖角。</p>
-<p><strong>关键参考：</strong>2025 年 10 月，APRA 首次执行 FAR 处罚——取消 Xinja Bank 两名董事资格（前 CEO Eric Wilson 8 年、非执行董事 Craig Swanger 10 年）。APRA 副主席明确表示："当负有责任的人员未达标时，APRA 将追究其责任。"这一执法行动发出了强有力的市场信号。</p>
+<p><strong>R&amp;C 薪资飙升：</strong>入门级 R&amp;C 薪资自皇家委员会以来增长 68%（~AUD 65K → AUD 95K+），全级别平均薪酬 AUD 172K（含养老金），CRO 薪资 AUD 280-450K。R&amp;C 人才市场是一个<strong>卖方市场</strong> -  - NovaCorp 应预期 R&amp;C 岗位薪资基准上升、补缺期延长。FAR 延迟薪酬机制对 Accountable Person 级别形成自然留任，但初中级 R&amp;C 专业人员面临 burnout 且被竞争者积极挖角。</p>
+<p><strong>关键参考：</strong>2025 年 10 月，APRA 首次执行 FAR 处罚 -  - 取消 Xinja Bank 两名董事资格（前 CEO Eric Wilson 8 年、非执行董事 Craig Swanger 10 年）。APRA 副主席明确表示："当负有责任的人员未达标时，APRA 将追究其责任。"这一执法行动发出了强有力的市场信号。</p>
 </div>
 <div class="en-block">
 <p>FAR took effect for banks on 15 March 2024 and expanded to insurers/superannuation on 15 March 2025. It replaced BEAR and expanded from ~150 ADIs to 1,500+ APRA-regulated entities (<strong>10× expansion</strong>), creating an order-of-magnitude increase in compliance professional demand. CPS 230 (Operational Risk Management), effective 1 July 2025, compounds the talent shortage.</p>
-<p><strong>R&amp;C Salary Explosion:</strong> Entry-level R&amp;C salaries rose 68% since the Royal Commission (~AUD 65K → AUD 95K+). Average R&amp;C compensation: AUD 172K (including super). CRO salaries: AUD 280-450K. The R&amp;C talent market is a <strong>seller's market</strong> — NovaCorp should expect elevated salary benchmarks and increased time-to-fill for R&amp;C roles.</p>
+<p><strong>R&amp;C Salary Explosion:</strong> Entry-level R&amp;C salaries rose 68% since the Royal Commission (~AUD 65K → AUD 95K+). Average R&amp;C compensation: AUD 172K (including super). CRO salaries: AUD 280-450K. The R&amp;C talent market is a <strong>seller's market</strong>  -  NovaCorp should expect elevated salary benchmarks and increased time-to-fill for R&amp;C roles.</p>
 <p><strong>Key Reference:</strong> First FAR enforcement action (October 2025): APRA disqualified two Xinja Bank directors (former CEO Eric Wilson for 8 years, NED Craig Swanger for 10 years). This enforcement sent a powerful market signal.</p>
 </div>
 
@@ -1276,12 +1276,12 @@ fig.savefig(VIZ_DIR / '10_age_gender_attrition.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图10</span>
-<span class="cn">敬业度维度趋势线 — 2024-2025五个调查波次的8维度平均得分变化</span>
-<span class="en">Engagement Dimension Trends — 8-dimension mean scores across 5 survey waves (2024-2025)</span>
+<span class="cn">敬业度维度趋势线  -  2024-2025五个调查波次的8维度平均得分变化</span>
+<span class="en">Engagement Dimension Trends  -  8-dimension mean scores across 5 survey waves (2024-2025)</span>
 </div>
 <div class="fig-purpose"><span class="cn">论证目的：追踪敬业度各维度的纵向变化，识别恶化趋势，为市场压力下的员工体验管理提供时间窗口</span><span class="en">Purpose: Track longitudinal shifts in engagement dimensions, identify deteriorating trends for timely intervention</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart5_engagement_trend()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart5_engagement_trend()
 eng = pd.read_csv(DATA_DIR / 'engagement.csv')
 eng_cols = ['manager_effectiveness','psychological_safety','recognition',
             'career_development','senior_leadership_trust','purpose_meaning',
@@ -1324,7 +1324,7 @@ fig.savefig(VIZ_DIR / '05_engagement_trend.png')</code></pre></div>
 </table>
 </div>
 
-<h3><span class="cn">9.2 五个干预杠杆 ROI 汇总</span><span class="en">9.2 Five Intervention Levers — ROI Summary</span></h3>
+<h3><span class="cn">9.2 五个干预杠杆 ROI 汇总</span><span class="en">9.2 Five Intervention Levers  -  ROI Summary</span></h3>
 <div class="table-wrap">
 <table>
 <thead><tr><th>#</th><th><span class="cn">杠杆</span><span class="en">Lever</span></th><th><span class="cn">影响人数</span><span class="en">People</span></th><th><span class="cn">年节省 (Base)</span><span class="en">Savings</span></th><th><span class="cn">预算</span><span class="en">Budget</span></th><th>ROI</th></tr></thead>
@@ -1365,10 +1365,10 @@ fig.savefig(VIZ_DIR / '05_engagement_trend.png')</code></pre></div>
 </div>
 
 <div class="cn-block">
-<p>五项杠杆总预算 $17.6M，Base 情景年节省 $26.0M（涵盖原 $42M 成本的约 62%），加权综合 ROI 约 <strong>4.5 倍</strong>。即便 Worst 情景（各杠杆下调 30%），节省额仍达 $18.2M，ROI 约 1.03×——<strong>在所有情景下投入都值得。</strong></p>
+<p>五项杠杆总预算 $17.6M，Base 情景年节省 $26.0M（涵盖原 $42M 成本的约 62%），加权综合 ROI 约 <strong>4.5 倍</strong>。即便 Worst 情景（各杠杆下调 30%），节省额仍达 $18.2M，ROI 约 1.03× -  - <strong>在所有情景下投入都值得。</strong></p>
 </div>
 <div class="en-block">
-<p>Total budget across five levers: $17.6M. Base scenario annual savings: $26.0M (covering ~62% of the original $42M). Weighted composite ROI ≈ <strong>4.5×</strong>. Even in Worst scenario (each lever reduced by 30%), savings reach $18.2M with ROI ≈ 1.03× — <strong>investment is worthwhile across all scenarios.</strong></p>
+<p>Total budget across five levers: $17.6M. Base scenario annual savings: $26.0M (covering ~62% of the original $42M). Weighted composite ROI ≈ <strong>4.5×</strong>. Even in Worst scenario (each lever reduced by 30%), savings reach $18.2M with ROI ≈ 1.03×  -  <strong>investment is worthwhile across all scenarios.</strong></p>
 </div>
 
 <!-- FIGURE: 04_salary_boxplot -->
@@ -1378,12 +1378,12 @@ fig.savefig(VIZ_DIR / '05_engagement_trend.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图11</span>
-<span class="cn">薪资分布箱型图 — 按职能族分组的年薪分布（AUD），揭示部门间薪酬差异</span>
-<span class="en">Salary Distribution Boxplot — Annual salary by role family (AUD), revealing cross-functional pay variation</span>
+<span class="cn">薪资分布箱型图  -  按职能族分组的年薪分布（AUD），揭示部门间薪酬差异</span>
+<span class="en">Salary Distribution Boxplot  -  Annual salary by role family (AUD), revealing cross-functional pay variation</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：为ROI测算中的替代成本提供薪资基准——不同职能族的替代成本差异显著</span><span class="en">Purpose: Provide salary benchmarks for ROI replacement cost estimates — costs vary substantially by function</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：为ROI测算中的替代成本提供薪资基准 -  - 不同职能族的替代成本差异显著</span><span class="en">Purpose: Provide salary benchmarks for ROI replacement cost estimates  -  costs vary substantially by function</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart4_salary_boxplot()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart4_salary_boxplot()
 df = pd.read_csv(DATA_DIR / 'employees.csv')
 df = df[df['salary'].between(30000, 500000)]
 order = df.groupby('role_family')['salary'].median().sort_values(ascending=False).index.tolist()
@@ -1402,7 +1402,7 @@ for i, patch in enumerate(bp['boxes']):
 
 ax.set_xticklabels(order, rotation=30, ha='right', fontsize=10)
 ax.set_ylabel('年薪 (AUD)')
-ax.set_title('NovaCorp 薪资分布 — 按职能族')
+ax.set_title('NovaCorp 薪资分布  -  按职能族')
 ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'${x:,.0f}'))
 fig.savefig(VIZ_DIR / '04_salary_boxplot.png')</code></pre></div>
 </div>
@@ -1414,12 +1414,12 @@ fig.savefig(VIZ_DIR / '04_salary_boxplot.png')</code></pre></div>
 </div>
 <div class="fig-caption">
 <span class="fig-num">图12</span>
-<span class="cn">ROI气泡图 — 五项干预措施的预计年节省额、ROI与受影响人数（气泡大小）</span>
-<span class="en">ROI Bubble Chart — Estimated annual savings, ROI, and affected headcount (bubble size) across 5 interventions</span>
+<span class="cn">ROI气泡图  -  五项干预措施的预计年节省额、ROI与受影响人数（气泡大小）</span>
+<span class="en">ROI Bubble Chart  -  Estimated annual savings, ROI, and affected headcount (bubble size) across 5 interventions</span>
 </div>
-<div class="fig-purpose"><span class="cn">论证目的：三维直观对比——年节省（x轴）、ROI（y轴）、影响范围（气泡大小），辅助预算决策</span><span class="en">Purpose: Three-dimensional comparison — savings (x), ROI (y), scope (bubble size) — to support budget decisions</span></div>
+<div class="fig-purpose"><span class="cn">论证目的：三维直观对比 -  - 年节省（x轴）、ROI（y轴）、影响范围（气泡大小），辅助预算决策</span><span class="en">Purpose: Three-dimensional comparison  -  savings (x), ROI (y), scope (bubble size)  -  to support budget decisions</span></div>
 <button class="src-toggle" onclick="toggleSource(this)">📋 <span class="cn">查看源码</span><span class="en">View Source</span></button>
-<div class="src-code"><pre><code># Source: generate_viz.py — chart7_roi_bubble()
+<div class="src-code"><pre><code># Source: generate_viz.py  -  chart7_roi_bubble()
 df = pd.read_csv(OUT_13 / 'roi_summary.csv')
 df.columns = ['intervention', 'affected', 'savings', 'budget', 'roi']
 
@@ -1498,31 +1498,31 @@ fig.savefig(VIZ_DIR / '07_roi_bubble.png')</code></pre></div>
 <ol style="margin-left:20px;">
 <li><strong>因果与相关的边界：</strong>尽管采用了滞后设计来增强因果推断，HR 观察数据本质上无法完全排除未观测变量的混淆。报告的结论应理解为"在现有数据下哪些因素表现出最强的时间先后关联和预测能力"，而非严格意义上的"因果效应"。</li>
 <li><strong>Entity_B 结构假象的潜在残留：</strong>虽然识别并剥离了 entityB×earlytenure 的收购算术假象，但 Entity_B 相关其他特征可能仍携带未完全分离的结构效应。Entity_B 的离职驱动解读需结合定性访谈三角验证。</li>
-<li><strong>engagement 非响应者的信息不对称：</strong>10,264 条非响应记录被标记为特征——未参与调查本身就是敬业度低的信号，但也意味着无法获知这些员工对 8 个维度的真实评分。</li>
+<li><strong>engagement 非响应者的信息不对称：</strong>10,264 条非响应记录被标记为特征 -  - 未参与调查本身就是敬业度低的信号，但也意味着无法获知这些员工对 8 个维度的真实评分。</li>
 <li><strong>2025-H2 绩效数据缺失：</strong>距数据截止日期最近的评估周期缺失，削弱了"最近绩效→离职"路径的可靠性。</li>
 <li><strong>离职面谈原因可信度：</strong>Case Brief 明确指出 40-60% 的离职面谈原因不反映真实原因。本报告将 stated_exit_reason 作为参考信号而非核心变量。</li>
-<li><strong>模型 AUC 的诚实解读：</strong>测试集 AUC 的 0.915 和 0.884 很大程度来自收购结构提供的"容易信号"。当剥离收购相关特征后，仅靠软性驱动因子的预测能力会下降——但这恰恰是"真正可干预"的部分。高分 AUC 不应被误读为"模型已完美解释离职"。</li>
+<li><strong>模型 AUC 的诚实解读：</strong>测试集 AUC 的 0.915 和 0.884 很大程度来自收购结构提供的"容易信号"。当剥离收购相关特征后，仅靠软性驱动因子的预测能力会下降 -  - 但这恰恰是"真正可干预"的部分。高分 AUC 不应被误读为"模型已完美解释离职"。</li>
 <li><strong>ROI 测算的不确定性：</strong>五杠杆 ROI 基于三情景方法，涉及多环节假设叠加。建议将 ROI 视为优先级排序的相对标尺，而非财务审计的精确预估。</li>
 </ol>
 </div>
 <div class="en-block">
 <ol style="margin-left:20px;">
-<li><strong>Causality and correlation boundary:</strong> Despite the lagged design strengthening causal inference, HR observational data cannot fully exclude confounding from unobserved variables. Conclusions should be understood as "which factors show the strongest time-sequenced association and predictive power" — not strict "causal effects."</li>
+<li><strong>Causality and correlation boundary:</strong> Despite the lagged design strengthening causal inference, HR observational data cannot fully exclude confounding from unobserved variables. Conclusions should be understood as "which factors show the strongest time-sequenced association and predictive power"  -  not strict "causal effects."</li>
 <li><strong>Residual Entity_B structural artifact:</strong> Although the entityB×earlytenure acquisition arithmetic artifact was removed, other Entity_B features may still carry incompletely separated structural effects. Entity_B driver interpretation requires triangulation with qualitative interviews.</li>
-<li><strong>Engagement non-responder information asymmetry:</strong> 10,264 non-response records are marked as a feature — non-participation signals low engagement, but true scores on 8 dimensions remain unknown.</li>
+<li><strong>Engagement non-responder information asymmetry:</strong> 10,264 non-response records are marked as a feature  -  non-participation signals low engagement, but true scores on 8 dimensions remain unknown.</li>
 <li><strong>Missing 2025-H2 performance data:</strong> The absence of the review cycle closest to the data cutoff date weakens the "recent performance → turnover" prediction pathway.</li>
 <li><strong>Exit interview reason reliability:</strong> 40-60% of exit interview reasons do not reflect true reasons (per Case Brief). This report uses stated_exit_reason as a reference signal, not a core variable.</li>
-<li><strong>Honest AUC interpretation:</strong> Test AUCs of 0.915 and 0.884 are heavily driven by acquisition-structure "easy signals." When acquisition features are removed, predictive power from soft drivers would decrease — but these are precisely the "truly actionable" portion.</li>
+<li><strong>Honest AUC interpretation:</strong> Test AUCs of 0.915 and 0.884 are heavily driven by acquisition-structure "easy signals." When acquisition features are removed, predictive power from soft drivers would decrease  -  but these are precisely the "truly actionable" portion.</li>
 <li><strong>ROI estimation uncertainty:</strong> Five-lever ROI estimates involve multi-step assumption stacking. ROI should be treated as a relative priority-ranking scale, not precise financial audit estimates.</li>
 </ol>
 </div>
 
 <div class="highlight">
 <div class="cn-block">
-<p><strong>总结：</strong>本报告的贡献不在于提供"唯一正解"，而在于建立了一个从"锁定谁在走"→"解释为什么走"→"量化投哪里最划算"的完整分析框架。承认局限性本身就是分析成熟度的体现——我们宁愿在递交前自己指出边界，也不愿在 Q&A 环节被动应对。</p>
+<p><strong>总结：</strong>本报告的贡献不在于提供"唯一正解"，而在于建立了一个从"锁定谁在走"→"解释为什么走"→"量化投哪里最划算"的完整分析框架。承认局限性本身就是分析成熟度的体现 -  - 我们宁愿在递交前自己指出边界，也不愿在 Q&A 环节被动应对。</p>
 </div>
 <div class="en-block">
-<p><strong>In summary:</strong> This report's contribution is not in providing "the single right answer" but in building a complete analytical framework: from finding who leaves, to explaining why, to quantifying where investment yields the highest return. Acknowledging limitations is itself a mark of analytical maturity — we prefer to identify our own boundaries before submission rather than respond passively during Q&A.</p>
+<p><strong>In summary:</strong> This report's contribution is not in providing "the single right answer" but in building a complete analytical framework: from finding who leaves, to explaining why, to quantifying where investment yields the highest return. Acknowledging limitations is itself a mark of analytical maturity  -  we prefer to identify our own boundaries before submission rather than respond passively during Q&A.</p>
 </div>
 </div>
 </div>
