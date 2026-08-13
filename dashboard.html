@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaCorp — Attrition Cost Dashboard</title>
+<title>NovaCorp — Act on Attrition: Stop the $42M Leak</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <script>window.echarts || document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js">\x3C/script>');</script>
 <style>
@@ -30,6 +30,13 @@ body{background:var(--bg);color:var(--text);
   border-radius:999px;padding:3px 12px;font-size:12px;color:var(--blue-light)}
 .topbar .chip b{color:var(--amber)}
 
+/* year lens bar */
+.yearbar{position:sticky;top:0;z-index:60;background:rgba(11,18,32,.97);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--border2);padding:10px 20px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.yearbar .y-label{font-size:11px;letter-spacing:2px;color:var(--amber);font-weight:700}
+.yearbar .y-hint{font-size:11.5px;color:var(--text3)}
+
 /* hero */
 .hero{margin-top:20px;background:radial-gradient(120% 160% at 85% -20%,#1F4E79 0%,#0E1828 55%);
   border:1px solid var(--border2);border-radius:12px;padding:26px 30px;
@@ -41,31 +48,49 @@ body{background:var(--bg);color:var(--text);
 .hero .sub{color:var(--text2);font-size:14px;max-width:640px}
 .hero .sub b{color:var(--text)}
 .hero .badge{border:1px solid var(--border2);background:var(--card);border-radius:10px;
-  padding:12px 18px;font-size:13px;color:var(--text2)}
-.hero .badge b{display:block;font-size:22px;color:var(--text);font-family:var(--mono)}
+  padding:12px 18px;font-size:13px;color:var(--text2);min-width:230px}
+.hero .badge b{font-size:20px;color:var(--text);font-family:var(--mono)}
+.hero .badge .bsub{display:block;font-size:12px;margin-top:4px}
+.hero .badge .bgen{display:block;font-size:11px;color:var(--text3);margin-top:2px}
 
 /* section */
 .section{margin-top:24px}
 .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .sec-head .no{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:1px}
-.sec-head h2{font-size:16px;font-weight:600;color:var(--text)}
+.sec-head h2{font-size:17px;font-weight:600;color:var(--text)}
 .sec-head .src{font-size:11px;color:var(--text3);font-family:var(--mono)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
 .card .chart{width:100%;height:420px}
 
 /* KPI cards */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .kpi{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--primary);
   border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
 .kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;
   border-radius:50%;background:radial-gradient(circle,rgba(46,155,214,.16),transparent 70%)}
 .kpi .k-name{font-size:12.5px;color:var(--text2);letter-spacing:.3px}
 .kpi .k-rate{font-size:40px;font-weight:700;font-family:var(--mono);line-height:1.15}
+.kpi .k-rate.both-rate{font-size:26px;line-height:1.35}
 .kpi .k-sub{font-size:12px;color:var(--text3);margin-top:6px}
 .kpi .k-sub b{color:var(--text2);font-family:var(--mono)}
+.kpi .k-action{margin-top:8px;font-size:12px;color:var(--blue-light)}
 .kpi.amber{border-left-color:var(--amber)} .kpi.amber .k-rate{color:var(--amber)}
 .kpi.red{border-left-color:var(--red)} .kpi.red .k-rate{color:var(--red-soft)}
 .kpi.blue .k-rate{color:var(--blue-light)}
+
+/* YoY delta chips */
+.delta{display:inline-block;margin-top:8px;font-size:12px;font-weight:600;font-family:var(--mono);
+  padding:2px 10px;border-radius:999px}
+.delta.bad{color:#FFB4BC;background:rgba(232,17,35,.15);border:1px solid rgba(232,17,35,.4)}
+.delta.good{color:#7EE2A8;background:rgba(33,163,102,.15);border:1px solid rgba(33,163,102,.4)}
+.delta.flat{color:var(--text2);background:rgba(107,127,149,.12);border:1px solid var(--border2)}
+.delta.na{color:var(--text2);background:rgba(107,127,149,.12);border:1px dashed var(--border2)}
+
+/* engagement delta chips */
+.eng-d{display:inline-block;margin:4px 6px 4px 0;padding:3px 10px;border-radius:8px;
+  font-size:11.5px;background:var(--card2);border:1px solid var(--border);color:var(--text2)}
+.eng-d b{color:var(--text)}
+.eng-d.good{color:#7EE2A8} .eng-d.bad{color:#FFB4BC} .eng-d.flat{color:var(--text3)}
 
 /* toggles */
 .toggles{display:flex;gap:8px}
@@ -76,6 +101,8 @@ body{background:var(--bg);color:var(--text);
 
 /* grid layout */
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid3 .chart{height:400px}
 .note{font-size:12px;color:var(--text3);margin-top:8px}
 .note b{color:var(--blue-light)}
 
@@ -94,9 +121,19 @@ body{background:var(--bg);color:var(--text);
 </head>
 <body>
 <div class="topbar">
-  <h1>NovaCorp · Voluntary Attrition Cost Dashboard</h1>
-  <span class="chip">6 verified CSV sources · <b>$42M</b> headline</span>
+  <h1>NovaCorp · Act on Attrition — Action Dashboard</h1>
+  <span class="chip">9 verified CSV sources · <b>$42M</b> headline</span>
   <span class="chip">Power BI style · ECharts</span>
+</div>
+
+<div class="yearbar">
+  <span class="y-label">YEAR LENS</span>
+  <div class="toggles" id="yearToggles">
+    <button class="tg yr" data-y="2024">2024</button>
+    <button class="tg yr" data-y="2025">2025</button>
+    <button class="tg yr on" data-y="both">Both</button>
+  </div>
+  <span class="y-hint">switches KPI cards · attrition heatmap · engagement comparison</span>
 </div>
 
 <div class="wrap">
@@ -105,25 +142,25 @@ body{background:var(--bg);color:var(--text);
   <!-- 1 hero -->
   <div class="hero">
     <div>
-      <div class="label">Estimated annual cost of voluntary attrition</div>
+      <div class="label">The annual cost of doing nothing — voluntary attrition</div>
       <div class="big">$42<span>.0M</span></div>
       <div class="sub">Reconstructed from <b>regrettable-attrition replacement ($22–25M)</b> +
         <b>disengagement productivity loss ($12–15M)</b> + <b>recruitment inefficiency ($4–6M)</b>.
         Midpoint total 23.5 + 13.5 + 5.0 = <b>$42.0M</b>.</div>
     </div>
-    <div class="badge"><b id="hero-exits">—</b>voluntary exits analyzed · <span id="hero-head">—</span> headcount · <span id="hero-gen">—</span></div>
+    <div class="badge"><span id="hero-main">—</span><span class="bsub" id="hero-sub">—</span><span class="bgen" id="hero-gen">—</span></div>
   </div>
 
   <!-- 2 KPI cards -->
   <div class="section">
-    <div class="sec-head"><span class="no">KPI</span><h2>Voluntary Attrition KPIs</h2>
-      <span class="src">source: exec_overview.csv</span></div>
+    <div class="sec-head"><span class="no">KPI</span><h2>Fix the $42M Leak — Prioritise Entity_B</h2>
+      <span class="src">source: kpi_by_year.csv + exec_overview.csv</span></div>
     <div class="kpi-grid" id="kpi-grid"></div>
   </div>
 
   <!-- 3 cost reconstruction -->
   <div class="section">
-    <div class="sec-head"><span class="no">02</span><h2>$42M Cost Reconstruction</h2>
+    <div class="sec-head"><span class="no">02</span><h2>Trace the $42M: Where Every Dollar Leaks</h2>
       <span class="src">source: cost42_reconstruction.csv</span></div>
     <div class="card"><div id="costChart" class="chart" style="height:300px"></div>
       <div class="note">Segments sized by bucket midpoint (23.5 + 13.5 + 5.0 = <b>$42.0M</b>); labels show the full verified range. Hover for detail.</div>
@@ -132,39 +169,71 @@ body{background:var(--bg);color:var(--text);
 
   <!-- 4 heatmap -->
   <div class="section">
-    <div class="sec-head"><span class="no">03</span><h2>Attrition Heatmap — Department × Role Level</h2>
-      <span class="src">source: attrition_level_dept.csv (35 cells)</span>
+    <div class="sec-head"><span class="no">03</span><h2>Stop the Bleeding: New-Hire Attrition</h2>
+      <span class="src">source: heatmap_by_year.csv (70 cells) · regrettable: attrition_level_dept.csv</span>
       <div class="toggles" id="heatToggles">
         <button class="tg on" data-m="vol">Voluntary rate</button>
         <button class="tg" data-m="reg">Regrettable rate</button>
       </div>
     </div>
-    <div class="card"><div id="heatChart" class="chart"></div>
-      <div class="note">Grey cells = no employees at that level in source data. Toggle to switch metric.</div>
+    <div class="card" id="heatSingle">
+      <div id="heatChart" class="chart"></div>
+      <div class="note" id="heatNote"></div>
     </div>
+    <div class="grid3" id="heatBoth" style="display:none">
+      <div class="card"><div id="heatChartA" class="chart"></div>
+        <div class="note">2024 — where it bled (voluntary rate %)</div></div>
+      <div class="card"><div id="heatChartB" class="chart"></div>
+        <div class="note">2025 — where it bleeds (voluntary rate %)</div></div>
+      <div class="card"><div id="heatDelta" class="chart"></div>
+        <div class="note">Shift 2024 → 2025, percentage points</div></div>
+    </div>
+    <div class="note" id="heatNoteBoth" style="display:none"></div>
   </div>
 
   <!-- 5 career pathway -->
   <div class="section">
-    <div class="sec-head"><span class="no">04</span><h2>Career Pathway — Promotion Eligibility vs Attrition</h2>
+    <div class="sec-head"><span class="no">04</span><h2>Unblock Careers: Fix the Promotion Dead-End</h2>
       <span class="src">source: career_pathway.csv (12 rows)</span></div>
     <div class="card"><div id="careerChart" class="chart" style="height:460px"></div>
-      <div class="note">Grouped bars: voluntary attrition rate (blue) vs regrettable attrition rate (red) for each level × eligibility group. Levels 6–7 have no eligible employees in source data.</div>
+      <div class="note" id="careerNote"></div>
     </div>
   </div>
 
-  <!-- 6 engagement trends -->
+  <!-- 6 engagement -->
   <div class="section">
-    <div class="sec-head"><span class="no">05</span><h2>Engagement Trends — 8 Dimensions × 6 Waves</h2>
-      <span class="src">source: engagement_trends.csv</span></div>
-    <div class="card"><div id="engChart" class="chart"></div>
-      <div class="note">Likert 1–5 scale. 2025Q2 is absent from the source CSV (not surveyed in file). Click legend items to isolate dimensions.</div>
+    <div class="sec-head"><span class="no">05</span><h2>Rebuild Trust: Leadership Scores in Decline</h2>
+      <span class="src">source: engagement_by_year.csv + engagement_trends.csv</span>
+      <div class="toggles" id="engToggles">
+        <button class="tg on" data-v="year">2024 vs 2025</button>
+        <button class="tg" data-v="wave">6-wave trend</button>
+      </div>
+    </div>
+    <div id="engYearWrap">
+      <div class="card"><div id="engYearChart" class="chart" style="height:400px"></div>
+        <div class="note" id="engDeltas"></div>
+        <div class="note" id="engYearNote"></div>
+      </div>
+    </div>
+    <div id="engWaveWrap" style="display:none">
+      <div class="card"><div id="engWaveChart" class="chart"></div>
+        <div class="note">Likert 1–5 scale. 2025Q2 is absent from the source CSV (not surveyed in file). Click legend items to isolate dimensions.</div>
+      </div>
     </div>
   </div>
+
+  
+  <!-- 6.5 Kaplan-Meier -->
+  <section class="block">
+    <h2>Retain Your Directors: Survival Curve by Entity</h2>
+    <span class="src">source: kaplan_meier_directors.csv (382 directors, 33 exits, 349 censored)</span>
+    <div class="card"><div id="kmChart" class="chart" style="height:380px"></div></div>
+    <div class="note">Probability of remaining in a Director-level role (job title contains "Director" or role_level >= 5) over tenure months. Steeper drops = faster director attrition.</div>
+  </section>
 
   <!-- 7 financial -->
   <div class="section">
-    <div class="sec-head"><span class="no">06</span><h2>Financial Comparison — Inaction vs Action</h2>
+    <div class="sec-head"><span class="no">06</span><h2>Act Now: $20M Net Benefit vs $42M Inaction</h2>
       <span class="src">source: financial_toggle.csv</span></div>
     <div class="card"><div id="finChart" class="chart" style="height:380px"></div>
       <div class="note">Values exactly as recorded in financial_toggle.csv. Net benefit of <b>$20.0M</b> is the source-stated figure (not a subtraction of the other two bars).</div>
@@ -176,196 +245,419 @@ body{background:var(--bg);color:var(--text);
 </div>
 
 <script>
-const DATA = {"kpi":[{"metric":"Overall Voluntary Attrition","rate_pct":8.45,"n_exits":1133,"n_total":13403},{"metric":"Entity_B Voluntary Attrition","rate_pct":11.89,"n_exits":224,"n_total":1884},{"metric":"Risk and Compliance Voluntary Attrition","rate_pct":9.64,"n_exits":195,"n_total":2022}],"cost42":[{"bucket":"Regrettable attrition replacement","low_m":22,"high_m":25,"mid_m":23.5},{"bucket":"Disengagement productivity loss","low_m":12,"high_m":15,"mid_m":13.5},{"bucket":"Recruitment inefficiency","low_m":4,"high_m":6,"mid_m":5.0}],"heatmap":{"dims":["Corporate Operations","Executive Leadership","Insurance","Retail Banking","Risk & Compliance","Technology","Wealth Management"],"levels":[1,2,3,4,5,6,7],"cells":[{"department":"Corporate Operations","level":1,"n_total":848,"n_vol_exits":75,"vol_rate_pct":8.84,"n_regrettable":11,"regrettable_rate_pct":1.3},{"department":"Corporate Operations","level":2,"n_total":485,"n_vol_exits":53,"vol_rate_pct":10.93,"n_regrettable":8,"regrettable_rate_pct":1.65},{"department":"Corporate Operations","level":3,"n_total":141,"n_vol_exits":17,"vol_rate_pct":12.06,"n_regrettable":6,"regrettable_rate_pct":4.26},{"department":"Corporate Operations","level":4,"n_total":25,"n_vol_exits":1,"vol_rate_pct":4.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Corporate Operations","level":5,"n_total":9,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":1,"n_total":128,"n_vol_exits":10,"vol_rate_pct":7.81,"n_regrettable":1,"regrettable_rate_pct":0.78},{"department":"Executive Leadership","level":2,"n_total":67,"n_vol_exits":5,"vol_rate_pct":7.46,"n_regrettable":1,"regrettable_rate_pct":1.49},{"department":"Executive Leadership","level":3,"n_total":16,"n_vol_exits":2,"vol_rate_pct":12.5,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":6,"n_total":6,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":7,"n_total":8,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Insurance","level":1,"n_total":1033,"n_vol_exits":91,"vol_rate_pct":8.81,"n_regrettable":14,"regrettable_rate_pct":1.36},{"department":"Insurance","level":2,"n_total":530,"n_vol_exits":38,"vol_rate_pct":7.17,"n_regrettable":6,"regrettable_rate_pct":1.13},{"department":"Insurance","level":3,"n_total":172,"n_vol_exits":11,"vol_rate_pct":6.4,"n_regrettable":3,"regrettable_rate_pct":1.74},{"department":"Insurance","level":4,"n_total":35,"n_vol_exits":2,"vol_rate_pct":5.71,"n_regrettable":1,"regrettable_rate_pct":2.86},{"department":"Insurance","level":5,"n_total":10,"n_vol_exits":1,"vol_rate_pct":10.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Retail Banking","level":1,"n_total":1917,"n_vol_exits":152,"vol_rate_pct":7.93,"n_regrettable":17,"regrettable_rate_pct":0.89},{"department":"Retail Banking","level":2,"n_total":968,"n_vol_exits":72,"vol_rate_pct":7.44,"n_regrettable":3,"regrettable_rate_pct":0.31},{"department":"Retail Banking","level":3,"n_total":307,"n_vol_exits":22,"vol_rate_pct":7.17,"n_regrettable":2,"regrettable_rate_pct":0.65},{"department":"Retail Banking","level":4,"n_total":67,"n_vol_exits":6,"vol_rate_pct":8.96,"n_regrettable":1,"regrettable_rate_pct":1.49},{"department":"Retail Banking","level":5,"n_total":19,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Risk & Compliance","level":1,"n_total":1177,"n_vol_exits":111,"vol_rate_pct":9.43,"n_regrettable":18,"regrettable_rate_pct":1.53},{"department":"Risk & Compliance","level":2,"n_total":587,"n_vol_exits":52,"vol_rate_pct":8.86,"n_regrettable":6,"regrettable_rate_pct":1.02},{"department":"Risk & Compliance","level":3,"n_total":188,"n_vol_exits":21,"vol_rate_pct":11.17,"n_regrettable":6,"regrettable_rate_pct":3.19},{"department":"Risk & Compliance","level":4,"n_total":54,"n_vol_exits":10,"vol_rate_pct":18.52,"n_regrettable":3,"regrettable_rate_pct":5.56},{"department":"Risk & Compliance","level":5,"n_total":14,"n_vol_exits":1,"vol_rate_pct":7.14,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Technology","level":1,"n_total":1753,"n_vol_exits":161,"vol_rate_pct":9.18,"n_regrettable":17,"regrettable_rate_pct":0.97},{"department":"Technology","level":2,"n_total":908,"n_vol_exits":74,"vol_rate_pct":8.15,"n_regrettable":10,"regrettable_rate_pct":1.1},{"department":"Technology","level":3,"n_total":296,"n_vol_exits":21,"vol_rate_pct":7.09,"n_regrettable":4,"regrettable_rate_pct":1.35},{"department":"Technology","level":4,"n_total":59,"n_vol_exits":1,"vol_rate_pct":1.69,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Technology","level":5,"n_total":13,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":1,"n_total":903,"n_vol_exits":76,"vol_rate_pct":8.42,"n_regrettable":11,"regrettable_rate_pct":1.22},{"department":"Wealth Management","level":2,"n_total":452,"n_vol_exits":31,"vol_rate_pct":6.86,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":3,"n_total":145,"n_vol_exits":11,"vol_rate_pct":7.59,"n_regrettable":4,"regrettable_rate_pct":2.76},{"department":"Wealth Management","level":4,"n_total":36,"n_vol_exits":4,"vol_rate_pct":11.11,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":5,"n_total":12,"n_vol_exits":1,"vol_rate_pct":8.33,"n_regrettable":0,"regrettable_rate_pct":0.0}]},"career":[{"label":"L1 Not eligible","level":1,"eligible":0,"n_total":5775,"n_vol_exits":497,"vol_rate_pct":8.61,"n_regrettable":69,"regrettable_rate_pct":1.19},{"label":"L1 Eligible","level":1,"eligible":1,"n_total":1984,"n_vol_exits":179,"vol_rate_pct":9.02,"n_regrettable":20,"regrettable_rate_pct":1.01},{"label":"L2 Not eligible","level":2,"eligible":0,"n_total":2962,"n_vol_exits":236,"vol_rate_pct":7.97,"n_regrettable":23,"regrettable_rate_pct":0.78},{"label":"L2 Eligible","level":2,"eligible":1,"n_total":1035,"n_vol_exits":89,"vol_rate_pct":8.6,"n_regrettable":11,"regrettable_rate_pct":1.06},{"label":"L3 Not eligible","level":3,"eligible":0,"n_total":946,"n_vol_exits":85,"vol_rate_pct":8.99,"n_regrettable":20,"regrettable_rate_pct":2.11},{"label":"L3 Eligible","level":3,"eligible":1,"n_total":319,"n_vol_exits":20,"vol_rate_pct":6.27,"n_regrettable":5,"regrettable_rate_pct":1.57},{"label":"L4 Not eligible","level":4,"eligible":0,"n_total":214,"n_vol_exits":18,"vol_rate_pct":8.41,"n_regrettable":4,"regrettable_rate_pct":1.87},{"label":"L4 Eligible","level":4,"eligible":1,"n_total":65,"n_vol_exits":6,"vol_rate_pct":9.23,"n_regrettable":1,"regrettable_rate_pct":1.54},{"label":"L5 Not eligible","level":5,"eligible":0,"n_total":60,"n_vol_exits":2,"vol_rate_pct":3.33,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L5 Eligible","level":5,"eligible":1,"n_total":18,"n_vol_exits":1,"vol_rate_pct":5.56,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L6 Not eligible","level":6,"eligible":0,"n_total":15,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L7 Not eligible","level":7,"eligible":0,"n_total":5,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0}],"engagement":{"waves":["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q3"],"n_responses":[10043,4978,11475,5893,11446,12136],"dims":["senior_leadership_trust","recognition","manager_effectiveness","psychological_safety","career_development","wellbeing","purpose_meaning","confidence_in_role_future"],"series":{"senior_leadership_trust":[3.392,3.371,3.348,3.342,3.342,3.338],"recognition":[3.392,3.38,3.378,3.352,3.366,3.375],"manager_effectiveness":[3.364,3.365,3.354,3.35,3.355,3.366],"psychological_safety":[3.385,3.373,3.378,3.359,3.364,3.363],"career_development":[3.385,3.356,3.377,3.37,3.362,3.369],"wellbeing":[3.402,3.387,3.361,3.374,3.371,3.364],"purpose_meaning":[3.391,3.368,3.354,3.354,3.33,3.316],"confidence_in_role_future":[3.402,3.415,3.381,3.393,3.366,3.355]}},"financial":[{"scenario":"Cost of inaction","value_m":42.0},{"scenario":"Cost of acting","value_m":6.9},{"scenario":"Net benefit","value_m":20.0}],"meta":{"generated":"2026-08-13 15:12","sources":[{"file":"exec_overview.csv","what":"KPI cards (attrition rates)","rows":3},{"file":"cost42_reconstruction.csv","what":"$42M cost reconstruction buckets","rows":3},{"file":"attrition_level_dept.csv","what":"Dept x level heatmap (35 cells)","rows":35},{"file":"career_pathway.csv","what":"Promotion-eligibility vs attrition (12 rows)","rows":12},{"file":"engagement_trends.csv","what":"Engagement 8 dims x 6 waves","rows":6},{"file":"financial_toggle.csv","what":"Financial comparison (inaction / acting / benefit)","rows":3}]}};
+const DATA = {"yearKpi":[{"year":2024,"overall_exits":552,"overall_rate_pct":4.12,"entity_b_exits":124,"entity_b_rate_pct":6.58},{"year":2025,"overall_exits":581,"overall_rate_pct":4.33,"entity_b_exits":100,"entity_b_rate_pct":5.31}],"execKpi":[{"metric":"Overall Voluntary Attrition","rate_pct":8.45,"n_exits":1133,"n_total":13403},{"metric":"Entity_B Voluntary Attrition","rate_pct":11.89,"n_exits":224,"n_total":1884},{"metric":"Risk and Compliance Voluntary Attrition","rate_pct":9.64,"n_exits":195,"n_total":2022}],"cost42":[{"bucket":"Regrettable attrition replacement","low_m":22,"high_m":25,"mid_m":23.5},{"bucket":"Disengagement productivity loss","low_m":12,"high_m":15,"mid_m":13.5},{"bucket":"Recruitment inefficiency","low_m":4,"high_m":6,"mid_m":5.0}],"heatmapYear":[{"year":2024,"department":"Corporate Operations","role_level":1,"n_total":848,"n_exits":32,"rate_pct":3.77},{"year":2024,"department":"Corporate Operations","role_level":2,"n_total":485,"n_exits":28,"rate_pct":5.77},{"year":2024,"department":"Corporate Operations","role_level":3,"n_total":141,"n_exits":8,"rate_pct":5.67},{"year":2024,"department":"Corporate Operations","role_level":4,"n_total":25,"n_exits":1,"rate_pct":4.0},{"year":2024,"department":"Corporate Operations","role_level":5,"n_total":9,"n_exits":0,"rate_pct":0.0},{"year":2024,"department":"Executive Leadership","role_level":1,"n_total":128,"n_exits":5,"rate_pct":3.91},{"year":2024,"department":"Executive Leadership","role_level":2,"n_total":67,"n_exits":4,"rate_pct":5.97},{"year":2024,"department":"Executive Leadership","role_level":3,"n_total":16,"n_exits":0,"rate_pct":0.0},{"year":2024,"department":"Executive Leadership","role_level":6,"n_total":6,"n_exits":0,"rate_pct":0.0},{"year":2024,"department":"Executive Leadership","role_level":7,"n_total":8,"n_exits":0,"rate_pct":0.0},{"year":2024,"department":"Insurance","role_level":1,"n_total":1033,"n_exits":42,"rate_pct":4.07},{"year":2024,"department":"Insurance","role_level":2,"n_total":530,"n_exits":21,"rate_pct":3.96},{"year":2024,"department":"Insurance","role_level":3,"n_total":172,"n_exits":5,"rate_pct":2.91},{"year":2024,"department":"Insurance","role_level":4,"n_total":35,"n_exits":1,"rate_pct":2.86},{"year":2024,"department":"Insurance","role_level":5,"n_total":10,"n_exits":1,"rate_pct":10.0},{"year":2024,"department":"Retail Banking","role_level":1,"n_total":1917,"n_exits":74,"rate_pct":3.86},{"year":2024,"department":"Retail Banking","role_level":2,"n_total":968,"n_exits":33,"rate_pct":3.41},{"year":2024,"department":"Retail Banking","role_level":3,"n_total":307,"n_exits":16,"rate_pct":5.21},{"year":2024,"department":"Retail Banking","role_level":4,"n_total":67,"n_exits":4,"rate_pct":5.97},{"year":2024,"department":"Retail Banking","role_level":5,"n_total":19,"n_exits":0,"rate_pct":0.0},{"year":2024,"department":"Risk & Compliance","role_level":1,"n_total":1177,"n_exits":56,"rate_pct":4.76},{"year":2024,"department":"Risk & Compliance","role_level":2,"n_total":587,"n_exits":23,"rate_pct":3.92},{"year":2024,"department":"Risk & Compliance","role_level":3,"n_total":188,"n_exits":13,"rate_pct":6.91},{"year":2024,"department":"Risk & Compliance","role_level":4,"n_total":54,"n_exits":4,"rate_pct":7.41},{"year":2024,"department":"Risk & Compliance","role_level":5,"n_total":14,"n_exits":1,"rate_pct":7.14},{"year":2024,"department":"Technology","role_level":1,"n_total":1753,"n_exits":72,"rate_pct":4.11},{"year":2024,"department":"Technology","role_level":2,"n_total":908,"n_exits":35,"rate_pct":3.85},{"year":2024,"department":"Technology","role_level":3,"n_total":296,"n_exits":11,"rate_pct":3.72},{"year":2024,"department":"Technology","role_level":4,"n_total":59,"n_exits":1,"rate_pct":1.69},{"year":2024,"department":"Technology","role_level":5,"n_total":13,"n_exits":0,"rate_pct":0.0},{"year":2024,"department":"Wealth Management","role_level":1,"n_total":903,"n_exits":32,"rate_pct":3.54},{"year":2024,"department":"Wealth Management","role_level":2,"n_total":452,"n_exits":22,"rate_pct":4.87},{"year":2024,"department":"Wealth Management","role_level":3,"n_total":145,"n_exits":5,"rate_pct":3.45},{"year":2024,"department":"Wealth Management","role_level":4,"n_total":36,"n_exits":2,"rate_pct":5.56},{"year":2024,"department":"Wealth Management","role_level":5,"n_total":12,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Corporate Operations","role_level":1,"n_total":848,"n_exits":43,"rate_pct":5.07},{"year":2025,"department":"Corporate Operations","role_level":2,"n_total":485,"n_exits":25,"rate_pct":5.15},{"year":2025,"department":"Corporate Operations","role_level":3,"n_total":141,"n_exits":9,"rate_pct":6.38},{"year":2025,"department":"Corporate Operations","role_level":4,"n_total":25,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Corporate Operations","role_level":5,"n_total":9,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Executive Leadership","role_level":1,"n_total":128,"n_exits":5,"rate_pct":3.91},{"year":2025,"department":"Executive Leadership","role_level":2,"n_total":67,"n_exits":1,"rate_pct":1.49},{"year":2025,"department":"Executive Leadership","role_level":3,"n_total":16,"n_exits":2,"rate_pct":12.5},{"year":2025,"department":"Executive Leadership","role_level":6,"n_total":6,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Executive Leadership","role_level":7,"n_total":8,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Insurance","role_level":1,"n_total":1033,"n_exits":49,"rate_pct":4.74},{"year":2025,"department":"Insurance","role_level":2,"n_total":530,"n_exits":17,"rate_pct":3.21},{"year":2025,"department":"Insurance","role_level":3,"n_total":172,"n_exits":6,"rate_pct":3.49},{"year":2025,"department":"Insurance","role_level":4,"n_total":35,"n_exits":1,"rate_pct":2.86},{"year":2025,"department":"Insurance","role_level":5,"n_total":10,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Retail Banking","role_level":1,"n_total":1917,"n_exits":78,"rate_pct":4.07},{"year":2025,"department":"Retail Banking","role_level":2,"n_total":968,"n_exits":39,"rate_pct":4.03},{"year":2025,"department":"Retail Banking","role_level":3,"n_total":307,"n_exits":6,"rate_pct":1.95},{"year":2025,"department":"Retail Banking","role_level":4,"n_total":67,"n_exits":2,"rate_pct":2.99},{"year":2025,"department":"Retail Banking","role_level":5,"n_total":19,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Risk & Compliance","role_level":1,"n_total":1177,"n_exits":55,"rate_pct":4.67},{"year":2025,"department":"Risk & Compliance","role_level":2,"n_total":587,"n_exits":29,"rate_pct":4.94},{"year":2025,"department":"Risk & Compliance","role_level":3,"n_total":188,"n_exits":8,"rate_pct":4.26},{"year":2025,"department":"Risk & Compliance","role_level":4,"n_total":54,"n_exits":6,"rate_pct":11.11},{"year":2025,"department":"Risk & Compliance","role_level":5,"n_total":14,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Technology","role_level":1,"n_total":1753,"n_exits":89,"rate_pct":5.08},{"year":2025,"department":"Technology","role_level":2,"n_total":908,"n_exits":39,"rate_pct":4.3},{"year":2025,"department":"Technology","role_level":3,"n_total":296,"n_exits":10,"rate_pct":3.38},{"year":2025,"department":"Technology","role_level":4,"n_total":59,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Technology","role_level":5,"n_total":13,"n_exits":0,"rate_pct":0.0},{"year":2025,"department":"Wealth Management","role_level":1,"n_total":903,"n_exits":44,"rate_pct":4.87},{"year":2025,"department":"Wealth Management","role_level":2,"n_total":452,"n_exits":9,"rate_pct":1.99},{"year":2025,"department":"Wealth Management","role_level":3,"n_total":145,"n_exits":6,"rate_pct":4.14},{"year":2025,"department":"Wealth Management","role_level":4,"n_total":36,"n_exits":2,"rate_pct":5.56},{"year":2025,"department":"Wealth Management","role_level":5,"n_total":12,"n_exits":1,"rate_pct":8.33}],"heatmapAgg":[{"department":"Corporate Operations","level":1,"n_total":848,"n_vol_exits":75,"vol_rate_pct":8.84,"n_regrettable":11,"regrettable_rate_pct":1.3},{"department":"Corporate Operations","level":2,"n_total":485,"n_vol_exits":53,"vol_rate_pct":10.93,"n_regrettable":8,"regrettable_rate_pct":1.65},{"department":"Corporate Operations","level":3,"n_total":141,"n_vol_exits":17,"vol_rate_pct":12.06,"n_regrettable":6,"regrettable_rate_pct":4.26},{"department":"Corporate Operations","level":4,"n_total":25,"n_vol_exits":1,"vol_rate_pct":4.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Corporate Operations","level":5,"n_total":9,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":1,"n_total":128,"n_vol_exits":10,"vol_rate_pct":7.81,"n_regrettable":1,"regrettable_rate_pct":0.78},{"department":"Executive Leadership","level":2,"n_total":67,"n_vol_exits":5,"vol_rate_pct":7.46,"n_regrettable":1,"regrettable_rate_pct":1.49},{"department":"Executive Leadership","level":3,"n_total":16,"n_vol_exits":2,"vol_rate_pct":12.5,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":6,"n_total":6,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":7,"n_total":8,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Insurance","level":1,"n_total":1033,"n_vol_exits":91,"vol_rate_pct":8.81,"n_regrettable":14,"regrettable_rate_pct":1.36},{"department":"Insurance","level":2,"n_total":530,"n_vol_exits":38,"vol_rate_pct":7.17,"n_regrettable":6,"regrettable_rate_pct":1.13},{"department":"Insurance","level":3,"n_total":172,"n_vol_exits":11,"vol_rate_pct":6.4,"n_regrettable":3,"regrettable_rate_pct":1.74},{"department":"Insurance","level":4,"n_total":35,"n_vol_exits":2,"vol_rate_pct":5.71,"n_regrettable":1,"regrettable_rate_pct":2.86},{"department":"Insurance","level":5,"n_total":10,"n_vol_exits":1,"vol_rate_pct":10.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Retail Banking","level":1,"n_total":1917,"n_vol_exits":152,"vol_rate_pct":7.93,"n_regrettable":17,"regrettable_rate_pct":0.89},{"department":"Retail Banking","level":2,"n_total":968,"n_vol_exits":72,"vol_rate_pct":7.44,"n_regrettable":3,"regrettable_rate_pct":0.31},{"department":"Retail Banking","level":3,"n_total":307,"n_vol_exits":22,"vol_rate_pct":7.17,"n_regrettable":2,"regrettable_rate_pct":0.65},{"department":"Retail Banking","level":4,"n_total":67,"n_vol_exits":6,"vol_rate_pct":8.96,"n_regrettable":1,"regrettable_rate_pct":1.49},{"department":"Retail Banking","level":5,"n_total":19,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Risk & Compliance","level":1,"n_total":1177,"n_vol_exits":111,"vol_rate_pct":9.43,"n_regrettable":18,"regrettable_rate_pct":1.53},{"department":"Risk & Compliance","level":2,"n_total":587,"n_vol_exits":52,"vol_rate_pct":8.86,"n_regrettable":6,"regrettable_rate_pct":1.02},{"department":"Risk & Compliance","level":3,"n_total":188,"n_vol_exits":21,"vol_rate_pct":11.17,"n_regrettable":6,"regrettable_rate_pct":3.19},{"department":"Risk & Compliance","level":4,"n_total":54,"n_vol_exits":10,"vol_rate_pct":18.52,"n_regrettable":3,"regrettable_rate_pct":5.56},{"department":"Risk & Compliance","level":5,"n_total":14,"n_vol_exits":1,"vol_rate_pct":7.14,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Technology","level":1,"n_total":1753,"n_vol_exits":161,"vol_rate_pct":9.18,"n_regrettable":17,"regrettable_rate_pct":0.97},{"department":"Technology","level":2,"n_total":908,"n_vol_exits":74,"vol_rate_pct":8.15,"n_regrettable":10,"regrettable_rate_pct":1.1},{"department":"Technology","level":3,"n_total":296,"n_vol_exits":21,"vol_rate_pct":7.09,"n_regrettable":4,"regrettable_rate_pct":1.35},{"department":"Technology","level":4,"n_total":59,"n_vol_exits":1,"vol_rate_pct":1.69,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Technology","level":5,"n_total":13,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":1,"n_total":903,"n_vol_exits":76,"vol_rate_pct":8.42,"n_regrettable":11,"regrettable_rate_pct":1.22},{"department":"Wealth Management","level":2,"n_total":452,"n_vol_exits":31,"vol_rate_pct":6.86,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":3,"n_total":145,"n_vol_exits":11,"vol_rate_pct":7.59,"n_regrettable":4,"regrettable_rate_pct":2.76},{"department":"Wealth Management","level":4,"n_total":36,"n_vol_exits":4,"vol_rate_pct":11.11,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":5,"n_total":12,"n_vol_exits":1,"vol_rate_pct":8.33,"n_regrettable":0,"regrettable_rate_pct":0.0}],"career":[{"label":"L1 Not eligible","level":1,"eligible":0,"n_total":5775,"n_vol_exits":497,"vol_rate_pct":8.61,"n_regrettable":69,"regrettable_rate_pct":1.19},{"label":"L1 Eligible","level":1,"eligible":1,"n_total":1984,"n_vol_exits":179,"vol_rate_pct":9.02,"n_regrettable":20,"regrettable_rate_pct":1.01},{"label":"L2 Not eligible","level":2,"eligible":0,"n_total":2962,"n_vol_exits":236,"vol_rate_pct":7.97,"n_regrettable":23,"regrettable_rate_pct":0.78},{"label":"L2 Eligible","level":2,"eligible":1,"n_total":1035,"n_vol_exits":89,"vol_rate_pct":8.6,"n_regrettable":11,"regrettable_rate_pct":1.06},{"label":"L3 Not eligible","level":3,"eligible":0,"n_total":946,"n_vol_exits":85,"vol_rate_pct":8.99,"n_regrettable":20,"regrettable_rate_pct":2.11},{"label":"L3 Eligible","level":3,"eligible":1,"n_total":319,"n_vol_exits":20,"vol_rate_pct":6.27,"n_regrettable":5,"regrettable_rate_pct":1.57},{"label":"L4 Not eligible","level":4,"eligible":0,"n_total":214,"n_vol_exits":18,"vol_rate_pct":8.41,"n_regrettable":4,"regrettable_rate_pct":1.87},{"label":"L4 Eligible","level":4,"eligible":1,"n_total":65,"n_vol_exits":6,"vol_rate_pct":9.23,"n_regrettable":1,"regrettable_rate_pct":1.54},{"label":"L5 Not eligible","level":5,"eligible":0,"n_total":60,"n_vol_exits":2,"vol_rate_pct":3.33,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L5 Eligible","level":5,"eligible":1,"n_total":18,"n_vol_exits":1,"vol_rate_pct":5.56,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L6 Not eligible","level":6,"eligible":0,"n_total":15,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L7 Not eligible","level":7,"eligible":0,"n_total":5,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0}],"engagementWaves":{"waves":["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q3"],"n_responses":[10043,4978,11475,5893,11446,12136],"dims":["senior_leadership_trust","recognition","manager_effectiveness","psychological_safety","career_development","wellbeing","purpose_meaning","confidence_in_role_future"],"series":{"senior_leadership_trust":[3.392,3.371,3.348,3.342,3.342,3.338],"recognition":[3.392,3.38,3.378,3.352,3.366,3.375],"manager_effectiveness":[3.364,3.365,3.354,3.35,3.355,3.366],"psychological_safety":[3.385,3.373,3.378,3.359,3.364,3.363],"career_development":[3.385,3.356,3.377,3.37,3.362,3.369],"wellbeing":[3.402,3.387,3.361,3.374,3.371,3.364],"purpose_meaning":[3.391,3.368,3.354,3.354,3.33,3.316],"confidence_in_role_future":[3.402,3.415,3.381,3.393,3.366,3.355]}},"engagementYear":[{"year":2024,"n_responses":32389,"dims":{"senior_leadership_trust":3.364,"recognition":3.378,"manager_effectiveness":3.358,"psychological_safety":3.376,"career_development":3.375,"wellbeing":3.38,"purpose_meaning":3.368,"confidence_in_role_future":3.395}},{"year":2025,"n_responses":23582,"dims":{"senior_leadership_trust":3.34,"recognition":3.371,"manager_effectiveness":3.361,"psychological_safety":3.364,"career_development":3.366,"wellbeing":3.368,"purpose_meaning":3.323,"confidence_in_role_future":3.36}}],"engDims":["senior_leadership_trust","recognition","manager_effectiveness","psychological_safety","career_development","wellbeing","purpose_meaning","confidence_in_role_future"],"financial":[{"scenario":"Cost of inaction","value_m":42.0},{"scenario":"Cost of acting","value_m":6.9},{"scenario":"Net benefit","value_m":20.0}],"kaplanMeier":{"ALL": {"months": [0, 1, 2, 5, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 26, 27, 28, 29, 30, 31, 32, 40, 42, 44, 46, 49, 50, 54, 64, 65, 67, 69, 71, 73, 78, 80, 81, 85, 89, 90, 92, 93, 94, 98, 100, 101, 103, 104, 109, 112, 113, 114, 118, 119, 122, 124, 125, 126, 128, 133, 135, 136, 137, 138, 140, 142, 146, 147, 148, 152, 155, 158, 161, 167, 168, 172, 176, 177, 178, 179, 180], "survival": [1.0, 0.9921, 0.9895, 0.9895, 0.9895, 0.9895, 0.9895, 0.9867, 0.9812, 0.9784, 0.9784, 0.9784, 0.9784, 0.9753, 0.9753, 0.972, 0.972, 0.972, 0.9686, 0.9686, 0.9686, 0.9686, 0.9686, 0.9686, 0.9686, 0.9686, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9643, 0.9596, 0.9596, 0.9596, 0.9596, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9547, 0.9495, 0.9495, 0.9495, 0.9495, 0.9495, 0.9495, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439, 0.9439]}, "Entity_A": {"months": [13, 18, 20, 27, 28, 29, 30, 31, 32], "survival": [0.9831, 0.9661, 0.9492, 0.9492, 0.9492, 0.9492, 0.9492, 0.9492, 0.9492]}, "Entity_B": {"months": [1, 13, 14, 16, 17, 18, 19, 20], "survival": [0.9667, 0.95, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333]}, "Entity_C": {"months": [2, 7, 8, 9], "survival": [0.9474, 0.9474, 0.9474, 0.9474]}, "NovaCorp-Origin": {"months": [0, 1, 5, 11, 14, 15, 17, 18, 19, 20, 21, 23, 26, 31, 40, 42, 44, 46, 49, 50, 54, 64, 65, 67, 69, 71, 73, 78, 80, 81, 85, 89, 90, 92, 93, 94, 98, 100, 101, 103, 104, 109, 112, 113, 114, 118, 119, 122, 124, 125, 126, 128, 133, 135, 136, 137, 138, 140, 142, 146, 147, 148, 152, 155, 158, 161, 167, 168, 172, 176, 177, 178, 179, 180], "survival": [1.0, 0.9959, 0.9959, 0.9917, 0.9917, 0.9917, 0.9917, 0.9917, 0.9917, 0.9917, 0.9917, 0.9917, 0.9874, 0.9874, 0.9874, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.983, 0.9782, 0.9782, 0.9782, 0.9782, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9733, 0.9679, 0.9679, 0.9679, 0.9679, 0.9679, 0.9679, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623, 0.9623]}},"meta":{"generated":"2026-08-13 15:44","sources":[{"file":"exec_overview.csv","what":"Aggregate KPI cards (attrition rates)","rows":3},{"file":"cost42_reconstruction.csv","what":"$42M cost reconstruction buckets","rows":3},{"file":"attrition_level_dept.csv","what":"Aggregate dept x level heatmap, vol + regrettable (35 cells)","rows":35},{"file":"career_pathway.csv","what":"Promotion-eligibility vs attrition (12 rows)","rows":12},{"file":"engagement_trends.csv","what":"Engagement 8 dims x 6 waves","rows":6},{"file":"financial_toggle.csv","what":"Financial comparison (inaction / acting / benefit)","rows":3},{"file":"kpi_by_year.csv","what":"Year-split KPI: overall + Entity_B exits & rates","rows":2},{"file":"heatmap_by_year.csv","what":"Year-split heatmap: 7 depts x 7 levels x 2 years (70 cells)","rows":70},{"file":"engagement_by_year.csv","what":"Engagement annual means 2024 vs 2025 (8 dims)","rows":2}],"checks":{"heatCells":70,"heat24":{"heatmap":552,"kpi":552},"heat25":{"heatmap":581,"kpi":581},"heatHead":13388,"execHead":13403,"engDims":8}}};
 
 /* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
-const fmtPct = v => v.toFixed(2) + '%';
+const fmtPct = (v, d) => v.toFixed(d === undefined ? 2 : d) + '%';
 const fmtInt = v => v.toLocaleString('en-US');
+const Y24 = DATA.yearKpi.find(r => r.year === 2024);
+const Y25 = DATA.yearKpi.find(r => r.year === 2025);
+let GYEAR = 'both';        // '2024' | '2025' | 'both'
+let heatMetric = 'vol';    // 'vol' | 'reg'
+let engView = 'year';      // 'year' | 'wave'
+
+const ENG_NAMES = {
+  senior_leadership_trust: 'Leadership trust',
+  recognition: 'Recognition',
+  manager_effectiveness: 'Manager effectiveness',
+  psychological_safety: 'Psychological safety',
+  career_development: 'Career development',
+  wellbeing: 'Wellbeing',
+  purpose_meaning: 'Purpose & meaning',
+  confidence_in_role_future: 'Role-future confidence'
+};
+const ENG_DIMS = DATA.engDims;
+const ENG_PALETTE = ['#F2C811','#2E9BD6','#21A366','#E81123','#8764B8','#37B5B2','#F2A93B','#C77DFF'];
 
 /* ---------- 1 hero ---------- */
-const overall = DATA.kpi[0];
-$('hero-exits').textContent = fmtInt(overall.n_exits);
-$('hero-head').textContent = fmtInt(overall.n_total);
-$('hero-gen').textContent = DATA.meta.generated + ' UTC';
+function renderHero(){
+  if (GYEAR === 'both') {
+    $('hero-main').innerHTML = '<b>' + fmtInt(Y24.overall_exits + Y25.overall_exits) + '</b> voluntary exits analyzed';
+    $('hero-sub').textContent = fmtInt(DATA.execKpi[0].n_total) + ' headcount · 2024 + 2025';
+  } else {
+    const y = GYEAR === '2024' ? Y24 : Y25;
+    $('hero-main').innerHTML = '<b>' + fmtInt(y.overall_exits) + '</b> exits in ' + GYEAR;
+    $('hero-sub').textContent = fmtPct(y.overall_rate_pct) + ' voluntary attrition rate';
+  }
+  $('hero-gen').textContent = DATA.meta.generated + ' UTC';
+}
 
-/* ---------- 2 KPI cards ---------- */
-const KPI_COLORS = ['blue','amber','red']; // overall, Entity_B, R&C
-$('kpi-grid').innerHTML = DATA.kpi.map((k,i)=>{
-  const cls = KPI_COLORS[i] || 'blue';
-  return '<div class="kpi '+cls+'">'
-    + '<div class="k-name">'+k.metric+'</div>'
-    + '<div class="k-rate">'+fmtPct(k.rate_pct)+'</div>'
-    + '<div class="k-sub"><b>'+fmtInt(k.n_exits)+'</b> exits / <b>'+fmtInt(k.n_total)+'</b> employees</div>'
+/* ---------- 2 KPI cards (year-aware + YoY chips) ---------- */
+function yoyChip(prev, cur, higherIsBad){
+  const d = cur - prev;
+  if (Math.abs(d) < 0.005) return '<span class="delta flat">— flat YoY</span>';
+  const up = d > 0;
+  const bad = higherIsBad ? up : !up;
+  return '<span class="delta ' + (bad ? 'bad' : 'good') + '">' + (up ? '▲' : '▼')
+    + ' ' + Math.abs(d).toFixed(2) + 'pp YoY (2024 → 2025)</span>';
+}
+
+function kpiCardHtml(def){
+  const d = def.cur.rate - def.prev.rate;
+  let rateHtml, subHtml;
+  if (GYEAR === '2024') {
+    rateHtml = '<div class="k-rate">' + fmtPct(def.prev.rate) + '</div>';
+    subHtml = '<b>' + fmtInt(def.prev.exits) + '</b> exits · 2024';
+  } else if (GYEAR === '2025') {
+    rateHtml = '<div class="k-rate">' + fmtPct(def.cur.rate) + '</div>';
+    subHtml = '<b>' + fmtInt(def.cur.exits) + '</b> exits · 2025';
+  } else {
+    rateHtml = '<div class="k-rate both-rate">' + fmtPct(def.prev.rate) + ' → ' + fmtPct(def.cur.rate) + '</div>';
+    subHtml = '<b>' + fmtInt(def.prev.exits) + '</b> → <b>' + fmtInt(def.cur.exits) + '</b> exits (2024 → 2025)';
+  }
+  const chip = yoyChip(def.prev.rate, def.cur.rate, true);
+  const action = def.action(d);
+  return '<div class="kpi ' + def.cls + '">'
+    + '<div class="k-name">' + def.name + '</div>'
+    + rateHtml
+    + chip
+    + '<div class="k-sub">' + subHtml + '</div>'
+    + '<div class="k-action">' + action + '</div>'
     + '</div>';
-}).join('');
+}
+
+function renderKpi(){
+  const rc = DATA.execKpi[2];
+  const cards = [
+    { cls: 'blue', name: 'Overall voluntary attrition',
+      prev: { rate: Y24.overall_rate_pct, exits: Y24.overall_exits },
+      cur:  { rate: Y25.overall_rate_pct, exits: Y25.overall_exits },
+      action: d => 'Act: overall rate ' + (d > 0 ? 'up ' + d.toFixed(2) + 'pp — intervene before it compounds' : 'down ' + Math.abs(d).toFixed(2) + 'pp — guard the gains') },
+    { cls: 'amber', name: 'Entity_B voluntary attrition',
+      prev: { rate: Y24.entity_b_rate_pct, exits: Y24.entity_b_exits },
+      cur:  { rate: Y25.entity_b_rate_pct, exits: Y25.entity_b_exits },
+      action: d => 'Act: Entity_B ' + (d < 0 ? 'down ' + Math.abs(d).toFixed(2) + 'pp — hold the line, scale what worked' : 'up ' + d.toFixed(2) + 'pp — double down on intervention') }
+  ];
+  const html = cards.map(kpiCardHtml).join('')
+    + '<div class="kpi red">'
+    + '<div class="k-name">' + rc.metric + '</div>'
+    + '<div class="k-rate">' + fmtPct(rc.rate_pct) + '</div>'
+    + '<span class="delta na">aggregate — no year split in source</span>'
+    + '<div class="k-sub"><b>' + fmtInt(rc.n_exits) + '</b> exits / <b>' + fmtInt(rc.n_total) + '</b> employees (both years)</div>'
+    + '<div class="k-action">Act: ' + rc.rate_pct.toFixed(2) + '% still sits above the overall ' + fmtPct(DATA.execKpi[0].rate_pct) + ' — next hotspot to attack</div>'
+    + '</div>';
+  $('kpi-grid').innerHTML = html;
+}
 
 /* ---------- echarts boot ---------- */
-if (typeof echarts === 'undefined') { $('errbox').style.display='block'; }
+if (typeof echarts === 'undefined') { $('errbox').style.display = 'block'; }
 else {
   echarts.registerTheme('nova', {
-    backgroundColor:'transparent',
-    textStyle:{color:'#9FB3C8'},
-    legend:{textStyle:{color:'#9FB3C8'}, pageTextStyle:{color:'#9FB3C8'}, pageIconColor:'#2E9BD6'},
+    backgroundColor: 'transparent',
+    textStyle: { color: '#9FB3C8' },
+    legend: { textStyle: { color: '#9FB3C8' }, pageTextStyle: { color: '#9FB3C8' }, pageIconColor: '#2E9BD6' }
   });
+  const charts = {};
+  function getChart(id){ if (!charts[id]) charts[id] = echarts.init($(id), 'nova'); return charts[id]; }
 
   /* ---------- 3 cost reconstruction ---------- */
   const costColors = ['#E81123','#F2A93B','#2E9BD6'];
   const costSeg = DATA.cost42.map((c,i)=>({
-    value:c.mid_m, low:c.low_m, high:c.high_m, name:c.bucket,
-    itemStyle:{color:costColors[i], borderRadius:(i===0?[8,0,0,8]:i===DATA.cost42.length-1?[0,8,8,0]:0)}
+    value: c.mid_m, low: c.low_m, high: c.high_m, name: c.bucket,
+    itemStyle: { color: costColors[i], borderRadius: (i===0?[8,0,0,8]:i===DATA.cost42.length-1?[0,8,8,0]:0) }
   }));
-  echarts.init($('costChart'),'nova').setOption({
-    grid:{left:20,right:120,top:30,bottom:40},
-    xAxis:{type:'value',max:45,splitLine:{lineStyle:{color:'#22344C'}},
-      axisLabel:{formatter:'{value}M'}},
-    yAxis:{type:'category',data:['Annual cost ($M)'],axisLine:{show:false}},
-    tooltip:{trigger:'item',formatter:p=>
-      '<b>'+p.data.name+'</b><br>$'+p.data.low+'–'+p.data.high+'M (midpoint $'+p.data.value+'M)'},
-    series:[{type:'bar',stack:'c',barWidth:64,data:costSeg,
-      label:{show:true,formatter:p=>'$'+p.data.low+'–'+p.data.high+'M',
-        color:'#E8EEF7',fontWeight:600,fontSize:13,position:'inside'}}]
+  getChart('costChart').setOption({
+    grid: { left: 20, right: 120, top: 30, bottom: 40 },
+    xAxis: { type: 'value', max: 45, splitLine: { lineStyle: { color: '#22344C' } },
+      axisLabel: { formatter: '{value}M' } },
+    yAxis: { type: 'category', data: ['Annual cost ($M)'], axisLine: { show: false } },
+    tooltip: { trigger: 'item', formatter: p =>
+      '<b>' + p.data.name + '</b><br>$' + p.data.low + '–' + p.data.high + 'M (midpoint $' + p.data.value + 'M)' },
+    series: [{ type: 'bar', stack: 'c', barWidth: 64, data: costSeg,
+      label: { show: true, formatter: p => '$' + p.data.low + '–' + p.data.high + 'M',
+        color: '#E8EEF7', fontWeight: 600, fontSize: 13, position: 'inside' } }]
   });
 
-  /* ---------- 4 heatmap ---------- */
-  const heatState = {metric:'vol'};
-  const heatMeta = {
-    vol:  {name:'Voluntary attrition rate (%)', key:'vol_rate_pct', unit:'%',
-           colors:['#0E2A47','#1F4E79','#2E6DA4','#3D9BE9','#7CC0F0','#F2C811'],
-           max:20},
-    reg:  {name:'Regrettable attrition rate (%)', key:'regrettable_rate_pct', unit:'%',
-           colors:['#2A1216','#5B1A22','#8A2531','#C73E4A','#E81123','#F58A94'],
-           max:6}
-  };
-  const hmDims = DATA.heatmap.dims, hmLvls = DATA.heatmap.levels;
-  function heatSeries(metric){
-    const m = heatMeta[metric];
-    return [{
-      type:'heatmap',
-      data:DATA.heatmap.cells.map(c=>[hmLvls.indexOf(c.level), hmDims.indexOf(c.department),
-        c[m.key] !== null ? c[m.key] : '-']),
-      label:{show:true,formatter:p=>(p.value[2]==='-')?'–':p.value[2].toFixed(1),
-        color:'#E8EEF7',fontSize:11},
-      emphasis:{itemStyle:{shadowBlur:12,shadowColor:'rgba(0,0,0,.5)'}},
-      itemStyle:{borderColor:'#0B1220',borderWidth:3,borderRadius:4}
-    }];
-  }
-  function heatTooltip(p){
-    const c = DATA.heatmap.cells.find(x=>x.department===hmDims[p.value[1]] && x.level===hmLvls[p.value[0]]);
-    if(!c) return '';
-    return '<b>'+c.department+' · Level '+c.level+'</b><br>'
-      +'Headcount: '+fmtInt(c.n_total)+'<br>'
-      +'Voluntary exits: '+fmtInt(c.n_vol_exits)+' ('+fmtPct(c.vol_rate_pct)+')<br>'
-      +'Regrettable: '+fmtInt(c.n_regrettable)+' ('+fmtPct(c.regrettable_rate_pct)+')';
-  }
-  const heatChart = echarts.init($('heatChart'),'nova');
-  function heatOpts(){
-    const m = heatMeta[heatState.metric];
+  /* ---------- 4 heatmap (year-aware) ---------- */
+  const HEAT_DIMS = DATA.heatmapYear.map(r => r.department).filter((v,i,a) => a.indexOf(v) === i);
+  const HEAT_LVLS = DATA.heatmapYear.map(r => r.role_level).filter((v,i,a) => a.indexOf(v) === i).sort((a,b) => a - b);
+  const VOL_MAX = Math.ceil(Math.max.apply(null, DATA.heatmapYear.map(r => r.rate_pct)));
+  const REG_MAX = Math.ceil(Math.max.apply(null, DATA.heatmapAgg.map(c => c.regrettable_rate_pct)));
+  const HM_VOL = ['#0E2A47','#1F4E79','#2E6DA4','#3D9BE9','#7CC0F0','#F2C811'];
+  const HM_REG = ['#2A1216','#5B1A22','#8A2531','#C73E4A','#E81123','#F58A94'];
+  const HM_DIV = ['#21A366','#12355B','#E81123'];
+
+  const yearRows = y => DATA.heatmapYear.filter(r => r.year === y);
+  const aggRows = metric => DATA.heatmapAgg.map(c => ({
+    department: c.department, role_level: c.level, n_total: c.n_total,
+    n_exits: metric === 'vol' ? c.n_vol_exits : c.n_regrettable,
+    rate_pct: metric === 'vol' ? c.vol_rate_pct : c.regrettable_rate_pct
+  }));
+
+  function heatOption(rows, maxV, colors, exitsLabel){
     return {
-      grid:{left:140,right:30,top:20,bottom:50},
-      xAxis:{type:'category',data:hmLvls.map(l=>'L'+l),splitArea:{show:false},
-        axisLabel:{fontSize:12}},
-      yAxis:{type:'category',data:hmDims,axisLabel:{fontSize:11.5}},
-      visualMap:{min:0,max:m.max,calculable:true,orient:'horizontal',left:'center',bottom:0,
-        itemHeight:90,itemWidth:14,textStyle:{color:'#9FB3C8',fontSize:11},
-        inRange:{color:m.colors}},
-      tooltip:{formatter:heatTooltip},
-      series:heatSeries(heatState.metric)
+      grid: { left: 140, right: 30, top: 20, bottom: 50 },
+      xAxis: { type: 'category', data: HEAT_LVLS.map(l => 'L' + l), splitArea: { show: false },
+        axisLabel: { fontSize: 12 } },
+      yAxis: { type: 'category', data: HEAT_DIMS, axisLabel: { fontSize: 11.5 } },
+      visualMap: { min: 0, max: maxV, calculable: true, orient: 'horizontal', left: 'center', bottom: 0,
+        itemHeight: 90, itemWidth: 14, textStyle: { color: '#9FB3C8', fontSize: 11 },
+        inRange: { color: colors } },
+      tooltip: { formatter: p => {
+        const c = rows.find(x => x.department === HEAT_DIMS[p.value[1]] && x.role_level === HEAT_LVLS[p.value[0]]);
+        if (!c) return '';
+        return '<b>' + c.department + ' · L' + c.role_level + '</b><br>Headcount: ' + fmtInt(c.n_total)
+          + '<br>' + exitsLabel + ': ' + fmtInt(c.n_exits) + ' (' + fmtPct(c.rate_pct) + ')';
+      }},
+      series: [{ type: 'heatmap',
+        data: rows.map(c => [HEAT_LVLS.indexOf(c.role_level), HEAT_DIMS.indexOf(c.department), c.rate_pct]),
+        label: { show: true, formatter: p => (p.value[2] === null || p.value[2] === '-') ? '–' : p.value[2].toFixed(1),
+          color: '#E8EEF7', fontSize: 11 },
+        emphasis: { itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,.5)' } },
+        itemStyle: { borderColor: '#0B1220', borderWidth: 3, borderRadius: 4 } }]
     };
   }
-  heatChart.setOption(heatOpts());
-  $('heatToggles').addEventListener('click',e=>{
-    const b = e.target.closest('.tg'); if(!b) return;
-    document.querySelectorAll('#heatToggles .tg').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on'); heatState.metric = b.dataset.m; heatChart.setOption(heatOpts());
-  });
+
+  function deltaOption(){
+    const rows = yearRows(2025).map(r => {
+      const p = DATA.heatmapYear.find(x => x.year === 2024 && x.department === r.department && x.role_level === r.role_level);
+      return { department: r.department, role_level: r.role_level,
+        d: +(r.rate_pct - p.rate_pct).toFixed(2), r24: p.rate_pct, r25: r.rate_pct, n_total: r.n_total };
+    });
+    const m = Math.max.apply(null, rows.map(r => Math.abs(r.d)));
+    return {
+      grid: { left: 140, right: 30, top: 20, bottom: 50 },
+      xAxis: { type: 'category', data: HEAT_LVLS.map(l => 'L' + l), axisLabel: { fontSize: 12 } },
+      yAxis: { type: 'category', data: HEAT_DIMS, axisLabel: { fontSize: 11.5 } },
+      visualMap: { min: -m, max: m, calculable: true, orient: 'horizontal', left: 'center', bottom: 0,
+        itemHeight: 90, itemWidth: 14, textStyle: { color: '#9FB3C8', fontSize: 11 },
+        inRange: { color: HM_DIV } },
+      tooltip: { formatter: p => {
+        const c = rows.find(x => x.department === HEAT_DIMS[p.value[1]] && x.role_level === HEAT_LVLS[p.value[0]]);
+        if (!c) return '';
+        return '<b>' + c.department + ' · L' + c.role_level + '</b><br>2024: ' + fmtPct(c.r24)
+          + '<br>2025: ' + fmtPct(c.r25) + '<br>Change: ' + (c.d >= 0 ? '+' : '') + c.d.toFixed(2) + 'pp'
+          + (c.d > 0 ? ' <b style="color:#FFB4BC">(worse)</b>' : c.d < 0 ? ' <b style="color:#7EE2A8">(better)</b>' : ' (flat)');
+      }},
+      series: [{ type: 'heatmap',
+        data: rows.map(c => [HEAT_LVLS.indexOf(c.role_level), HEAT_DIMS.indexOf(c.department), c.d]),
+        label: { show: true, formatter: p => (p.value[2] > 0 ? '+' : '') + p.value[2].toFixed(1),
+          color: '#E8EEF7', fontSize: 11 },
+        emphasis: { itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,.5)' } },
+        itemStyle: { borderColor: '#0B1220', borderWidth: 3, borderRadius: 4 } }]
+    };
+  }
+
+  function renderHeat(){
+    const both = GYEAR === 'both';
+    $('heatSingle').style.display = both ? 'none' : '';
+    $('heatBoth').style.display = both ? '' : 'none';
+    $('heatNoteBoth').style.display = both ? '' : 'none';
+    $('heatToggles').style.display = both ? 'none' : '';
+    if (both) {
+      ['heatChartA','heatChartB','heatDelta'].forEach(id => getChart(id).resize());
+      getChart('heatChartA').setOption(heatOption(yearRows(2024), VOL_MAX, HM_VOL, 'Voluntary exits'));
+      getChart('heatChartB').setOption(heatOption(yearRows(2025), VOL_MAX, HM_VOL, 'Voluntary exits'));
+      getChart('heatDelta').setOption(deltaOption());
+      $('heatNoteBoth').innerHTML = 'Side-by-side: 2024 vs 2025 voluntary attrition rate on a shared colour scale. Third panel = change in percentage points — '
+        + '<b style="color:#7EE2A8">green = improving</b>, <b style="color:#FFB4BC">red = worsening</b>. Overall rate moved <b>'
+        + fmtPct(Y24.overall_rate_pct) + ' → ' + fmtPct(Y25.overall_rate_pct) + '</b>; Entity_B improved <b>'
+        + fmtPct(Y24.entity_b_rate_pct) + ' → ' + fmtPct(Y25.entity_b_rate_pct) + '</b>.';
+    } else {
+      const y = GYEAR === '2024' ? 2024 : 2025;
+      const yk = GYEAR === '2024' ? Y24 : Y25;
+      if (heatMetric === 'vol') {
+        getChart('heatChart').setOption(heatOption(yearRows(y), VOL_MAX, HM_VOL, 'Voluntary exits'));
+        $('heatNote').innerHTML = GYEAR + ' voluntary rate across departments × levels (heatmap_by_year.csv). Overall: <b>'
+          + fmtPct(yk.overall_rate_pct) + '</b> (' + fmtInt(yk.overall_exits) + ' exits); Entity_B: <b>'
+          + fmtPct(yk.entity_b_rate_pct) + '</b>. L1 entry roles carry the largest exit counts — cut new-hire churn first.';
+      } else {
+        getChart('heatChart').setOption(heatOption(aggRows('reg'), REG_MAX, HM_REG, 'Regrettable exits'));
+        $('heatNote').innerHTML = '<b>Regrettable attrition is only available as a both-years aggregate in the source data</b> '
+          + '(attrition_level_dept.csv) — shown regardless of the year lens. Toggle back to Voluntary rate for the year split.';
+      }
+    }
+  }
 
   /* ---------- 5 career pathway ---------- */
-  echarts.init($('careerChart'),'nova').setOption({
-    grid:{left:50,right:20,top:50,bottom:70},
-    legend:{data:['Voluntary attrition rate','Regrettable attrition rate'],top:10},
-    xAxis:{type:'category',data:DATA.career.map(r=>r.label),
-      axisLabel:{rotate:30,fontSize:11}},
-    yAxis:{type:'value',name:'Rate (%)'},
-    tooltip:{trigger:'axis',formatter:ps=>{
+  getChart('careerChart').setOption({
+    grid: { left: 50, right: 20, top: 50, bottom: 70 },
+    legend: { data: ['Voluntary attrition rate','Regrettable attrition rate'], top: 10 },
+    xAxis: { type: 'category', data: DATA.career.map(r => r.label),
+      axisLabel: { rotate: 30, fontSize: 11 } },
+    yAxis: { type: 'value', name: 'Rate (%)' },
+    tooltip: { trigger: 'axis', formatter: ps => {
       const c = DATA.career[ps[0].dataIndex];
-      return '<b>'+c.label+'</b><br>Headcount: '+fmtInt(c.n_total)
-        +'<br>Voluntary exits: '+fmtInt(c.n_vol_exits)+' ('+fmtPct(c.vol_rate_pct)+')'
-        +'<br>Regrettable exits: '+fmtInt(c.n_regrettable)+' ('+fmtPct(c.regrettable_rate_pct)+')';
+      return '<b>' + c.label + '</b><br>Headcount: ' + fmtInt(c.n_total)
+        + '<br>Voluntary exits: ' + fmtInt(c.n_vol_exits) + ' (' + fmtPct(c.vol_rate_pct) + ')'
+        + '<br>Regrettable exits: ' + fmtInt(c.n_regrettable) + ' (' + fmtPct(c.regrettable_rate_pct) + ')';
     }},
-    series:[
-      {name:'Voluntary attrition rate',type:'bar',barMaxWidth:26,
-       data:DATA.career.map(r=>r.vol_rate_pct),itemStyle:{color:'#2E9BD6',borderRadius:[4,4,0,0]}},
-      {name:'Regrettable attrition rate',type:'bar',barMaxWidth:26,
-       data:DATA.career.map(r=>r.regrettable_rate_pct),itemStyle:{color:'#E81123',borderRadius:[4,4,0,0]}}
+    series: [
+      { name: 'Voluntary attrition rate', type: 'bar', barMaxWidth: 26,
+        data: DATA.career.map(r => r.vol_rate_pct), itemStyle: { color: '#2E9BD6', borderRadius: [4,4,0,0] } },
+      { name: 'Regrettable attrition rate', type: 'bar', barMaxWidth: 26,
+        data: DATA.career.map(r => r.regrettable_rate_pct), itemStyle: { color: '#E81123', borderRadius: [4,4,0,0] } }
     ]
   });
+  (function(){
+    const l3e = DATA.career.find(r => r.level === 3 && r.eligible === 1);
+    const l3n = DATA.career.find(r => r.level === 3 && r.eligible === 0);
+    const l4e = DATA.career.find(r => r.level === 4 && r.eligible === 1);
+    const l4n = DATA.career.find(r => r.level === 4 && r.eligible === 0);
+    $('careerNote').innerHTML = 'Promotion-eligible L3 staff quit at <b>' + fmtPct(l3e.vol_rate_pct) + '</b> vs <b>'
+      + fmtPct(l3n.vol_rate_pct) + '</b> for ineligible peers — a ' + (l3n.vol_rate_pct - l3e.vol_rate_pct).toFixed(2)
+      + 'pp gap worth fixing. At L4 the gap reverses (eligible <b>' + fmtPct(l4e.vol_rate_pct) + '</b> vs <b>'
+      + fmtPct(l4n.vol_rate_pct) + '</b>) — eligibility alone does not fix the dead-end. Levels 6–7 have no eligible employees in source data.';
+  })();
 
-  /* ---------- 6 engagement trends ---------- */
-  const engDims = DATA.engagement.dims;
-  const engNames = {
-    senior_leadership_trust:'Senior leadership trust', recognition:'Recognition',
-    manager_effectiveness:'Manager effectiveness', psychological_safety:'Psychological safety',
-    career_development:'Career development', wellbeing:'Wellbeing',
-    purpose_meaning:'Purpose & meaning', confidence_in_role_future:'Confidence in role future'
-  };
-  const engPalette = ['#F2C811','#2E9BD6','#21A366','#E81123','#8764B8','#37B5B2','#F2A93B','#C77DFF'];
-  echarts.init($('engChart'),'nova').setOption({
-    grid:{left:55,right:30,top:40,bottom:60},
-    legend:{top:0,type:'scroll',itemWidth:14,itemHeight:8,fontSize:11},
-    xAxis:{type:'category',boundaryGap:false,data:DATA.engagement.waves},
-    yAxis:{type:'value',min:3.28,max:3.46,axisLabel:{formatter:'{value}'},
-      name:'Score (1–5)'},
-    tooltip:{trigger:'axis',
-      formatter:ps=>{
-        const w = DATA.engagement.waves[ps[0].dataIndex];
-        const n = DATA.engagement.n_responses[ps[0].dataIndex];
-        let h = '<b>'+w+'</b> · n='+fmtInt(n)+'<br>';
-        ps.forEach(p=>{h += p.marker+engNames[p.seriesName]+': <b>'+p.value.toFixed(3)+'</b><br>';});
-        return h;
-      }},
-    series:engDims.map((d,i)=>({name:d,type:'line',smooth:true,symbol:'circle',symbolSize:5,
-      lineStyle:{width:2,color:engPalette[i%engPalette.length]},
-      itemStyle:{color:engPalette[i%engPalette.length]},
-      data:DATA.engagement.series[d]}))
-  });
+  /* ---------- 6 engagement ---------- */
+  function renderEng(){
+    const showYear = engView === 'year';
+    $('engYearWrap').style.display = showYear ? '' : 'none';
+    $('engWaveWrap').style.display = showYear ? 'none' : '';
+    if (showYear) {
+      const e24r = DATA.engagementYear.find(r => r.year === 2024);
+      const e25r = DATA.engagementYear.find(r => r.year === 2025);
+      const e24 = e24r.dims, e25 = e25r.dims;
+      const op24 = GYEAR === '2025' ? 0.22 : 1;
+      const op25 = GYEAR === '2024' ? 0.22 : 1;
+      getChart('engYearChart').resize();
+      getChart('engYearChart').setOption({
+        grid: { left: 55, right: 20, top: 40, bottom: 95 },
+        legend: { data: ['2024','2025'], top: 0 },
+        xAxis: { type: 'category', data: ENG_DIMS.map(d => ENG_NAMES[d] || d),
+          axisLabel: { rotate: 32, fontSize: 10.5 } },
+        yAxis: { type: 'value', min: 3.2, max: 3.46, name: 'Score (1–5)', axisLabel: { formatter: '{value}' } },
+        tooltip: { trigger: 'axis', formatter: ps => {
+          let h = '<b>' + ps[0].name + '</b><br>';
+          ps.forEach(p => { h += p.marker + p.seriesName + ': <b>' + p.value.toFixed(3) + '</b><br>'; });
+          return h;
+        }},
+        series: [
+          { name: '2024', type: 'bar', barMaxWidth: 15, data: ENG_DIMS.map(d => e24[d]),
+            itemStyle: { color: '#2E9BD6', opacity: op24, borderRadius: [4,4,0,0] } },
+          { name: '2025', type: 'bar', barMaxWidth: 15, data: ENG_DIMS.map(d => e25[d]),
+            itemStyle: { color: '#F2C811', opacity: op25, borderRadius: [4,4,0,0] } }
+        ]
+      });
+      $('engDeltas').innerHTML = 'Δ 2024 → 2025: ' + ENG_DIMS.map(d => {
+        const dv = e25[d] - e24[d];
+        const flat = Math.abs(dv) < 0.005;
+        const cls = flat ? 'flat' : (dv > 0 ? 'good' : 'bad');
+        const arrow = flat ? '—' : (dv > 0 ? '▲' : '▼');
+        return '<span class="eng-d ' + cls + '"><b>' + (ENG_NAMES[d] || d) + '</b> ' + arrow + ' '
+          + Math.abs(dv).toFixed(3) + '</span>';
+      }).join('');
+      let worstDim = null, worstD = 0;
+      ENG_DIMS.forEach(d => { const dv = e25[d] - e24[d]; if (dv < worstD) { worstD = dv; worstDim = d; } });
+      const worse = ENG_DIMS.filter(d => e25[d] < e24[d] - 0.0005).length;
+      $('engYearNote').innerHTML = 'Annual means, engagement_by_year.csv: <b>' + worse + ' of 8</b> dimensions declined 2024 → 2025'
+        + (worstDim ? ' (largest drop: <b>' + (ENG_NAMES[worstDim] || worstDim) + ' ' + worstD.toFixed(3) + '</b>)' : '')
+        + '. Survey n: <b>' + fmtInt(e24r.n_responses) + '</b> (2024) vs <b>' + fmtInt(e25r.n_responses) + '</b> (2025).'
+        + ' The year lens dims the other year\'s bars.';
+    } else {
+      getChart('engWaveChart').resize();
+      getChart('engWaveChart').setOption({
+        grid: { left: 55, right: 30, top: 40, bottom: 60 },
+        legend: { top: 0, type: 'scroll', itemWidth: 14, itemHeight: 8, fontSize: 11 },
+        xAxis: { type: 'category', boundaryGap: false, data: DATA.engagementWaves.waves },
+        yAxis: { type: 'value', min: 3.28, max: 3.46, axisLabel: { formatter: '{value}' },
+          name: 'Score (1–5)' },
+        tooltip: { trigger: 'axis',
+          formatter: ps => {
+            const w = DATA.engagementWaves.waves[ps[0].dataIndex];
+            const n = DATA.engagementWaves.n_responses[ps[0].dataIndex];
+            let h = '<b>' + w + '</b> · n=' + fmtInt(n) + '<br>';
+            ps.forEach(p => { h += p.marker + (ENG_NAMES[p.seriesName] || p.seriesName) + ': <b>' + p.value.toFixed(3) + '</b><br>'; });
+            return h;
+          }},
+        series: DATA.engagementWaves.dims.map((d,i) => ({
+          name: d, type: 'line', smooth: true, symbol: 'circle', symbolSize: 5,
+          lineStyle: { width: 2, color: ENG_PALETTE[i % ENG_PALETTE.length] },
+          itemStyle: { color: ENG_PALETTE[i % ENG_PALETTE.length] },
+          data: DATA.engagementWaves.series[d] }))
+      });
+    }
+  }
 
-  /* ---------- 7 financial ---------- */
-  const finColor = {'Cost of inaction':'#E81123','Cost of acting':'#2E9BD6','Net benefit':'#21A366'};
-  echarts.init($('finChart'),'nova').setOption({
-    grid:{left:60,right:30,top:30,bottom:50},
-    xAxis:{type:'category',data:DATA.financial.map(f=>f.scenario),
-      axisLabel:{fontSize:12.5}},
-    yAxis:{type:'value',name:'$ million'},
-    tooltip:{trigger:'item',formatter:p=>'<b>'+p.name+'</b>: $'+p.value.toFixed(1)+'M'},
-    series:[{type:'bar',barMaxWidth:120,
-      data:DATA.financial.map(f=>({value:f.value_m,
-        itemStyle:{color:finColor[f.scenario],borderRadius:[6,6,0,0]}})),
-      label:{show:true,position:'top',formatter:p=>'$'+p.value.toFixed(1)+'M',
-        color:'#E8EEF7',fontWeight:700,fontSize:14}}]
+  
+  /* ---------- 6.5 Kaplan-Meier init ---------- */
+  (function(){
+    var kmData = DATA.kaplanMeier;
+    if(!kmData) return;
+    var colors = {'NovaCorp-Origin':'#5B9BD5','Entity_A':'#70AD47','Entity_B':'#ED7D31','Entity_C':'#A5A5A5','ALL':'#FFC000'};
+    var series = [];
+    ['NovaCorp-Origin','Entity_A','Entity_B','Entity_C','ALL'].forEach(function(e){
+      var d = kmData[e];
+      if(!d) return;
+      series.push({
+        name: e, type: 'line', step: 'end',
+        data: d.months.map(function(m,i){return [m, (d.survival[i]*100).toFixed(2)];}),
+        lineStyle:{width:2.5}, itemStyle:{color:colors[e]}, symbol:'none'
+      });
+    });
+    getChart('kmChart').setOption({
+      tooltip:{trigger:'axis', valueFormatter:function(v){return v+'%';}},
+      legend:{data:['NovaCorp-Origin','Entity_A','Entity_B','Entity_C','ALL'], textStyle:{color:'#cbd5e1'}, top:5},
+      grid:{left:55,right:20,top:45,bottom:40},
+      xAxis:{type:'value',name:'Tenure (months)',nameTextStyle:{color:'#94a3b8'},axisLabel:{color:'#94a3b8'}},
+      yAxis:{type:'value',name:'Survival %',min:85,max:100,nameTextStyle:{color:'#94a3b8'},axisLabel:{color:'#94a3b8',formatter:'{value}%'}},
+      series: series
+    });
+  })();
+
+/* ---------- 7 financial ---------- */
+  const finColor = { 'Cost of inaction': '#E81123', 'Cost of acting': '#2E9BD6', 'Net benefit': '#21A366' };
+  getChart('finChart').setOption({
+    grid: { left: 60, right: 30, top: 30, bottom: 50 },
+    xAxis: { type: 'category', data: DATA.financial.map(f => f.scenario), axisLabel: { fontSize: 12.5 } },
+    yAxis: { type: 'value', name: '$ million' },
+    tooltip: { trigger: 'item', formatter: p => '<b>' + p.name + '</b>: $' + p.value.toFixed(1) + 'M' },
+    series: [{ type: 'bar', barMaxWidth: 120,
+      data: DATA.financial.map(f => ({ value: f.value_m,
+        itemStyle: { color: finColor[f.scenario], borderRadius: [6,6,0,0] } })),
+      label: { show: true, position: 'top', formatter: p => '$' + p.value.toFixed(1) + 'M',
+        color: '#E8EEF7', fontWeight: 700, fontSize: 14 } }]
   });
 
   /* ---------- footer ---------- */
+  const chk = DATA.meta.checks;
   $('foot').innerHTML =
     '<div><h3>Data Sources (embedded at build time)</h3><table><tr><th>file</th><th>rows</th><th>content</th></tr>'
-    + DATA.meta.sources.map(s=>'<tr><td class="mono">'+s.file+'</td><td>'+s.rows+'</td><td>'+s.what+'</td></tr>').join('')
+    + DATA.meta.sources.map(s => '<tr><td class="mono">' + s.file + '</td><td>' + s.rows + '</td><td>' + s.what + '</td></tr>').join('')
     + '</table></div>'
     + '<div><h3>Verification</h3><table>'
-    + '<tr><td>Heatmap cells</td><td>35 / 35</td></tr>'
-    + '<tr><td>Career rows</td><td>12 / 12</td></tr>'
-    + '<tr><td>Engagement waves × dims</td><td>6 × 8</td></tr>'
-    + '<tr><td>Midpoint reconstruction</td><td>23.5+13.5+5.0 = $42.0M</td></tr>'
-    + '<tr><td>Heatmap exits ≡ overview exits</td><td>'+fmtInt(overall.n_exits)+' ≡ '+fmtInt(overall.n_exits)+'</td></tr>'
+    + '<tr><td>heatmap_by_year cells</td><td>' + chk.heatCells + ' / 70 (35 per year)</td></tr>'
+    + '<tr><td>2024 heatmap exits ≡ kpi_by_year</td><td>' + fmtInt(chk.heat24.heatmap) + ' ≡ ' + fmtInt(chk.heat24.kpi) + '</td></tr>'
+    + '<tr><td>2025 heatmap exits ≡ kpi_by_year</td><td>' + fmtInt(chk.heat25.heatmap) + ' ≡ ' + fmtInt(chk.heat25.kpi) + '</td></tr>'
+    + '<tr><td>2024 + 2025 exits ≡ exec_overview</td><td>' + fmtInt(chk.heat24.kpi + chk.heat25.kpi) + ' ≡ ' + fmtInt(DATA.execKpi[0].n_exits) + '</td></tr>'
+    + '<tr><td>Engagement years × dims</td><td>2 × ' + chk.engDims + '</td></tr>'
+    + '<tr><td>Midpoint reconstruction</td><td>23.5 + 13.5 + 5.0 = $42.0M</td></tr>'
+    + '<tr><td>Headcount note</td><td>heatmap n_total sums ' + fmtInt(chk.heatHead) + ' (2024 snapshot) vs exec_overview ' + fmtInt(chk.execHead) + ' (source-level difference, reported as-is)</td></tr>'
     + '</table></div>'
     + '<div><h3>Generated</h3><p style="color:#6B7F95;font-size:12px">'
-    + DATA.meta.generated+' UTC<br>All figures read directly from dashboard_data/*.csv — no hard-coded values.</p></div>';
+    + DATA.meta.generated + ' UTC<br>All figures read directly from dashboard_data/*.csv — no hard-coded values.</p></div>';
 
-  /* resize */
-  window.addEventListener('resize',()=>{
-    [heatChart, echarts.getInstanceByDom($('costChart')),
-     echarts.getInstanceByDom($('careerChart')),
-     echarts.getInstanceByDom($('engChart')),
-     echarts.getInstanceByDom($('finChart'))].forEach(c=>c&&c.resize());
+  /* ---------- event wiring ---------- */
+  $('yearToggles').addEventListener('click', e => {
+    const b = e.target.closest('.tg'); if (!b) return;
+    document.querySelectorAll('#yearToggles .tg').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    GYEAR = b.dataset.y;
+    renderHero(); renderKpi(); renderHeat(); renderEng();
+  });
+  $('heatToggles').addEventListener('click', e => {
+    const b = e.target.closest('.tg'); if (!b) return;
+    document.querySelectorAll('#heatToggles .tg').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    heatMetric = b.dataset.m;
+    renderHeat();
+  });
+  $('engToggles').addEventListener('click', e => {
+    const b = e.target.closest('.tg'); if (!b) return;
+    document.querySelectorAll('#engToggles .tg').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    engView = b.dataset.v;
+    renderEng();
+  });
+
+  /* ---------- initial render ---------- */
+  renderHero(); renderKpi(); renderHeat(); renderEng();
+
+  /* ---------- resize ---------- */
+  window.addEventListener('resize', () => {
+    Object.keys(charts).forEach(k => charts[k].resize());
   });
 }
 </script>
