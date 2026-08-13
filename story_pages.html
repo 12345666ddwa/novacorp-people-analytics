@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaCorp - The Attrition Story in Four Pages</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>window.echarts || document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js">\x3C/script>');</script>
+<style>
+:root{
+  --paper:#FAFAF7; --ink:#1A2332; --navy:#1F4E79; --orange:#E69F00;
+  --orange-l:#F2B03D; --gray:#8A94A0; --gray2:#5A6572;
+  --lgray:#D8D8D0; --grid:#EFEDE6; --hair:#E5E3DC; --card:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory}
+body{
+  background:var(--paper); color:var(--ink); overflow-x:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+}
+.slide{
+  height:100vh; height:100svh; min-height:640px; scroll-snap-align:start;
+  max-width:1440px; margin:0 auto; padding:52px 64px 0;
+  display:flex; flex-direction:column; position:relative;
+}
+.kicker{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gray);font-weight:700}
+h1{
+  font-family:Georgia,'Times New Roman',serif; font-weight:700;
+  font-size:clamp(30px,3.1vw,42px); line-height:1.1; margin:12px 0 0; max-width:960px;
+}
+.rule{width:86px;height:3px;background:var(--orange);margin:18px 0 14px}
+.sub{color:var(--gray2);font-size:clamp(14px,1.25vw,17px);max-width:840px;line-height:1.55}
+.body{flex:1;display:grid;grid-template-columns:1.14fr .86fr;gap:52px;padding:26px 0 22px;min-height:0}
+.chartbox{position:relative;min-width:0;min-height:0}
+.chart{position:absolute;inset:0 0 0 0}
+.chartbox.hasfoot .chart{inset:0 0 24px 0}
+.foot{position:absolute;bottom:0;left:4px;font-size:11.5px;color:#9AA3AD;letter-spacing:.02em}
+.kpis{display:flex;flex-direction:column;justify-content:center;gap:36px;padding-left:6px}
+.kpi{border-left:2px solid var(--hair);padding-left:18px}
+.kpi.hot{border-left:3px solid var(--orange)}
+.kpi .num{
+  font-family:Georgia,'Times New Roman',serif; font-weight:700;
+  font-size:clamp(38px,3.7vw,54px); line-height:1; display:block; color:var(--navy);
+}
+.kpi.hot .num{color:var(--orange)}
+.kpi .cap{display:block;margin-top:9px;font-size:14px;color:var(--gray2);line-height:1.5;max-width:330px}
+.kpi .cap b{color:var(--ink);font-weight:600}
+/* page 2 buckets */
+.buckets{display:flex;flex-direction:column;gap:13px;margin-top:2px}
+.bucket{
+  background:var(--card);border:1px solid var(--hair);border-radius:10px;
+  padding:15px 18px;display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  box-shadow:0 1px 2px rgba(26,35,50,.05);
+}
+.bucket .blabel{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray);font-weight:700}
+.bucket .bnum{font-family:Georgia,serif;font-size:25px;font-weight:700;color:var(--navy);white-space:nowrap}
+.bucket.hot .bnum{color:var(--orange)}
+.netchip{
+  margin-top:4px;background:var(--navy);color:#fff;border-radius:10px;padding:15px 18px;
+  font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+}
+.netchip .nnum{font-family:Georgia,serif;font-size:24px;color:var(--orange-l);white-space:nowrap}
+.rec{
+  margin:auto -64px 0; background:var(--navy); padding:20px 64px;
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  font-size:clamp(13.5px,1.15vw,16.5px);
+}
+.rlab{
+  color:var(--orange-l);font-weight:800;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+  white-space:nowrap;padding-top:1px;
+}
+.ract{color:#fff;font-weight:700;line-height:1.45}
+.pageno{position:absolute;right:64px;top:56px;font-size:12.5px;letter-spacing:.2em;color:var(--lgray);font-weight:700}
+.brand{
+  position:fixed;top:18px;left:24px;z-index:40;font-size:10.5px;letter-spacing:.22em;
+  color:var(--gray);font-weight:800;text-transform:uppercase;pointer-events:none;
+}
+.dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:12px}
+.dot{width:9px;height:9px;border-radius:50%;background:#D8D5CC;border:none;cursor:pointer;padding:0;transition:all .25s}
+.dot.on{background:var(--orange);transform:scale(1.15)}
+@media (max-width:980px){
+  .slide{padding:40px 28px 0;min-height:0;height:auto}
+  .body{grid-template-columns:1fr;gap:26px;padding:24px 0}
+  .chartbox{height:44vh;min-height:300px}
+  .chart{inset:0}
+  .chartbox.hasfoot .chart{inset:0 0 22px 0}
+  .kpis{gap:26px}
+  .rec{margin:auto -28px 0;padding:18px 28px}
+  .pageno{right:28px;top:44px}
+  .brand{display:none}
+  .dots{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="brand">NovaCorp / People Story</div>
+<nav class="dots" aria-label="Slides">
+  <button class="dot on" data-i="0"></button>
+  <button class="dot" data-i="1"></button>
+  <button class="dot" data-i="2"></button>
+  <button class="dot" data-i="3"></button>
+</nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="slide" id="p1">
+  <div class="pageno">01 / 04</div>
+  <div class="kicker">01 · The Problem</div>
+  <h1>Entity B is losing people twice as fast</h1>
+  <div class="rule"></div>
+  <p class="sub">The acquired unit runs well above every other part of the company. Its voluntary attrition is 11.9%, the company average is 8.5%.</p>
+  <div class="body">
+    <div class="chartbox"><div class="chart" id="chart1"></div></div>
+    <div class="kpis">
+      <div class="kpi hot">
+        <span class="num">79.4%</span>
+        <span class="cap">of Entity B new hires left within their first year. That is <b>181 of 228</b> people.</span>
+      </div>
+      <div class="kpi">
+        <span class="num">2.3x</span>
+        <span class="cap">more likely to name the acquisition as their exit driver.</span>
+      </div>
+      <div class="kpi">
+        <span class="num">$22-25M</span>
+        <span class="cap">a year in regrettable exits. The largest cost bucket.</span>
+      </div>
+    </div>
+  </div>
+  <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Run an Entity B cultural integration audit within 90 days.</span></div>
+</section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="slide" id="p2">
+  <div class="pageno">02 / 04</div>
+  <div class="kicker">02 · The Cost of Waiting</div>
+  <h1>Acting costs 6x less than doing nothing</h1>
+  <div class="rule"></div>
+  <p class="sub">Inaction keeps the full $42M leak open. A fix costs $6.9M and pays for itself in the first year.</p>
+  <div class="body">
+    <div class="chartbox"><div class="chart" id="chart2"></div></div>
+    <div class="kpis">
+      <div class="kpi hot">
+        <span class="num">6x</span>
+        <span class="cap">cheaper to act than to let the leak run.</span>
+      </div>
+      <div class="buckets">
+        <div class="bucket hot"><span class="blabel">Regrettable exits</span><span class="bnum">$22-25M</span></div>
+        <div class="bucket"><span class="blabel">Disengagement drag</span><span class="bnum">$12-15M</span></div>
+        <div class="bucket"><span class="blabel">Recruiting to refill</span><span class="bnum">$4-6M</span></div>
+      </div>
+      <div class="netchip"><span>Net benefit of acting</span><span class="nnum">$20M a year</span></div>
+    </div>
+  </div>
+  <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Fund the tiered intervention plan.</span></div>
+</section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="slide" id="p3">
+  <div class="pageno">03 / 04</div>
+  <div class="kicker">03 · The Early Exits</div>
+  <h1>1 in 5 new hires leaves within a year</h1>
+  <div class="rule"></div>
+  <p class="sub">Year one is where the losses concentrate. After year two, the rate drops to near zero and stays low.</p>
+  <div class="body">
+    <div class="chartbox"><div class="chart" id="chart3"></div></div>
+    <div class="kpis">
+      <div class="kpi hot">
+        <span class="num">21.5%</span>
+        <span class="cap">of new hires leave within their first year. That is <b>321 of 1,496</b> people.</span>
+      </div>
+      <div class="kpi">
+        <span class="num">-50%</span>
+        <span class="cap">cut in early turnover with structured onboarding. Brandon Hall, AMJ 2015.</span>
+      </div>
+      <div class="kpi">
+        <span class="num">+25%</span>
+        <span class="cap">productivity gain after an onboarding upgrade. Google re:Work.</span>
+      </div>
+    </div>
+  </div>
+  <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Roll out structured 90-day onboarding.</span></div>
+</section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="slide" id="p4">
+  <div class="pageno">04 / 04</div>
+  <div class="kicker">04 · The Director Gap</div>
+  <h1>Directors leave Entity B faster than anywhere else</h1>
+  <div class="rule"></div>
+  <p class="sub">By month 20, Entity B has lost 6.7% of its directors. Origin has lost 1%.</p>
+  <div class="body">
+    <div class="chartbox hasfoot">
+      <div class="chart" id="chart4"></div>
+      <div class="foot">Kaplan-Meier survival of directors in role. NovaCorp HR records, FY2024-2025.</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi hot">
+        <span class="num">93.3%</span>
+        <span class="cap">of Entity B directors are still in role after 60 months.</span>
+      </div>
+      <div class="kpi">
+        <span class="num">96.2%</span>
+        <span class="cap">at Origin, the original NovaCorp entity, over the same window.</span>
+      </div>
+      <div class="kpi">
+        <span class="num">6.7%</span>
+        <span class="cap">of Entity B directors gone by month 20. Origin lost 1%.</span>
+      </div>
+    </div>
+  </div>
+  <div class="rec"><span class="rlab">Recommendation</span><span class="ract">Offer Entity B directors FAR liability cover.</span></div>
+</section>
+
+<script>
+(function(){
+  var PAPER='#FAFAF7', INK='#1A2332', NAVY='#1F4E79', ORANGE='#E69F00',
+      GRAY='#8A94A0', LGRAY='#D8D8D0', GRID='#EFEDE6', HAIR='#E5E3DC';
+
+  function commonTooltip(formatter){
+    return {
+      trigger:'axis',
+      backgroundColor:'#FFFFFF', borderColor:HAIR, borderWidth:1,
+      padding:[8,12], textStyle:{color:INK,fontSize:12.5},
+      axisPointer:{type:'shadow',shadowStyle:{color:'rgba(26,35,50,0.04)'}},
+      formatter:formatter
+    };
+  }
+
+  var charts = [];
+
+  function make(id, option){
+    var el = document.getElementById(id);
+    if(!window.echarts || !el){ return; }
+    var c = echarts.init(el);
+    c.setOption(option);
+    charts.push(c);
+  }
+
+  /* ---------- Chart 1: entity attrition bars ---------- */
+  make('chart1', {
+    grid:{left:8,right:14,top:48,bottom:6,containLabel:true},
+    tooltip: commonTooltip(function(ps){
+      var p = ps[0];
+      return p.name + '<br><b>' + p.value.toFixed(2) + '%</b> voluntary attrition';
+    }),
+    xAxis:{
+      type:'category', data:['Origin','Entity A','Entity B','Entity C'],
+      axisTick:{show:false}, axisLine:{lineStyle:{color:HAIR}},
+      axisLabel:{color:INK,fontSize:13,fontWeight:600,interval:0}
+    },
+    yAxis:{
+      type:'value', min:0, max:14, interval:2,
+      axisLabel:{formatter:'{value}%',color:GRAY,fontSize:12},
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:GRID,width:1}}
+    },
+    series:[{
+      type:'bar', barWidth:'36%',
+      data:[
+        {value:8.11, itemStyle:{color:LGRAY}, label:{formatter:'8.1%',color:GRAY,fontWeight:400}},
+        {value:6.67, itemStyle:{color:LGRAY}, label:{formatter:'6.7%',color:GRAY,fontWeight:400}},
+        {value:11.89,itemStyle:{color:ORANGE},label:{formatter:'11.9%',color:INK,fontWeight:800,fontSize:15}},
+        {value:8.38, itemStyle:{color:LGRAY}, label:{formatter:'8.4%',color:GRAY,fontWeight:400}}
+      ],
+      label:{show:true,position:'top',fontSize:13},
+      markLine:{
+        silent:true, symbol:'none',
+        lineStyle:{color:NAVY,type:'dashed',width:1.5},
+        label:{formatter:'Company average 8.45%',position:'end',color:NAVY,fontSize:11.5,fontWeight:700},
+        data:[{yAxis:8.45}]
+      },
+      animationDuration:650, animationEasing:'cubicOut'
+    }]
+  });
+
+  /* ---------- Chart 2: cost of inaction vs action ---------- */
+  make('chart2', {
+    grid:{left:12,right:86,top:26,bottom:34,containLabel:true},
+    tooltip: commonTooltip(function(ps){
+      var p = ps[0];
+      return p.name + '<br><b>$' + p.value + 'M</b> per year';
+    }),
+    xAxis:{
+      type:'value', min:0, max:50,
+      axisLabel:{formatter:'${value}M',color:GRAY,fontSize:12},
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:GRID,width:1}},
+      name:'Cost per year', nameLocation:'middle', nameGap:30,
+      nameTextStyle:{color:GRAY,fontSize:12}
+    },
+    yAxis:{
+      type:'category', data:['Do nothing','Act now'], inverse:true,
+      axisTick:{show:false}, axisLine:{lineStyle:{color:HAIR}},
+      axisLabel:{color:INK,fontSize:14,fontWeight:700}
+    },
+    series:[{
+      type:'bar', barWidth:'46%',
+      data:[
+        {value:42, itemStyle:{color:NAVY}, label:{formatter:'$42M',position:'right',color:NAVY,fontWeight:800,fontSize:21}},
+        {value:6.9,itemStyle:{color:ORANGE},label:{formatter:'$6.9M',position:'right',color:ORANGE,fontWeight:800,fontSize:21}}
+      ],
+      label:{show:true},
+      animationDuration:650, animationEasing:'cubicOut'
+    }]
+  });
+
+  /* ---------- Chart 3: attrition by tenure band ---------- */
+  make('chart3', {
+    grid:{left:8,right:14,top:48,bottom:6,containLabel:true},
+    tooltip: commonTooltip(function(ps){
+      var p = ps[0];
+      return p.name + '<br><b>' + p.value + '%</b> leave in this band';
+    }),
+    xAxis:{
+      type:'category', data:['<1 yr','1-2 yrs','2-3 yrs','3-5 yrs','5+ yrs'],
+      axisTick:{show:false}, axisLine:{lineStyle:{color:HAIR}},
+      axisLabel:{color:INK,fontSize:13,fontWeight:600,interval:0}
+    },
+    yAxis:{
+      type:'value', min:0, max:25, interval:5,
+      axisLabel:{formatter:'{value}%',color:GRAY,fontSize:12},
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:GRID,width:1}}
+    },
+    series:[{
+      type:'bar', barWidth:'34%',
+      data:[
+        {value:21.5,itemStyle:{color:ORANGE},label:{formatter:'21.5%',color:INK,fontWeight:800,fontSize:15}},
+        {value:7.0, itemStyle:{color:LGRAY}, label:{formatter:'7.0%',color:GRAY,fontWeight:400}},
+        {value:2.1, itemStyle:{color:LGRAY}, label:{formatter:'2.1%',color:GRAY,fontWeight:400}},
+        {value:8.5, itemStyle:{color:LGRAY}, label:{formatter:'8.5%',color:GRAY,fontWeight:400}},
+        {value:8.0, itemStyle:{color:LGRAY}, label:{formatter:'8.0%',color:GRAY,fontWeight:400}}
+      ],
+      label:{show:true,position:'top',fontSize:13},
+      animationDuration:650, animationEasing:'cubicOut'
+    }]
+  });
+
+  /* ---------- Chart 4: director survival curves ---------- */
+  var KM = {
+    Origin:   [[0,1],[1.0,0.9959],[10.7,0.9917],[25.7,0.9874],[41.6,0.983]],
+    Entity_A: [[0,1],[12.9,0.9831],[18.3,0.9661],[19.5,0.9492]],
+    Entity_B: [[0,1],[0.9,0.9833],[1.0,0.9667],[12.9,0.95],[13.8,0.9333]],
+    Entity_C: [[0,1],[1.8,0.9474]]
+  };
+  var KM_STYLE = {
+    Origin:   {color:'#8A94A0', width:2},
+    Entity_A: {color:'#B9BEC6', width:2},
+    Entity_B: {color:ORANGE,  width:4},
+    Entity_C: {color:'#CFD3D8', width:2}
+  };
+  var kmSeries = ['Origin','Entity_A','Entity_B','Entity_C'].map(function(name){
+    var pts = KM[name].slice();
+    var last = pts[pts.length-1][1];
+    pts.push([60,last]);
+    var s = {
+      name:name, type:'line', step:'start', symbol:'none',
+      data: pts.map(function(p){ return [p[0], +(p[1]*100).toFixed(1)]; }),
+      lineStyle:KM_STYLE[name],
+      itemStyle:KM_STYLE[name],
+      emphasis:{disabled:true},
+      animationDuration:800, animationEasing:'cubicOut'
+    };
+    if(name==='Entity_B'){
+      s.endLabel = {
+        show:true, formatter:'93.3%', color:ORANGE, fontWeight:800, fontSize:15,
+        offset:[14,-4]
+      };
+    }
+    return s;
+  });
+
+  make('chart4', {
+    grid:{left:14,right:56,top:26,bottom:44,containLabel:true},
+    tooltip:{
+      trigger:'item', backgroundColor:'#FFFFFF', borderColor:HAIR, borderWidth:1,
+      padding:[8,12], textStyle:{color:INK,fontSize:12.5},
+      formatter:function(p){
+        var m = Math.round(p.value[0]);
+        return p.seriesName + '<br><b>' + p.value[1] + '%</b> still in role<br>month ' + m;
+      }
+    },
+    xAxis:{
+      type:'value', min:0, max:60, interval:10,
+      axisLabel:{formatter:'{value}',color:GRAY,fontSize:12},
+      axisLine:{lineStyle:{color:HAIR}}, axisTick:{show:false},
+      splitLine:{show:false},
+      name:'Months in director role', nameLocation:'middle', nameGap:32,
+      nameTextStyle:{color:GRAY,fontSize:12}
+    },
+    yAxis:{
+      type:'value', min:88, max:101, interval:2,
+      axisLabel:{formatter:'{value}%',color:GRAY,fontSize:12},
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:GRID,width:1}},
+      name:'Still in role', nameLocation:'middle', nameGap:48,
+      nameTextStyle:{color:GRAY,fontSize:12}
+    },
+    legend:{
+      bottom:2, left:4, itemWidth:18, itemHeight:3, icon:'rect',
+      textStyle:{color:GRAY,fontSize:12}, itemGap:22
+    },
+    series:kmSeries
+  });
+
+  /* ---------- slide dots ---------- */
+  var slides = document.querySelectorAll('.slide');
+  var dots = document.querySelectorAll('.dot');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var i = Array.prototype.indexOf.call(slides, e.target);
+          dots.forEach(function(d){ d.classList.toggle('on', +d.getAttribute('data-i')===i); });
+        }
+      });
+    },{threshold:0.55});
+    slides.forEach(function(s){ io.observe(s); });
+  }
+  dots.forEach(function(d){
+    d.addEventListener('click', function(){
+      slides[+d.getAttribute('data-i')].scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  /* ---------- resize ---------- */
+  window.addEventListener('resize', function(){
+    charts.forEach(function(c){ c.resize(); });
+  });
+})();
+</script>
+</body>
+</html>
