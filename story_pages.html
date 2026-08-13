@@ -239,7 +239,7 @@ h1{
 
   /* ---------- Chart 1: entity attrition bars ---------- */
   make('chart1', {
-    grid:{left:8,right:14,top:48,bottom:6,containLabel:true},
+    grid:{left:8,right:20,top:48,bottom:6,containLabel:true},
     tooltip: commonTooltip(function(ps){
       var p = ps[0];
       return p.name + '<br><b>' + p.value.toFixed(2) + '%</b> voluntary attrition';
@@ -267,7 +267,7 @@ h1{
       markLine:{
         silent:true, symbol:'none',
         lineStyle:{color:NAVY,type:'dashed',width:1.5},
-        label:{formatter:'Company average 8.45%',position:'end',color:NAVY,fontSize:11.5,fontWeight:700},
+        label:{formatter:'Company average 8.45%',position:'insideEndTop',color:NAVY,fontSize:11.5,fontWeight:700},
         data:[{yAxis:8.45}]
       },
       animationDuration:650, animationEasing:'cubicOut'
