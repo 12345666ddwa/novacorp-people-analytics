@@ -118,8 +118,8 @@ h1{
         <span class="cap">of Entity B new hires left within their first year. That is <b>181 of 228</b> people.</span>
       </div>
       <div class="kpi">
-        <span class="num">2.3x</span>
-        <span class="cap">more likely to name the acquisition as their exit driver.</span>
+        <span class="num">1.5x</span>
+        <span class="cap">the voluntary exit rate of every other entity combined. 11.9% vs 7.9%.</span>
       </div>
       <div class="kpi">
         <span class="num">$22-25M</span>
@@ -188,20 +188,20 @@ h1{
   <div class="kicker">04 · The Director Gap</div>
   <h1>Directors leave Entity B faster than anywhere else</h1>
   <div class="rule"></div>
-  <p class="sub">By month 20, Entity B has lost 6.7% of its directors. Origin has lost 1%.</p>
+  <p class="sub">By month 20, Entity B has lost 6.7% of its directors. Origin has lost less than 1% over the same window.</p>
   <div class="body">
     <div class="chartbox hasfoot">
       <div class="chart" id="chart4"></div>
-      <div class="foot">Kaplan-Meier survival of directors in role. NovaCorp HR records, FY2024-2025.</div>
+      <div class="foot">Kaplan-Meier survival of directors in role. NovaCorp HR records, FY2024-2025. Entity B and C observed for 20 months or less; later points are projections.</div>
     </div>
     <div class="kpis">
       <div class="kpi hot">
         <span class="num">93.3%</span>
-        <span class="cap">of Entity B directors are still in role after 60 months.</span>
+        <span class="cap">of Entity B directors are still in role after 20 months of observation.</span>
       </div>
       <div class="kpi">
-        <span class="num">96.2%</span>
-        <span class="cap">at Origin, the original NovaCorp entity, over the same window.</span>
+        <span class="num">99.2%</span>
+        <span class="cap">at Origin over the same 20-month window.</span>
       </div>
       <div class="kpi">
         <span class="num">6.7%</span>
@@ -339,7 +339,7 @@ h1{
 
   /* ---------- Chart 4: director survival curves ---------- */
   var KM = {
-    Origin:   [[0,1],[1.0,0.9959],[10.7,0.9917],[25.7,0.9874],[41.6,0.983]],
+    Origin:   [[0,1],[1.0,0.9959],[10.7,0.9917]],
     Entity_A: [[0,1],[12.9,0.9831],[18.3,0.9661],[19.5,0.9492]],
     Entity_B: [[0,1],[0.9,0.9833],[1.0,0.9667],[12.9,0.95],[13.8,0.9333]],
     Entity_C: [[0,1],[1.8,0.9474]]
@@ -353,7 +353,7 @@ h1{
   var kmSeries = ['Origin','Entity_A','Entity_B','Entity_C'].map(function(name){
     var pts = KM[name].slice();
     var last = pts[pts.length-1][1];
-    pts.push([60,last]);
+    pts.push([24,last]);
     var s = {
       name:name, type:'line', step:'start', symbol:'none',
       data: pts.map(function(p){ return [p[0], +(p[1]*100).toFixed(1)]; }),
@@ -382,7 +382,7 @@ h1{
       }
     },
     xAxis:{
-      type:'value', min:0, max:60, interval:10,
+      type:'value', min:0, max:24, interval:4,
       axisLabel:{formatter:'{value}',color:GRAY,fontSize:12},
       axisLine:{lineStyle:{color:HAIR}}, axisTick:{show:false},
       splitLine:{show:false},
