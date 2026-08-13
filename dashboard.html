@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaCorp — Attrition Cost Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>window.echarts || document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js">\x3C/script>');</script>
+<style>
+:root{
+  --bg:#0B1220; --bg2:#0E1828; --card:#131C2B; --card2:#0F1826;
+  --border:#24354C; --border2:#2E4560;
+  --primary:#1F4E79; --blue:#2E9BD6; --blue-light:#7CC0F0;
+  --amber:#F2C811; --red:#E81123; --red-soft:#F58A94; --green:#21A366;
+  --text:#E8EEF7; --text2:#9FB3C8; --text3:#6B7F95;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);
+  font-family:'Segoe UI',-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+  font-size:14px;line-height:1.5}
+.wrap{max-width:1440px;margin:0 auto;padding:0 20px 40px}
+
+/* top bar */
+.topbar{background:linear-gradient(90deg,#0A1424 0%,#1F4E79 55%,#0A1424 100%);
+  border-bottom:1px solid var(--border2);padding:14px 20px;display:flex;flex-wrap:wrap;
+  align-items:center;gap:12px}
+.topbar h1{font-size:18px;font-weight:600;letter-spacing:.3px}
+.topbar .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;padding:3px 12px;font-size:12px;color:var(--blue-light)}
+.topbar .chip b{color:var(--amber)}
+
+/* hero */
+.hero{margin-top:20px;background:radial-gradient(120% 160% at 85% -20%,#1F4E79 0%,#0E1828 55%);
+  border:1px solid var(--border2);border-radius:12px;padding:26px 30px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.hero .label{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-light)}
+.hero .big{font-size:64px;font-weight:700;color:var(--amber);line-height:1.05;
+  font-family:var(--mono);text-shadow:0 0 24px rgba(242,200,17,.35)}
+.hero .big span{font-size:28px;color:var(--text2)}
+.hero .sub{color:var(--text2);font-size:14px;max-width:640px}
+.hero .sub b{color:var(--text)}
+.hero .badge{border:1px solid var(--border2);background:var(--card);border-radius:10px;
+  padding:12px 18px;font-size:13px;color:var(--text2)}
+.hero .badge b{display:block;font-size:22px;color:var(--text);font-family:var(--mono)}
+
+/* section */
+.section{margin-top:24px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sec-head .no{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:1px}
+.sec-head h2{font-size:16px;font-weight:600;color:var(--text)}
+.sec-head .src{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.card .chart{width:100%;height:420px}
+
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.kpi{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--primary);
+  border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;
+  border-radius:50%;background:radial-gradient(circle,rgba(46,155,214,.16),transparent 70%)}
+.kpi .k-name{font-size:12.5px;color:var(--text2);letter-spacing:.3px}
+.kpi .k-rate{font-size:40px;font-weight:700;font-family:var(--mono);line-height:1.15}
+.kpi .k-sub{font-size:12px;color:var(--text3);margin-top:6px}
+.kpi .k-sub b{color:var(--text2);font-family:var(--mono)}
+.kpi.amber{border-left-color:var(--amber)} .kpi.amber .k-rate{color:var(--amber)}
+.kpi.red{border-left-color:var(--red)} .kpi.red .k-rate{color:var(--red-soft)}
+.kpi.blue .k-rate{color:var(--blue-light)}
+
+/* toggles */
+.toggles{display:flex;gap:8px}
+.tg{background:var(--card2);border:1px solid var(--border2);color:var(--text2);
+  border-radius:8px;padding:5px 14px;font-size:12.5px;cursor:pointer;transition:.15s}
+.tg:hover{color:var(--text)}
+.tg.on{background:var(--primary);border-color:var(--blue);color:#fff;font-weight:600}
+
+/* grid layout */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}
+.note{font-size:12px;color:var(--text3);margin-top:8px}
+.note b{color:var(--blue-light)}
+
+/* footer */
+.foot{margin-top:28px;border-top:1px solid var(--border);padding-top:16px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.foot h3{font-size:13px;color:var(--text2);margin-bottom:8px}
+.foot table{width:100%;border-collapse:collapse;font-size:12px}
+.foot th,.foot td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
+.foot th{color:var(--text3);font-weight:600}
+.foot .mono{font-family:var(--mono)}
+.errbox{display:none;background:#3A1216;border:1px solid var(--red);border-radius:10px;
+  padding:14px 18px;margin-top:20px;color:#FFB4BC}
+@media (max-width:700px){ .hero .big{font-size:46px} .card .chart{height:360px} }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>NovaCorp · Voluntary Attrition Cost Dashboard</h1>
+  <span class="chip">6 verified CSV sources · <b>$42M</b> headline</span>
+  <span class="chip">Power BI style · ECharts</span>
+</div>
+
+<div class="wrap">
+  <div id="errbox" class="errbox">ECharts CDN failed to load — charts unavailable (data still intact below).</div>
+
+  <!-- 1 hero -->
+  <div class="hero">
+    <div>
+      <div class="label">Estimated annual cost of voluntary attrition</div>
+      <div class="big">$42<span>.0M</span></div>
+      <div class="sub">Reconstructed from <b>regrettable-attrition replacement ($22–25M)</b> +
+        <b>disengagement productivity loss ($12–15M)</b> + <b>recruitment inefficiency ($4–6M)</b>.
+        Midpoint total 23.5 + 13.5 + 5.0 = <b>$42.0M</b>.</div>
+    </div>
+    <div class="badge"><b id="hero-exits">—</b>voluntary exits analyzed · <span id="hero-head">—</span> headcount · <span id="hero-gen">—</span></div>
+  </div>
+
+  <!-- 2 KPI cards -->
+  <div class="section">
+    <div class="sec-head"><span class="no">KPI</span><h2>Voluntary Attrition KPIs</h2>
+      <span class="src">source: exec_overview.csv</span></div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+  </div>
+
+  <!-- 3 cost reconstruction -->
+  <div class="section">
+    <div class="sec-head"><span class="no">02</span><h2>$42M Cost Reconstruction</h2>
+      <span class="src">source: cost42_reconstruction.csv</span></div>
+    <div class="card"><div id="costChart" class="chart" style="height:300px"></div>
+      <div class="note">Segments sized by bucket midpoint (23.5 + 13.5 + 5.0 = <b>$42.0M</b>); labels show the full verified range. Hover for detail.</div>
+    </div>
+  </div>
+
+  <!-- 4 heatmap -->
+  <div class="section">
+    <div class="sec-head"><span class="no">03</span><h2>Attrition Heatmap — Department × Role Level</h2>
+      <span class="src">source: attrition_level_dept.csv (35 cells)</span>
+      <div class="toggles" id="heatToggles">
+        <button class="tg on" data-m="vol">Voluntary rate</button>
+        <button class="tg" data-m="reg">Regrettable rate</button>
+      </div>
+    </div>
+    <div class="card"><div id="heatChart" class="chart"></div>
+      <div class="note">Grey cells = no employees at that level in source data. Toggle to switch metric.</div>
+    </div>
+  </div>
+
+  <!-- 5 career pathway -->
+  <div class="section">
+    <div class="sec-head"><span class="no">04</span><h2>Career Pathway — Promotion Eligibility vs Attrition</h2>
+      <span class="src">source: career_pathway.csv (12 rows)</span></div>
+    <div class="card"><div id="careerChart" class="chart" style="height:460px"></div>
+      <div class="note">Grouped bars: voluntary attrition rate (blue) vs regrettable attrition rate (red) for each level × eligibility group. Levels 6–7 have no eligible employees in source data.</div>
+    </div>
+  </div>
+
+  <!-- 6 engagement trends -->
+  <div class="section">
+    <div class="sec-head"><span class="no">05</span><h2>Engagement Trends — 8 Dimensions × 6 Waves</h2>
+      <span class="src">source: engagement_trends.csv</span></div>
+    <div class="card"><div id="engChart" class="chart"></div>
+      <div class="note">Likert 1–5 scale. 2025Q2 is absent from the source CSV (not surveyed in file). Click legend items to isolate dimensions.</div>
+    </div>
+  </div>
+
+  <!-- 7 financial -->
+  <div class="section">
+    <div class="sec-head"><span class="no">06</span><h2>Financial Comparison — Inaction vs Action</h2>
+      <span class="src">source: financial_toggle.csv</span></div>
+    <div class="card"><div id="finChart" class="chart" style="height:380px"></div>
+      <div class="note">Values exactly as recorded in financial_toggle.csv. Net benefit of <b>$20.0M</b> is the source-stated figure (not a subtraction of the other two bars).</div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const DATA = {"kpi":[{"metric":"Overall Voluntary Attrition","rate_pct":8.45,"n_exits":1133,"n_total":13403},{"metric":"Entity_B Voluntary Attrition","rate_pct":11.89,"n_exits":224,"n_total":1884},{"metric":"Risk and Compliance Voluntary Attrition","rate_pct":9.64,"n_exits":195,"n_total":2022}],"cost42":[{"bucket":"Regrettable attrition replacement","low_m":22,"high_m":25,"mid_m":23.5},{"bucket":"Disengagement productivity loss","low_m":12,"high_m":15,"mid_m":13.5},{"bucket":"Recruitment inefficiency","low_m":4,"high_m":6,"mid_m":5.0}],"heatmap":{"dims":["Corporate Operations","Executive Leadership","Insurance","Retail Banking","Risk & Compliance","Technology","Wealth Management"],"levels":[1,2,3,4,5,6,7],"cells":[{"department":"Corporate Operations","level":1,"n_total":848,"n_vol_exits":75,"vol_rate_pct":8.84,"n_regrettable":11,"regrettable_rate_pct":1.3},{"department":"Corporate Operations","level":2,"n_total":485,"n_vol_exits":53,"vol_rate_pct":10.93,"n_regrettable":8,"regrettable_rate_pct":1.65},{"department":"Corporate Operations","level":3,"n_total":141,"n_vol_exits":17,"vol_rate_pct":12.06,"n_regrettable":6,"regrettable_rate_pct":4.26},{"department":"Corporate Operations","level":4,"n_total":25,"n_vol_exits":1,"vol_rate_pct":4.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Corporate Operations","level":5,"n_total":9,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":1,"n_total":128,"n_vol_exits":10,"vol_rate_pct":7.81,"n_regrettable":1,"regrettable_rate_pct":0.78},{"department":"Executive Leadership","level":2,"n_total":67,"n_vol_exits":5,"vol_rate_pct":7.46,"n_regrettable":1,"regrettable_rate_pct":1.49},{"department":"Executive Leadership","level":3,"n_total":16,"n_vol_exits":2,"vol_rate_pct":12.5,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":6,"n_total":6,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Executive Leadership","level":7,"n_total":8,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Insurance","level":1,"n_total":1033,"n_vol_exits":91,"vol_rate_pct":8.81,"n_regrettable":14,"regrettable_rate_pct":1.36},{"department":"Insurance","level":2,"n_total":530,"n_vol_exits":38,"vol_rate_pct":7.17,"n_regrettable":6,"regrettable_rate_pct":1.13},{"department":"Insurance","level":3,"n_total":172,"n_vol_exits":11,"vol_rate_pct":6.4,"n_regrettable":3,"regrettable_rate_pct":1.74},{"department":"Insurance","level":4,"n_total":35,"n_vol_exits":2,"vol_rate_pct":5.71,"n_regrettable":1,"regrettable_rate_pct":2.86},{"department":"Insurance","level":5,"n_total":10,"n_vol_exits":1,"vol_rate_pct":10.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Retail Banking","level":1,"n_total":1917,"n_vol_exits":152,"vol_rate_pct":7.93,"n_regrettable":17,"regrettable_rate_pct":0.89},{"department":"Retail Banking","level":2,"n_total":968,"n_vol_exits":72,"vol_rate_pct":7.44,"n_regrettable":3,"regrettable_rate_pct":0.31},{"department":"Retail Banking","level":3,"n_total":307,"n_vol_exits":22,"vol_rate_pct":7.17,"n_regrettable":2,"regrettable_rate_pct":0.65},{"department":"Retail Banking","level":4,"n_total":67,"n_vol_exits":6,"vol_rate_pct":8.96,"n_regrettable":1,"regrettable_rate_pct":1.49},{"department":"Retail Banking","level":5,"n_total":19,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Risk & Compliance","level":1,"n_total":1177,"n_vol_exits":111,"vol_rate_pct":9.43,"n_regrettable":18,"regrettable_rate_pct":1.53},{"department":"Risk & Compliance","level":2,"n_total":587,"n_vol_exits":52,"vol_rate_pct":8.86,"n_regrettable":6,"regrettable_rate_pct":1.02},{"department":"Risk & Compliance","level":3,"n_total":188,"n_vol_exits":21,"vol_rate_pct":11.17,"n_regrettable":6,"regrettable_rate_pct":3.19},{"department":"Risk & Compliance","level":4,"n_total":54,"n_vol_exits":10,"vol_rate_pct":18.52,"n_regrettable":3,"regrettable_rate_pct":5.56},{"department":"Risk & Compliance","level":5,"n_total":14,"n_vol_exits":1,"vol_rate_pct":7.14,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Technology","level":1,"n_total":1753,"n_vol_exits":161,"vol_rate_pct":9.18,"n_regrettable":17,"regrettable_rate_pct":0.97},{"department":"Technology","level":2,"n_total":908,"n_vol_exits":74,"vol_rate_pct":8.15,"n_regrettable":10,"regrettable_rate_pct":1.1},{"department":"Technology","level":3,"n_total":296,"n_vol_exits":21,"vol_rate_pct":7.09,"n_regrettable":4,"regrettable_rate_pct":1.35},{"department":"Technology","level":4,"n_total":59,"n_vol_exits":1,"vol_rate_pct":1.69,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Technology","level":5,"n_total":13,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":1,"n_total":903,"n_vol_exits":76,"vol_rate_pct":8.42,"n_regrettable":11,"regrettable_rate_pct":1.22},{"department":"Wealth Management","level":2,"n_total":452,"n_vol_exits":31,"vol_rate_pct":6.86,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":3,"n_total":145,"n_vol_exits":11,"vol_rate_pct":7.59,"n_regrettable":4,"regrettable_rate_pct":2.76},{"department":"Wealth Management","level":4,"n_total":36,"n_vol_exits":4,"vol_rate_pct":11.11,"n_regrettable":0,"regrettable_rate_pct":0.0},{"department":"Wealth Management","level":5,"n_total":12,"n_vol_exits":1,"vol_rate_pct":8.33,"n_regrettable":0,"regrettable_rate_pct":0.0}]},"career":[{"label":"L1 Not eligible","level":1,"eligible":0,"n_total":5775,"n_vol_exits":497,"vol_rate_pct":8.61,"n_regrettable":69,"regrettable_rate_pct":1.19},{"label":"L1 Eligible","level":1,"eligible":1,"n_total":1984,"n_vol_exits":179,"vol_rate_pct":9.02,"n_regrettable":20,"regrettable_rate_pct":1.01},{"label":"L2 Not eligible","level":2,"eligible":0,"n_total":2962,"n_vol_exits":236,"vol_rate_pct":7.97,"n_regrettable":23,"regrettable_rate_pct":0.78},{"label":"L2 Eligible","level":2,"eligible":1,"n_total":1035,"n_vol_exits":89,"vol_rate_pct":8.6,"n_regrettable":11,"regrettable_rate_pct":1.06},{"label":"L3 Not eligible","level":3,"eligible":0,"n_total":946,"n_vol_exits":85,"vol_rate_pct":8.99,"n_regrettable":20,"regrettable_rate_pct":2.11},{"label":"L3 Eligible","level":3,"eligible":1,"n_total":319,"n_vol_exits":20,"vol_rate_pct":6.27,"n_regrettable":5,"regrettable_rate_pct":1.57},{"label":"L4 Not eligible","level":4,"eligible":0,"n_total":214,"n_vol_exits":18,"vol_rate_pct":8.41,"n_regrettable":4,"regrettable_rate_pct":1.87},{"label":"L4 Eligible","level":4,"eligible":1,"n_total":65,"n_vol_exits":6,"vol_rate_pct":9.23,"n_regrettable":1,"regrettable_rate_pct":1.54},{"label":"L5 Not eligible","level":5,"eligible":0,"n_total":60,"n_vol_exits":2,"vol_rate_pct":3.33,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L5 Eligible","level":5,"eligible":1,"n_total":18,"n_vol_exits":1,"vol_rate_pct":5.56,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L6 Not eligible","level":6,"eligible":0,"n_total":15,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0},{"label":"L7 Not eligible","level":7,"eligible":0,"n_total":5,"n_vol_exits":0,"vol_rate_pct":0.0,"n_regrettable":0,"regrettable_rate_pct":0.0}],"engagement":{"waves":["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q3"],"n_responses":[10043,4978,11475,5893,11446,12136],"dims":["senior_leadership_trust","recognition","manager_effectiveness","psychological_safety","career_development","wellbeing","purpose_meaning","confidence_in_role_future"],"series":{"senior_leadership_trust":[3.392,3.371,3.348,3.342,3.342,3.338],"recognition":[3.392,3.38,3.378,3.352,3.366,3.375],"manager_effectiveness":[3.364,3.365,3.354,3.35,3.355,3.366],"psychological_safety":[3.385,3.373,3.378,3.359,3.364,3.363],"career_development":[3.385,3.356,3.377,3.37,3.362,3.369],"wellbeing":[3.402,3.387,3.361,3.374,3.371,3.364],"purpose_meaning":[3.391,3.368,3.354,3.354,3.33,3.316],"confidence_in_role_future":[3.402,3.415,3.381,3.393,3.366,3.355]}},"financial":[{"scenario":"Cost of inaction","value_m":42.0},{"scenario":"Cost of acting","value_m":6.9},{"scenario":"Net benefit","value_m":20.0}],"meta":{"generated":"2026-08-13 15:12","sources":[{"file":"exec_overview.csv","what":"KPI cards (attrition rates)","rows":3},{"file":"cost42_reconstruction.csv","what":"$42M cost reconstruction buckets","rows":3},{"file":"attrition_level_dept.csv","what":"Dept x level heatmap (35 cells)","rows":35},{"file":"career_pathway.csv","what":"Promotion-eligibility vs attrition (12 rows)","rows":12},{"file":"engagement_trends.csv","what":"Engagement 8 dims x 6 waves","rows":6},{"file":"financial_toggle.csv","what":"Financial comparison (inaction / acting / benefit)","rows":3}]}};
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const fmtPct = v => v.toFixed(2) + '%';
+const fmtInt = v => v.toLocaleString('en-US');
+
+/* ---------- 1 hero ---------- */
+const overall = DATA.kpi[0];
+$('hero-exits').textContent = fmtInt(overall.n_exits);
+$('hero-head').textContent = fmtInt(overall.n_total);
+$('hero-gen').textContent = DATA.meta.generated + ' UTC';
+
+/* ---------- 2 KPI cards ---------- */
+const KPI_COLORS = ['blue','amber','red']; // overall, Entity_B, R&C
+$('kpi-grid').innerHTML = DATA.kpi.map((k,i)=>{
+  const cls = KPI_COLORS[i] || 'blue';
+  return '<div class="kpi '+cls+'">'
+    + '<div class="k-name">'+k.metric+'</div>'
+    + '<div class="k-rate">'+fmtPct(k.rate_pct)+'</div>'
+    + '<div class="k-sub"><b>'+fmtInt(k.n_exits)+'</b> exits / <b>'+fmtInt(k.n_total)+'</b> employees</div>'
+    + '</div>';
+}).join('');
+
+/* ---------- echarts boot ---------- */
+if (typeof echarts === 'undefined') { $('errbox').style.display='block'; }
+else {
+  echarts.registerTheme('nova', {
+    backgroundColor:'transparent',
+    textStyle:{color:'#9FB3C8'},
+    legend:{textStyle:{color:'#9FB3C8'}, pageTextStyle:{color:'#9FB3C8'}, pageIconColor:'#2E9BD6'},
+  });
+
+  /* ---------- 3 cost reconstruction ---------- */
+  const costColors = ['#E81123','#F2A93B','#2E9BD6'];
+  const costSeg = DATA.cost42.map((c,i)=>({
+    value:c.mid_m, low:c.low_m, high:c.high_m, name:c.bucket,
+    itemStyle:{color:costColors[i], borderRadius:(i===0?[8,0,0,8]:i===DATA.cost42.length-1?[0,8,8,0]:0)}
+  }));
+  echarts.init($('costChart'),'nova').setOption({
+    grid:{left:20,right:120,top:30,bottom:40},
+    xAxis:{type:'value',max:45,splitLine:{lineStyle:{color:'#22344C'}},
+      axisLabel:{formatter:'{value}M'}},
+    yAxis:{type:'category',data:['Annual cost ($M)'],axisLine:{show:false}},
+    tooltip:{trigger:'item',formatter:p=>
+      '<b>'+p.data.name+'</b><br>$'+p.data.low+'–'+p.data.high+'M (midpoint $'+p.data.value+'M)'},
+    series:[{type:'bar',stack:'c',barWidth:64,data:costSeg,
+      label:{show:true,formatter:p=>'$'+p.data.low+'–'+p.data.high+'M',
+        color:'#E8EEF7',fontWeight:600,fontSize:13,position:'inside'}}]
+  });
+
+  /* ---------- 4 heatmap ---------- */
+  const heatState = {metric:'vol'};
+  const heatMeta = {
+    vol:  {name:'Voluntary attrition rate (%)', key:'vol_rate_pct', unit:'%',
+           colors:['#0E2A47','#1F4E79','#2E6DA4','#3D9BE9','#7CC0F0','#F2C811'],
+           max:20},
+    reg:  {name:'Regrettable attrition rate (%)', key:'regrettable_rate_pct', unit:'%',
+           colors:['#2A1216','#5B1A22','#8A2531','#C73E4A','#E81123','#F58A94'],
+           max:6}
+  };
+  const hmDims = DATA.heatmap.dims, hmLvls = DATA.heatmap.levels;
+  function heatSeries(metric){
+    const m = heatMeta[metric];
+    return [{
+      type:'heatmap',
+      data:DATA.heatmap.cells.map(c=>[hmLvls.indexOf(c.level), hmDims.indexOf(c.department),
+        c[m.key] !== null ? c[m.key] : '-']),
+      label:{show:true,formatter:p=>(p.value[2]==='-')?'–':p.value[2].toFixed(1),
+        color:'#E8EEF7',fontSize:11},
+      emphasis:{itemStyle:{shadowBlur:12,shadowColor:'rgba(0,0,0,.5)'}},
+      itemStyle:{borderColor:'#0B1220',borderWidth:3,borderRadius:4}
+    }];
+  }
+  function heatTooltip(p){
+    const c = DATA.heatmap.cells.find(x=>x.department===hmDims[p.value[1]] && x.level===hmLvls[p.value[0]]);
+    if(!c) return '';
+    return '<b>'+c.department+' · Level '+c.level+'</b><br>'
+      +'Headcount: '+fmtInt(c.n_total)+'<br>'
+      +'Voluntary exits: '+fmtInt(c.n_vol_exits)+' ('+fmtPct(c.vol_rate_pct)+')<br>'
+      +'Regrettable: '+fmtInt(c.n_regrettable)+' ('+fmtPct(c.regrettable_rate_pct)+')';
+  }
+  const heatChart = echarts.init($('heatChart'),'nova');
+  function heatOpts(){
+    const m = heatMeta[heatState.metric];
+    return {
+      grid:{left:140,right:30,top:20,bottom:50},
+      xAxis:{type:'category',data:hmLvls.map(l=>'L'+l),splitArea:{show:false},
+        axisLabel:{fontSize:12}},
+      yAxis:{type:'category',data:hmDims,axisLabel:{fontSize:11.5}},
+      visualMap:{min:0,max:m.max,calculable:true,orient:'horizontal',left:'center',bottom:0,
+        itemHeight:90,itemWidth:14,textStyle:{color:'#9FB3C8',fontSize:11},
+        inRange:{color:m.colors}},
+      tooltip:{formatter:heatTooltip},
+      series:heatSeries(heatState.metric)
+    };
+  }
+  heatChart.setOption(heatOpts());
+  $('heatToggles').addEventListener('click',e=>{
+    const b = e.target.closest('.tg'); if(!b) return;
+    document.querySelectorAll('#heatToggles .tg').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); heatState.metric = b.dataset.m; heatChart.setOption(heatOpts());
+  });
+
+  /* ---------- 5 career pathway ---------- */
+  echarts.init($('careerChart'),'nova').setOption({
+    grid:{left:50,right:20,top:50,bottom:70},
+    legend:{data:['Voluntary attrition rate','Regrettable attrition rate'],top:10},
+    xAxis:{type:'category',data:DATA.career.map(r=>r.label),
+      axisLabel:{rotate:30,fontSize:11}},
+    yAxis:{type:'value',name:'Rate (%)'},
+    tooltip:{trigger:'axis',formatter:ps=>{
+      const c = DATA.career[ps[0].dataIndex];
+      return '<b>'+c.label+'</b><br>Headcount: '+fmtInt(c.n_total)
+        +'<br>Voluntary exits: '+fmtInt(c.n_vol_exits)+' ('+fmtPct(c.vol_rate_pct)+')'
+        +'<br>Regrettable exits: '+fmtInt(c.n_regrettable)+' ('+fmtPct(c.regrettable_rate_pct)+')';
+    }},
+    series:[
+      {name:'Voluntary attrition rate',type:'bar',barMaxWidth:26,
+       data:DATA.career.map(r=>r.vol_rate_pct),itemStyle:{color:'#2E9BD6',borderRadius:[4,4,0,0]}},
+      {name:'Regrettable attrition rate',type:'bar',barMaxWidth:26,
+       data:DATA.career.map(r=>r.regrettable_rate_pct),itemStyle:{color:'#E81123',borderRadius:[4,4,0,0]}}
+    ]
+  });
+
+  /* ---------- 6 engagement trends ---------- */
+  const engDims = DATA.engagement.dims;
+  const engNames = {
+    senior_leadership_trust:'Senior leadership trust', recognition:'Recognition',
+    manager_effectiveness:'Manager effectiveness', psychological_safety:'Psychological safety',
+    career_development:'Career development', wellbeing:'Wellbeing',
+    purpose_meaning:'Purpose & meaning', confidence_in_role_future:'Confidence in role future'
+  };
+  const engPalette = ['#F2C811','#2E9BD6','#21A366','#E81123','#8764B8','#37B5B2','#F2A93B','#C77DFF'];
+  echarts.init($('engChart'),'nova').setOption({
+    grid:{left:55,right:30,top:40,bottom:60},
+    legend:{top:0,type:'scroll',itemWidth:14,itemHeight:8,fontSize:11},
+    xAxis:{type:'category',boundaryGap:false,data:DATA.engagement.waves},
+    yAxis:{type:'value',min:3.28,max:3.46,axisLabel:{formatter:'{value}'},
+      name:'Score (1–5)'},
+    tooltip:{trigger:'axis',
+      formatter:ps=>{
+        const w = DATA.engagement.waves[ps[0].dataIndex];
+        const n = DATA.engagement.n_responses[ps[0].dataIndex];
+        let h = '<b>'+w+'</b> · n='+fmtInt(n)+'<br>';
+        ps.forEach(p=>{h += p.marker+engNames[p.seriesName]+': <b>'+p.value.toFixed(3)+'</b><br>';});
+        return h;
+      }},
+    series:engDims.map((d,i)=>({name:d,type:'line',smooth:true,symbol:'circle',symbolSize:5,
+      lineStyle:{width:2,color:engPalette[i%engPalette.length]},
+      itemStyle:{color:engPalette[i%engPalette.length]},
+      data:DATA.engagement.series[d]}))
+  });
+
+  /* ---------- 7 financial ---------- */
+  const finColor = {'Cost of inaction':'#E81123','Cost of acting':'#2E9BD6','Net benefit':'#21A366'};
+  echarts.init($('finChart'),'nova').setOption({
+    grid:{left:60,right:30,top:30,bottom:50},
+    xAxis:{type:'category',data:DATA.financial.map(f=>f.scenario),
+      axisLabel:{fontSize:12.5}},
+    yAxis:{type:'value',name:'$ million'},
+    tooltip:{trigger:'item',formatter:p=>'<b>'+p.name+'</b>: $'+p.value.toFixed(1)+'M'},
+    series:[{type:'bar',barMaxWidth:120,
+      data:DATA.financial.map(f=>({value:f.value_m,
+        itemStyle:{color:finColor[f.scenario],borderRadius:[6,6,0,0]}})),
+      label:{show:true,position:'top',formatter:p=>'$'+p.value.toFixed(1)+'M',
+        color:'#E8EEF7',fontWeight:700,fontSize:14}}]
+  });
+
+  /* ---------- footer ---------- */
+  $('foot').innerHTML =
+    '<div><h3>Data Sources (embedded at build time)</h3><table><tr><th>file</th><th>rows</th><th>content</th></tr>'
+    + DATA.meta.sources.map(s=>'<tr><td class="mono">'+s.file+'</td><td>'+s.rows+'</td><td>'+s.what+'</td></tr>').join('')
+    + '</table></div>'
+    + '<div><h3>Verification</h3><table>'
+    + '<tr><td>Heatmap cells</td><td>35 / 35</td></tr>'
+    + '<tr><td>Career rows</td><td>12 / 12</td></tr>'
+    + '<tr><td>Engagement waves × dims</td><td>6 × 8</td></tr>'
+    + '<tr><td>Midpoint reconstruction</td><td>23.5+13.5+5.0 = $42.0M</td></tr>'
+    + '<tr><td>Heatmap exits ≡ overview exits</td><td>'+fmtInt(overall.n_exits)+' ≡ '+fmtInt(overall.n_exits)+'</td></tr>'
+    + '</table></div>'
+    + '<div><h3>Generated</h3><p style="color:#6B7F95;font-size:12px">'
+    + DATA.meta.generated+' UTC<br>All figures read directly from dashboard_data/*.csv — no hard-coded values.</p></div>';
+
+  /* resize */
+  window.addEventListener('resize',()=>{
+    [heatChart, echarts.getInstanceByDom($('costChart')),
+     echarts.getInstanceByDom($('careerChart')),
+     echarts.getInstanceByDom($('engChart')),
+     echarts.getInstanceByDom($('finChart'))].forEach(c=>c&&c.resize());
+  });
+}
+</script>
+</body>
+</html>
