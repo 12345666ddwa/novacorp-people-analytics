@@ -8,11 +8,11 @@
 <script>window.echarts || document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js">\x3C/script>');</script>
 <style>
 :root{
-  --bg:#F7F9FC; --bg2:#FFFFFF; --card:#FFFFFF; --card2:#F2F5FA;
-  --border:#24354C; --border2:#2E4560;
+  --bg:#F5F7FA; --bg2:#FFFFFF; --card:#FFFFFF; --card2:#F1F5F9;
+  --border:#E2E8F0; --border2:#CBD5E1;
   --primary:#1F4E79; --blue:#2E9BD6; --blue-light:#7CC0F0;
-  --amber:#F2C811; --red:#E81123; --red-soft:#F58A94; --green:#21A366;
-  --text:#E8EEF7; --text2:#9FB3C8; --text3:#6B7F95;
+  --amber:#B45309; --red:#DC2626; --red-soft:#F87171; --green:#15803D;
+  --text:#1E293B; --text2:#475569; --text3:#64748B;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -22,32 +22,32 @@ body{background:var(--bg);color:var(--text);
 .wrap{max-width:1440px;margin:0 auto;padding:0 20px 40px}
 
 /* top bar */
-.topbar{background:linear-gradient(90deg,#FFFFFF 0%,#E8F0FA 55%,#FFFFFF 100%);color:#1E293B;
-  border-bottom:1px solid var(--border2);padding:14px 20px;display:flex;flex-wrap:wrap;
+.topbar{background:#FFFFFF;color:var(--text);
+  border-bottom:1px solid var(--border);padding:14px 20px;display:flex;flex-wrap:wrap;
   align-items:center;gap:12px}
 .topbar h1{font-size:18px;font-weight:600;letter-spacing:.3px}
-.topbar .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;padding:3px 12px;font-size:12px;color:var(--blue-light)}
-.topbar .chip b{color:var(--amber)}
+.topbar .chip{background:var(--card2);border:1px solid var(--border);
+  border-radius:999px;padding:3px 12px;font-size:12px;color:var(--text2)}
+.topbar .chip b{color:var(--primary)}
 
 /* year lens bar */
-.yearbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.97);
-  backdrop-filter:blur(6px);border-bottom:1px solid var(--border2);padding:10px 20px;
+.yearbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.95);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--border);padding:10px 20px;
   display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.yearbar .y-label{font-size:11px;letter-spacing:2px;color:var(--amber);font-weight:700}
+.yearbar .y-label{font-size:11px;letter-spacing:2px;color:var(--primary);font-weight:700}
 .yearbar .y-hint{font-size:11.5px;color:var(--text3)}
 
 /* hero */
-.hero{margin-top:20px;background:linear-gradient(135deg,#FFFFFF 0%,#E8F0FA 100%);border:1px solid #D9E2F0;
-  border:1px solid var(--border2);border-radius:12px;padding:26px 30px;
+.hero{margin-top:20px;background:linear-gradient(135deg,#FFFFFF 0%,#EFF4FB 100%);
+  border:1px solid var(--border);border-radius:12px;padding:26px 30px;
   display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
-.hero .label{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-light)}
-.hero .big{font-size:64px;font-weight:700;color:var(--amber);line-height:1.05;
-  font-family:var(--mono);text-shadow:0 0 24px rgba(242,200,17,.35)}
-.hero .big span{font-size:28px;color:var(--text2)}
+.hero .label{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--blue)}
+.hero .big{font-size:64px;font-weight:700;color:var(--primary);line-height:1.05;
+  font-family:var(--mono)}
+.hero .big span{font-size:28px;color:var(--text3)}
 .hero .sub{color:var(--text2);font-size:14px;max-width:640px}
 .hero .sub b{color:var(--text)}
-.hero .badge{border:1px solid var(--border2);background:var(--card);border-radius:10px;
+.hero .badge{border:1px solid var(--border);background:var(--card);border-radius:10px;
   padding:12px 18px;font-size:13px;color:var(--text2);min-width:230px}
 .hero .badge b{font-size:20px;color:var(--text);font-family:var(--mono)}
 .hero .badge .bsub{display:block;font-size:12px;margin-top:4px}
@@ -56,7 +56,7 @@ body{background:var(--bg);color:var(--text);
 /* section */
 .section{margin-top:24px}
 .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.sec-head .no{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:1px}
+.sec-head .no{font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px}
 .sec-head h2{font-size:17px;font-weight:600;color:var(--text)}
 .sec-head .src{font-size:11px;color:var(--text3);font-family:var(--mono)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
@@ -67,44 +67,44 @@ body{background:var(--bg);color:var(--text);
 .kpi{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--primary);
   border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
 .kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;
-  border-radius:50%;background:radial-gradient(circle,rgba(46,155,214,.16),transparent 70%)}
+  border-radius:50%;background:radial-gradient(circle,rgba(46,155,214,.10),transparent 70%)}
 .kpi .k-name{font-size:12.5px;color:var(--text2);letter-spacing:.3px}
 .kpi .k-rate{font-size:40px;font-weight:700;font-family:var(--mono);line-height:1.15}
 .kpi .k-rate.both-rate{font-size:26px;line-height:1.35}
 .kpi .k-sub{font-size:12px;color:var(--text3);margin-top:6px}
 .kpi .k-sub b{color:var(--text2);font-family:var(--mono)}
-.kpi .k-action{margin-top:8px;font-size:12px;color:var(--blue-light)}
+.kpi .k-action{margin-top:8px;font-size:12px;color:var(--blue)}
 .kpi.amber{border-left-color:var(--amber)} .kpi.amber .k-rate{color:var(--amber)}
-.kpi.red{border-left-color:var(--red)} .kpi.red .k-rate{color:var(--red-soft)}
-.kpi.blue .k-rate{color:var(--blue-light)}
+.kpi.red{border-left-color:var(--red)} .kpi.red .k-rate{color:var(--red)}
+.kpi.blue .k-rate{color:var(--primary)}
 
 /* YoY delta chips */
 .delta{display:inline-block;margin-top:8px;font-size:12px;font-weight:600;font-family:var(--mono);
   padding:2px 10px;border-radius:999px}
 .delta.bad{color:#B91C1C;background:#FEE2E2;border:1px solid #FCA5A5}
 .delta.good{color:#047857;background:#D1FAE5;border:1px solid #6EE7B7}
-.delta.flat{color:var(--text2);background:rgba(107,127,149,.12);border:1px solid var(--border2)}
-.delta.na{color:var(--text2);background:rgba(107,127,149,.12);border:1px dashed var(--border2)}
+.delta.flat{color:var(--text2);background:var(--card2);border:1px solid var(--border2)}
+.delta.na{color:var(--text2);background:var(--card2);border:1px dashed var(--border2)}
 
 /* engagement delta chips */
 .eng-d{display:inline-block;margin:4px 6px 4px 0;padding:3px 10px;border-radius:8px;
   font-size:11.5px;background:var(--card2);border:1px solid var(--border);color:var(--text2)}
 .eng-d b{color:var(--text)}
-.eng-d.good{color:#7EE2A8} .eng-d.bad{color:#FFB4BC} .eng-d.flat{color:var(--text3)}
+.eng-d.good{color:var(--green)} .eng-d.bad{color:var(--red)} .eng-d.flat{color:var(--text3)}
 
 /* toggles */
 .toggles{display:flex;gap:8px}
 .tg{background:var(--card2);border:1px solid var(--border2);color:var(--text2);
   border-radius:8px;padding:5px 14px;font-size:12.5px;cursor:pointer;transition:.15s}
-.tg:hover{color:var(--text)}
-.tg.on{background:var(--primary);border-color:var(--blue);color:#fff;font-weight:600}
+.tg:hover{color:var(--text);border-color:var(--blue)}
+.tg.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
 
 /* grid layout */
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}
 .grid3{display:grid;grid-template-columns:1fr;gap:20px}
 .grid3 .chart{height:400px}
 .note{font-size:12px;color:var(--text3);margin-top:8px}
-.note b{color:var(--blue-light)}
+.note b{color:var(--blue)}
 
 /* footer */
 .foot{margin-top:28px;border-top:1px solid var(--border);padding-top:16px;
@@ -114,8 +114,8 @@ body{background:var(--bg);color:var(--text);
 .foot th,.foot td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
 .foot th{color:var(--text3);font-weight:600}
 .foot .mono{font-family:var(--mono)}
-.errbox{display:none;background:#3A1216;border:1px solid var(--red);border-radius:10px;
-  padding:14px 18px;margin-top:20px;color:#FFB4BC}
+.errbox{display:none;background:#FEF2F2;border:1px solid var(--red);border-radius:10px;
+  padding:14px 18px;margin-top:20px;color:#B91C1C}
 @media (max-width:700px){ .hero .big{font-size:46px} .card .chart{height:360px} }
 </style>
 </head>
@@ -345,8 +345,8 @@ if (typeof echarts === 'undefined') { $('errbox').style.display = 'block'; }
 else {
   echarts.registerTheme('nova', {
     backgroundColor: 'transparent',
-    textStyle: { color: '#9FB3C8' },
-    legend: { textStyle: { color: '#9FB3C8' }, pageTextStyle: { color: '#9FB3C8' }, pageIconColor: '#2E9BD6' }
+    textStyle: { color: '#475569' },
+    legend: { textStyle: { color: '#475569' }, pageTextStyle: { color: '#64748B' }, pageIconColor: '#2E9BD6' }
   });
   const charts = {};
   function getChart(id){ if (!charts[id]) charts[id] = echarts.init($(id), 'nova'); return charts[id]; }
@@ -359,14 +359,14 @@ else {
   }));
   getChart('costChart').setOption({
     grid: { left: 20, right: 120, top: 30, bottom: 40 },
-    xAxis: { type: 'value', max: 45, splitLine: { lineStyle: { color: '#22344C' } },
+    xAxis: { type: 'value', max: 45, splitLine: { lineStyle: { color: '#E2E8F0' } },
       axisLabel: { formatter: '{value}M' } },
     yAxis: { type: 'category', data: ['Annual cost ($M)'], axisLine: { show: false } },
     tooltip: { trigger: 'item', formatter: p =>
       '<b>' + p.data.name + '</b><br>$' + p.data.low + '–' + p.data.high + 'M (midpoint $' + p.data.value + 'M)' },
     series: [{ type: 'bar', stack: 'c', barWidth: 64, data: costSeg,
       label: { show: true, formatter: p => '$' + p.data.low + '–' + p.data.high + 'M',
-        color: '#E8EEF7', fontWeight: 600, fontSize: 13, position: 'inside' } }]
+        color: '#1E293B', fontWeight: 600, fontSize: 13, position: 'inside' } }]
   });
 
   /* ---------- 4 heatmap (year-aware) ---------- */
@@ -392,7 +392,7 @@ else {
         axisLabel: { fontSize: 12 } },
       yAxis: { type: 'category', data: HEAT_DIMS, axisLabel: { fontSize: 11.5 } },
       visualMap: { min: 0, max: maxV, calculable: true, orient: 'horizontal', left: 'center', bottom: 0,
-        itemHeight: 90, itemWidth: 14, textStyle: { color: '#9FB3C8', fontSize: 11 },
+        itemHeight: 90, itemWidth: 14, textStyle: { color: '#475569', fontSize: 11 },
         inRange: { color: colors } },
       tooltip: { formatter: p => {
         const c = rows.find(x => x.department === HEAT_DIMS[p.value[1]] && x.role_level === HEAT_LVLS[p.value[0]]);
@@ -403,9 +403,9 @@ else {
       series: [{ type: 'heatmap',
         data: rows.map(c => [HEAT_LVLS.indexOf(c.role_level), HEAT_DIMS.indexOf(c.department), c.rate_pct]),
         label: { show: true, formatter: p => (p.value[2] === null || p.value[2] === '-') ? '–' : p.value[2].toFixed(1),
-          color: '#E8EEF7', fontSize: 11 },
+          color: '#1E293B', fontSize: 11 },
         emphasis: { itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,.5)' } },
-        itemStyle: { borderColor: '#0B1220', borderWidth: 3, borderRadius: 4 } }]
+        itemStyle: { borderColor: '#FFFFFF', borderWidth: 3, borderRadius: 4 } }]
     };
   }
 
@@ -421,21 +421,21 @@ else {
       xAxis: { type: 'category', data: HEAT_LVLS.map(l => 'L' + l), axisLabel: { fontSize: 12 } },
       yAxis: { type: 'category', data: HEAT_DIMS, axisLabel: { fontSize: 11.5 } },
       visualMap: { min: -m, max: m, calculable: true, orient: 'horizontal', left: 'center', bottom: 0,
-        itemHeight: 90, itemWidth: 14, textStyle: { color: '#9FB3C8', fontSize: 11 },
+        itemHeight: 90, itemWidth: 14, textStyle: { color: '#475569', fontSize: 11 },
         inRange: { color: HM_DIV } },
       tooltip: { formatter: p => {
         const c = rows.find(x => x.department === HEAT_DIMS[p.value[1]] && x.role_level === HEAT_LVLS[p.value[0]]);
         if (!c) return '';
         return '<b>' + c.department + ' · L' + c.role_level + '</b><br>2024: ' + fmtPct(c.r24)
           + '<br>2025: ' + fmtPct(c.r25) + '<br>Change: ' + (c.d >= 0 ? '+' : '') + c.d.toFixed(2) + 'pp'
-          + (c.d > 0 ? ' <b style="color:#FFB4BC">(worse)</b>' : c.d < 0 ? ' <b style="color:#7EE2A8">(better)</b>' : ' (flat)');
+          + (c.d > 0 ? ' <b style="color:#DC2626">(worse)</b>' : c.d < 0 ? ' <b style="color:#15803D">(better)</b>' : ' (flat)');
       }},
       series: [{ type: 'heatmap',
         data: rows.map(c => [HEAT_LVLS.indexOf(c.role_level), HEAT_DIMS.indexOf(c.department), c.d]),
         label: { show: true, formatter: p => (p.value[2] > 0 ? '+' : '') + p.value[2].toFixed(1),
-          color: '#E8EEF7', fontSize: 11 },
+          color: '#1E293B', fontSize: 11 },
         emphasis: { itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,.5)' } },
-        itemStyle: { borderColor: '#0B1220', borderWidth: 3, borderRadius: 4 } }]
+        itemStyle: { borderColor: '#FFFFFF', borderWidth: 3, borderRadius: 4 } }]
     };
   }
 
@@ -451,7 +451,7 @@ else {
       getChart('heatChartB').setOption(heatOption(yearRows(2025), VOL_MAX, HM_VOL, 'Voluntary exits'));
       getChart('heatDelta').setOption(deltaOption());
       $('heatNoteBoth').innerHTML = 'Side-by-side: 2024 vs 2025 voluntary attrition rate on a shared colour scale. Third panel = change in percentage points — '
-        + '<b style="color:#7EE2A8">green = improving</b>, <b style="color:#FFB4BC">red = worsening</b>. Overall rate moved <b>'
+        + '<b style="color:#15803D">green = improving</b>, <b style="color:#DC2626">red = worsening</b>. Overall rate moved <b>'
         + fmtPct(Y24.overall_rate_pct) + ' → ' + fmtPct(Y25.overall_rate_pct) + '</b>; Entity_B improved <b>'
         + fmtPct(Y24.entity_b_rate_pct) + ' → ' + fmtPct(Y25.entity_b_rate_pct) + '</b>.';
     } else {
@@ -608,7 +608,7 @@ else {
       data: DATA.financial.map(f => ({ value: f.value_m,
         itemStyle: { color: finColor[f.scenario], borderRadius: [6,6,0,0] } })),
       label: { show: true, position: 'top', formatter: p => '$' + p.value.toFixed(1) + 'M',
-        color: '#E8EEF7', fontWeight: 700, fontSize: 14 } }]
+        color: '#1E293B', fontWeight: 700, fontSize: 14 } }]
   });
 
   /* ---------- footer ---------- */
