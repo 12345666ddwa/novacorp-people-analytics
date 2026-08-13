@@ -123,7 +123,22 @@ body{background:var(--bg);color:var(--text);
 .foot .mono{font-family:var(--mono)}
 .errbox{display:none;background:var(--red-soft);border:0.5px solid var(--red-border);border-radius:10px;
   padding:14px 18px;margin-top:20px;color:var(--red)}
-@media (max-width:700px){ .hero .big{font-size:40px} .kpi .k-rate{font-size:36px} .card .chart{height:360px} }
+@media (max-width:700px){
+  .wrap{padding:0 12px 32px}
+  .hero .big{font-size:40px}
+  .hero{padding:20px 18px}
+  .hero .badge{min-width:100%;width:100%}
+  .kpi .k-rate{font-size:36px}
+  .kpi-grid{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .card .chart{height:320px}
+  .sec-head h2{font-size:15px}
+  .topbar h1{font-size:15px}
+  .yearbar{position:static;padding:8px 12px}
+  .toggles{flex-wrap:wrap}
+  .foot{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
