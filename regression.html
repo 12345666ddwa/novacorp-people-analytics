@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaCorp · Manager Effectiveness and Attrition</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>window.echarts || document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js">\x3C/script>');</script>
+<style>
+:root{
+  --paper:#FAFAF7; --ink:#1A2332; --navy:#1F4E79; --orange:#E69F00;
+  --orange-l:#F2B03D; --gray:#8A94A0; --gray2:#5A6572;
+  --lgray:#D8D8D0; --grid:#EFEDE6; --hair:#E5E3DC; --card:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink); overflow-x:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+}
+.back{
+  position:absolute; top:22px; right:28px; z-index:10;
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gray); font-weight:800; text-decoration:none;
+  border-bottom:1px solid var(--lgray); padding-bottom:3px;
+}
+.back:hover{color:var(--orange); border-color:var(--orange)}
+.wrap{
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:flex-start; justify-content:center;
+  padding:56px 20px;
+}
+.card{
+  background:var(--card); border:1px solid var(--hair); border-radius:14px;
+  box-shadow:0 12px 40px rgba(26,35,50,.06);
+  padding:clamp(26px,4vw,54px);
+  max-width:1120px; width:100%;
+  margin:auto 0;
+}
+.kicker{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gray);font-weight:700}
+h1{
+  font-family:Georgia,'Times New Roman',serif; font-weight:700;
+  font-size:clamp(27px,3.2vw,42px); line-height:1.12; margin:12px 0 0; max-width:880px;
+}
+.rule{width:86px;height:3px;background:var(--orange);margin:18px 0 14px}
+.sub{color:var(--gray2);font-size:clamp(14px,1.25vw,16.5px);max-width:840px;line-height:1.55}
+.stats{display:flex;gap:44px;margin:28px 0 4px;flex-wrap:wrap}
+.stat{border-left:2px solid var(--hair);padding-left:16px;min-width:170px}
+.stat.hot{border-left:3px solid var(--orange)}
+.stat .num{
+  font-family:Georgia,'Times New Roman',serif; font-weight:700;
+  font-size:clamp(26px,2.4vw,34px); line-height:1; display:block; color:var(--navy);
+}
+.stat.hot .num{color:var(--orange)}
+.stat .cap{display:block;margin-top:8px;font-size:13px;color:var(--gray2);line-height:1.45;max-width:230px}
+.chart{width:100%;height:430px;margin-top:14px}
+.checks{margin-top:34px}
+.checks .intro{color:var(--gray2);font-size:14px;margin:10px 0 14px;max-width:760px;line-height:1.5}
+.tests{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.test{
+  background:var(--paper); border:1px solid var(--hair); border-radius:12px;
+  padding:20px 22px; display:flex; flex-direction:column; gap:12px;
+}
+.test .thead{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.test .tname{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:17px;color:var(--navy);line-height:1.3}
+.badge{
+  font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
+  color:var(--gray2); background:#EFEDE6; border:1px solid var(--hair);
+  border-radius:999px; padding:4px 10px; white-space:nowrap;
+}
+.cmp{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.cmp .cv{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:26px;color:var(--ink)}
+.cmp .vs{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.cmp .delta{font-size:13px;color:var(--gray2);font-weight:700}
+.tstat{font-size:13.5px;color:var(--gray2)}
+.tstat b{color:var(--ink);font-weight:700}
+.tnote{font-size:13.5px;color:var(--gray2);line-height:1.5;border-top:1px solid var(--grid);padding-top:11px}
+.tnote b{color:var(--ink);font-weight:600}
+.foot{
+  font-size:11.5px; color:#9AA3AD; letter-spacing:.02em;
+  border-top:1px solid var(--grid); padding-top:14px; margin-top:30px;
+  display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+}
+@media (max-width:700px){
+  .wrap{padding:44px 12px; align-items:flex-start}
+  .back{position:static; display:inline-block; margin:0 0 18px}
+  .card{padding:24px 18px}
+  .stats{flex-direction:column; gap:18px}
+  .stat{min-width:0}
+  .tests{grid-template-columns:1fr}
+  .chart{height:320px}
+  .cmp .cv{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <a class="back" href="story_pages.html">Back to story</a>
+    <div class="kicker">Statistical appendix · Decile regression</div>
+    <h1>Better managers mean fewer exits. The slope is real.</h1>
+    <div class="rule"></div>
+    <p class="sub">Each point is one decile of 12,590 employees, ranked by manager effectiveness. The regression line has R² = 0.60, p = 0.008.</p>
+
+    <div class="stats">
+      <div class="stat hot">
+        <span class="num">0.52 pp</span>
+        <span class="cap">lower attrition per 1 point of manager effectiveness.</span>
+      </div>
+      <div class="stat">
+        <span class="num">0.60</span>
+        <span class="cap">R². The decile spread is mostly explained by this line, not noise.</span>
+      </div>
+      <div class="stat">
+        <span class="num">0.008</span>
+        <span class="cap">p-value. The chance this slope is noise sits under 1 in 100.</span>
+      </div>
+    </div>
+
+    <div id="chart" class="chart"></div>
+
+    <div class="checks">
+      <div class="kicker">Honest checks</div>
+      <p class="intro">Two median splits were also tested with chi-square. Neither clears the p &lt; 0.05 bar. We report them anyway.</p>
+      <div class="tests">
+        <div class="test">
+          <div class="thead">
+            <div class="tname">Manager effectiveness, median split</div>
+            <span class="badge">Not significant</span>
+          </div>
+          <div class="cmp">
+            <span class="cv">6.81%</span><span class="vs">low half vs</span><span class="cv">6.23%</span>
+            <span class="delta">-0.58 pp</span>
+          </div>
+          <div class="tstat"><b>χ² = 1.63</b>, p = 0.201</div>
+          <div class="tnote">The gap points the right way. It is too small to rule out chance.</div>
+        </div>
+        <div class="test">
+          <div class="thead">
+            <div class="tname">Recognition, median split</div>
+            <span class="badge">Not significant</span>
+          </div>
+          <div class="cmp">
+            <span class="cv">6.76%</span><span class="vs">low half vs</span><span class="cv">6.28%</span>
+            <span class="delta">-0.48 pp</span>
+          </div>
+          <div class="tstat"><b>χ² = 1.10</b>, p = 0.294</div>
+          <div class="tnote">Recognition alone does not move the needle in this test. Keep it as context, not proof.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>n = 12,590 employees with engagement records. Decile aggregation, 10 points. Full data on request.</span>
+      <span>NovaCorp people analytics</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PAPER='#FAFAF7', INK='#1A2332', NAVY='#1F4E79', ORANGE='#E69F00',
+      GRAY='#8A94A0', LGRAY='#D8D8D0', GRID='#EFEDE6', HAIR='#E5E3DC';
+
+  /* Verified from Python output. Do not edit values by hand. */
+  var B0 = 8.259;      /* intercept, % */
+  var B1 = -0.518;     /* slope, pp per 1 point of manager effectiveness */
+
+  /* Decile means of manager effectiveness (x) and attrition rate (y, %). */
+  var POINTS = [
+    [1.5658, 7.78], [2.2750, 7.15], [2.6650, 6.59], [2.9843, 6.04],
+    [3.2580, 6.51], [3.5198, 6.59], [3.7909, 6.20], [4.0958, 7.07],
+    [4.4641, 5.64], [4.9180, 5.64]
+  ];
+  var scatterData = POINTS.map(function(p, i){
+    return { value: p, decile: 'Decile ' + (i + 1) };
+  });
+
+  /* Fitted line over the plotted range. */
+  var X0 = 1.0, X1 = 5.2;
+  var lineData = [
+    [X0, +(B0 + B1 * X0).toFixed(4)],
+    [X1, +(B0 + B1 * X1).toFixed(4)]
+  ];
+
+  var el = document.getElementById('chart');
+  if (window.echarts && el) {
+    var chart = echarts.init(el);
+    chart.setOption({
+      grid: { left: 44, right: 90, top: 28, bottom: 8, containLabel: true },
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: '#FFFFFF', borderColor: HAIR, borderWidth: 1,
+        padding: [8, 12], textStyle: { color: INK, fontSize: 12.5 },
+        formatter: function(p) {
+          if (!p.data.decile) { return ''; }
+          return '<b>' + p.data.decile + '</b><br>' +
+                 'Manager score: ' + p.value[0].toFixed(2) + '<br>' +
+                 'Attrition: ' + p.value[1].toFixed(2) + '%';
+        }
+      },
+      xAxis: {
+        type: 'value', min: 1, max: 5.5, interval: 1,
+        name: 'Manager effectiveness (decile mean)',
+        nameLocation: 'middle', nameGap: 34,
+        nameTextStyle: { color: GRAY, fontSize: 12 },
+        axisLabel: { color: GRAY, fontSize: 12 },
+        axisLine: { lineStyle: { color: HAIR } },
+        axisTick: { show: false },
+        splitLine: { lineStyle: { color: GRID, width: 1 } }
+      },
+      yAxis: {
+        type: 'value', min: 5, max: 8.5, interval: 1,
+        name: 'Attrition rate',
+        nameLocation: 'middle', nameGap: 46,
+        nameTextStyle: { color: GRAY, fontSize: 12 },
+        axisLabel: { formatter: '{value}%', color: GRAY, fontSize: 12 },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { lineStyle: { color: GRID, width: 1 } }
+      },
+      series: [
+        {
+          type: 'line', data: lineData,
+          silent: true, symbol: 'none',
+          lineStyle: { color: ORANGE, width: 3 },
+          label: {
+            show: true, position: 'insideEndTop', distance: 12,
+            formatter: 'y = 8.26% - 0.52%x',
+            color: ORANGE, fontWeight: 700, fontSize: 12.5,
+            backgroundColor: '#FFFFFF', borderColor: HAIR, borderWidth: 1,
+            borderRadius: 6, padding: [5, 9]
+          }
+        },
+        {
+          type: 'scatter', data: scatterData,
+          symbolSize: 13,
+          itemStyle: {
+            color: NAVY, borderColor: '#FFFFFF', borderWidth: 1.5, opacity: 0.92
+          },
+          emphasis: { scale: 1.6, itemStyle: { color: ORANGE } }
+        }
+      ]
+    });
+    window.addEventListener('resize', function(){ chart.resize(); });
+  }
+})();
+</script>
+</body>
+</html>
