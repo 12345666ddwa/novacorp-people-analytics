@@ -79,6 +79,25 @@ h1{
 .dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:12px}
 .dot{width:9px;height:9px;border-radius:50%;background:#D8D5CC;border:none;cursor:pointer;padding:0;transition:all .25s}
 .dot.on{background:var(--orange);transform:scale(1.15)}
+/* entrance animation + micro-interactions */
+html.js-anim .slide{opacity:0;transform:translateY(20px);transition:opacity .5s ease-out,transform .5s ease-out}
+html.js-anim .slide.in{opacity:1;transform:none}
+.kpi{transition:transform .25s ease}
+.kpi:hover{transform:translateY(-3px)}
+.dot.on{animation:dotPulse 2.6s ease-out infinite}
+@keyframes dotPulse{
+  0%{box-shadow:0 0 0 0 rgba(230,159,0,.5)}
+  70%{box-shadow:0 0 0 8px rgba(230,159,0,0)}
+  100%{box-shadow:0 0 0 0 rgba(230,159,0,0)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  html.js-anim .slide{opacity:1;transform:none;transition:none}
+  .kpi{transition:none}
+  .kpi:hover{transform:none}
+  .dot{transition:none}
+  .dot.on{animation:none}
+}
 /* layout variants for pages 5-10 */
 .bodyfull{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:18px 0 24px;min-height:0}
 .bodyfull .chartbox{flex:1;min-height:0}
@@ -133,25 +152,32 @@ h1{
 .body.mirror .kpis{padding-left:0;padding-right:6px}
 @media (max-width:980px){
   .slide{padding:40px 28px 0;min-height:0;height:auto}
-  .body{grid-template-columns:1fr;gap:26px;padding:24px 0}
-  .chartbox{height:44vh;min-height:300px}
-  .chart{inset:0}
+  .body{grid-template-columns:1fr;gap:30px;padding:24px 0;min-height:0}
+  .chartbox{height:44vh}
+  .chart{inset:0 0 0 0}
   .chartbox.hasfoot .chart{inset:0 0 22px 0}
-  .kpis{gap:26px}
+  .kpis{gap:28px;padding-left:0}
+  .body.mirror .kpis{padding-right:0}
   .rec{margin:auto -28px 0;padding:18px 28px}
   .pageno{right:28px;top:44px}
   .brand{display:none}
   .dots{display:none}
-  .bodyfull{gap:18px;padding:20px 0}
+  .bodyfull{gap:26px;padding:16px 0 26px;min-height:0}
   .bodyfull .chartbox{flex:none}
-  .bignum{font-size:clamp(40px,11vw,64px)}
-  .splitrow{flex-direction:column;gap:28px}
-  .seg{font-size:11px;padding:0 10px}
-  .roles{grid-template-columns:repeat(2,1fr);gap:22px 16px}
-  .hero{flex-direction:column;gap:26px}
   .bodyfull .chartbox.herochart{flex:none}
+  .splitrow{flex-direction:column;align-items:center;gap:32px}
+  .bignum{font-size:clamp(40px,11vw,64px)}
+  .seg{font-size:11px;padding:0 10px}
+  .slegend{flex-wrap:wrap;gap:12px 26px}
+  .roles{grid-template-columns:1fr;gap:24px}
+  .chips{justify-content:flex-start;gap:12px}
+  .chips.center{justify-content:center}
+  .hero{flex-direction:column;gap:30px}
+  .heronum{font-size:clamp(64px,20vw,96px)}
+  .netchip{flex-wrap:wrap}
 }
 </style>
+<script>document.documentElement.classList.add('js-anim');</script>
 </head>
 <body>
 
@@ -466,6 +492,8 @@ h1{
   var PAPER='#FAFAF7', INK='#1A2332', NAVY='#1F4E79', ORANGE='#E69F00',
       GRAY='#8A94A0', LGRAY='#D8D8D0', GRID='#EFEDE6', HAIR='#E5E3DC';
 
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function commonTooltip(formatter){
     return {
       trigger:'axis',
@@ -639,7 +667,7 @@ h1{
       nameTextStyle:{color:GRAY,fontSize:12}
     },
     yAxis:{
-      type:'value', min:88, max:101, interval:2,
+      type:'value', min:80, max:101, interval:2,
       axisLabel:{formatter:'{value}%',color:GRAY,fontSize:12},
       axisLine:{show:false}, axisTick:{show:false},
       splitLine:{lineStyle:{color:GRID,width:1}},
@@ -674,7 +702,7 @@ h1{
       axisLabel:{color:INK,fontSize:12,interval:0}
     },
     yAxis:{
-      type:'value', min:3.28, max:3.42, interval:0.04,
+      type:'value', min:3.0, max:3.5, interval:0.1,
       axisLabel:{formatter:'{value}',color:GRAY,fontSize:12},
       axisLine:{show:false}, axisTick:{show:false},
       splitLine:{lineStyle:{color:GRID,width:1}},
@@ -859,9 +887,71 @@ h1{
   }
   dots.forEach(function(d){
     d.addEventListener('click', function(){
-      slides[+d.getAttribute('data-i')].scrollIntoView({behavior:'smooth'});
+      slides[+d.getAttribute('data-i')].scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth'});
     });
   });
+
+  /* ---------- entrance + KPI count-up animations ---------- */
+  var NUM_RX = /^(.*?)([-+]?\d+(?:\.\d+)?)(.*)$/;
+
+  function findTextNode(el){
+    var kids = el.childNodes;
+    for(var i=0;i<kids.length;i++){
+      if(kids[i].nodeType===3 && kids[i].nodeValue.replace(/\s/g,'')!==''){
+        return kids[i];
+      }
+    }
+    return null;
+  }
+
+  function animateCount(node, original){
+    if(reduceMotion){ node.nodeValue = original; return; }
+    var m = original.match(NUM_RX);
+    if(!m){ return; }
+    var pre = m[1], numStr = m[2], post = m[3];
+    if(/^\s*-\s*\d/.test(post)){ return; }  /* range like $22-25M stays static */
+    var target = parseFloat(numStr);
+    if(isNaN(target)){ return; }
+    var decimals = (numStr.split('.')[1] || '').length;
+    var showPlus = numStr.charAt(0) === '+';
+    var dur = 1000, start = null;
+    function frame(ts){
+      if(start === null){ start = ts; }
+      var t = Math.min(1, (ts - start) / dur);
+      var eased = 1 - Math.pow(1 - t, 3);
+      var v = target * eased;
+      var s = Math.abs(v).toFixed(decimals);
+      if(showPlus){ s = '+' + s; }
+      else if(v < 0){ s = '-' + s; }
+      node.nodeValue = pre + s + post;
+      if(t < 1){
+        requestAnimationFrame(frame);
+      }else{
+        node.nodeValue = original;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  var NUM_SEL = '.kpi .num, .bnum, .nnum, .rnum, .heronum, .bignum > span';
+  if('IntersectionObserver' in window){
+    var animIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting){ return; }
+        animIO.unobserve(e.target);
+        e.target.classList.add('in');
+        var nums = e.target.querySelectorAll(NUM_SEL);
+        Array.prototype.forEach.call(nums, function(el){
+          if(el.classList.contains('blab') || el.classList.contains('bcap')){ return; }
+          var node = findTextNode(el);
+          if(node){ animateCount(node, node.nodeValue); }
+        });
+      });
+    },{threshold:0.15});
+    slides.forEach(function(s){ animIO.observe(s); });
+  }else{
+    slides.forEach(function(s){ s.classList.add('in'); });
+  }
 
   /* ---------- resize ---------- */
   window.addEventListener('resize', function(){
